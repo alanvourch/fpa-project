@@ -34,14 +34,27 @@ back to a source figure, and it fails loudly if one doesn't match.
 
 ### Setup for the Narrative Agent
 
-The Narrative Agent calls the Anthropic API directly (a real, metered API cost — separate
-from a Claude subscription used to build the rest of this project). Set your API key as an
-environment variable before running it — never hardcode it in code or commit it to the repo:
+The Narrative Agent (`agents/narrative_agent.py`) constructs a bare `anthropic.Anthropic()`
+client and never hardcodes a credential — it works with whichever of these you set up:
+
+**Option A — API key** (a metered, pay-per-token credential):
 
 ```
 export ANTHROPIC_API_KEY=sk-ant-...   # macOS/Linux
 $env:ANTHROPIC_API_KEY = "sk-ant-..."  # Windows PowerShell
 ```
+
+**Option B — OAuth via your Claude account** (no separate API key needed — this is the
+path used for this project, consistent with the Claude Pro subscription constraint in
+CLAUDE.md section 5). Install the [Anthropic CLI](https://github.com/anthropics/anthropic-cli)
+(`ant`), then run:
+
+```
+ant auth login
+```
+
+This opens a browser, authenticates against your Claude account, and stores a short-lived
+OAuth profile that the Python SDK picks up automatically — no environment variable required.
 
 ## Results
 

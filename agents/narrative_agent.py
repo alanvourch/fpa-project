@@ -30,8 +30,11 @@ considered but rejected because this is the single deliverable recruiters
 will actually read line by line — Sonnet 5's writing quality is worth the
 small cost step-up over Haiku for a report generated once a month.
 
-Reads ANTHROPIC_API_KEY from the environment via the default Anthropic()
-client construction. Never hardcode a key. See README.md for setup.
+Authenticates via the default Anthropic() client construction, which
+resolves ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN, or an `ant auth login`
+OAuth profile (whichever is available) — no key is ever hardcoded. See
+README.md for setup, including the OAuth option for callers without a
+separate metered API key.
 
 Output: output/executive_summary.md
 
@@ -39,7 +42,6 @@ Run: .venv/Scripts/python.exe agents/narrative_agent.py
 """
 
 import datetime
-import os
 
 import anthropic
 
@@ -111,28 +113,33 @@ instructions. Output only the commentary itself (starting with a heading), no pr
 
 
 def main():
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise SystemExit(
-            "ANTHROPIC_API_KEY is not set. This agent calls the Anthropic API directly "
-            "(a real API cost, unlike the Claude Pro subscription used for development) — "
-            "set the environment variable before running. See README.md for setup."
-        )
-
     with open(VARIANCE_REPORT_PATH, encoding="utf-8") as f:
         variance_report = f.read()
     with open(FORECAST_REPORT_PATH, encoding="utf-8") as f:
         forecast_report = f.read()
 
+    # Bare Anthropic() resolves credentials in order: ANTHROPIC_API_KEY,
+    # ANTHROPIC_AUTH_TOKEN, then an active `ant auth login` OAuth profile —
+    # so this works whether the caller has a metered API key or is
+    # authenticating through their Claude subscription via OAuth. Never
+    # hardcode a key here.
     client = anthropic.Anthropic()
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=MAX_TOKENS,
-        output_config={"effort": "medium"},
-        system=SYSTEM_PROMPT,
-        messages=[
-            {"role": "user", "content": build_user_message(variance_report, forecast_report)},
-        ],
-    )
+    try:
+        response = client.messages.create(
+            model=MODEL,
+            max_tokens=MAX_TOKENS,
+            output_config={"effort": "medium"},
+            system=SYSTEM_PROMPT,
+            messages=[
+                {"role": "user", "content": build_user_message(variance_report, forecast_report)},
+            ],
+        )
+    except anthropic.AuthenticationError:
+        raise SystemExit(
+            "No Anthropic credentials found. Either set ANTHROPIC_API_KEY, or run "
+            "`ant auth login` to authenticate via OAuth (uses your Claude subscription "
+            "instead of a separate metered API key). See README.md for setup."
+        )
 
     if response.stop_reason == "refusal":
         raise SystemExit("Model declined to generate the summary (stop_reason=refusal).")
