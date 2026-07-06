@@ -370,7 +370,19 @@ def main():
     material = attach_evidence(episodes + single_months, notes)
     material.sort(key=lambda x: -abs(x["variance_eur"]))
 
+    # Mark each month-row with its materiality classification and evidence, so
+    # downstream agents (Forecast) can tell one-off months from sustained
+    # programmes without re-deriving the analysis.
+    flag_map = {}
+    for item in material:
+        kind = "episode" if len(item["months"]) > 1 else "single"
+        ids = ", ".join(h["note"]["note_id"] for h in item["evidence"])
+        for m in item["months"]:
+            flag_map[(item["business_unit"], item["line_item"], m)] = (kind, ids)
     out = var_df.copy()
+    keys = list(zip(out["business_unit"], out["line_item"], out["month"]))
+    out["materiality"] = [flag_map.get(k, ("", ""))[0] for k in keys]
+    out["evidence_notes"] = [flag_map.get(k, ("", ""))[1] for k in keys]
     out["month"] = out["month"].dt.strftime("%Y-%m")
     out.to_csv(TABLE_PATH, index=False)
 
