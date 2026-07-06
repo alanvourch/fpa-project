@@ -130,10 +130,11 @@ fpa-agent-team/
   - `orchestrator.py` chains all steps as subprocesses and assembles `output/board_pack.md` — but every run ends with a literal **DRAFT — PENDING HUMAN SIGN-OFF** banner and a Reviewed-by/Approved-for-distribution sign-off block. Nothing in this pipeline sends anything anywhere on its own.
   - `agents/grounding_check.py`: the narrative hallucination-check logic (money/percent parsing, honesty checks) was extracted from `tests/validate_narrative.py` into a shared module both the QA Agent and the test script import — it never needed ground truth, so it's legitimately reusable in production.
   - Full 4-validator suite (ingestion/variance/forecast/narrative) re-run green after the orchestrator regenerated every file from scratch — the whole pipeline is reproducible end to end.
+- README polish (stayed on Sonnet 5 — no architecture decision required, per the user's standing instruction to flag before switching): filled Problem/Solution/Results (previously empty), added a Mermaid architecture diagram embedded in README.md (renders on GitHub, colors the one LLM-calling node and the human sign-off gate), and two chart images in `docs/` (`variance_highlights.png` — the flagship visual, hatched vs solid distinguishing "no clear driver identified" from evidence-grounded; `forecast_outlook.png` — Q3 2026 P&L). Built following the dataviz skill's procedure.
 **In progress:**
-- Nothing — Phase 7 is complete.
+- Nothing — README/visuals pass is complete.
 **Next step:**
-- Recruiter-facing README polish (Problem/Solution/Results sections are still empty headers), architecture diagram, demo. Once the user sets up `ant auth login` or an API key locally, re-run `orchestrator.py` once more for the authoritative narrative + a fully-real end-to-end demo run.
+- A demo (GIF/video of `orchestrator.py` running) is the one remaining open item — recording a terminal session isn't achievable from this environment, so it's a task for the user locally. Once `ant auth login` or an API key is set up, re-run `orchestrator.py` once more for the authoritative narrative + a fully-real end-to-end run to use in that demo.
 **Decisions made (and why) — see PROGRESS.md for full reasoning on each:**
 - Project positioning (Phase 7 reframe): human-in-the-loop control and provable data non-leakage are the two things this portfolio must demonstrate, not full automation — every Phase 7 design choice serves one or both of these.
 - Narrative Agent model: Sonnet 5 (writing-quality step-up over Haiku is worth it for the one deliverable recruiters read closely; Fable 5 is reserved for hard architecture calls per §5, not needed here).
