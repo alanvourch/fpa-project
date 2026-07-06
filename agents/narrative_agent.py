@@ -136,7 +136,19 @@ def main():
         )
     except anthropic.AuthenticationError:
         raise SystemExit(
-            "No Anthropic credentials found. Either set ANTHROPIC_API_KEY, or run "
+            "No Anthropic credentials found (rejected). Either set ANTHROPIC_API_KEY, or run "
+            "`ant auth login` to authenticate via OAuth (uses your Claude subscription "
+            "instead of a separate metered API key). See README.md for setup."
+        )
+    except TypeError as e:
+        # When NO credential source exists at all (not even an invalid one),
+        # the SDK fails at header-construction time with a plain TypeError
+        # rather than AuthenticationError — a different failure shape for the
+        # same underlying problem, so it needs its own catch here.
+        if "Could not resolve authentication method" not in str(e):
+            raise
+        raise SystemExit(
+            "No Anthropic credentials configured. Either set ANTHROPIC_API_KEY, or run "
             "`ant auth login` to authenticate via OAuth (uses your Claude subscription "
             "instead of a separate metered API key). See README.md for setup."
         )

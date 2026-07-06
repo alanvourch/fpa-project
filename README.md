@@ -56,6 +56,28 @@ ant auth login
 This opens a browser, authenticates against your Claude account, and stores a short-lived
 OAuth profile that the Python SDK picks up automatically — no environment variable required.
 
+### Data governance and human control
+
+This isn't a fully autonomous "black box" — and given financial data sensitivity, it isn't
+meant to be:
+
+- **Only one component ever touches an external AI provider.** Ingestion, Variance,
+  Forecast, and QA are 100% deterministic Python — no data from those steps leaves the
+  local machine. Only the Narrative Agent calls Claude, and it only ever receives the two
+  *already-aggregated* summary reports (BU/month-level variance and forecast tables) —
+  never the raw dataset, never anything below that aggregation level.
+- **This is checked, not just claimed.** The QA/Reviewer Agent (`agents/qa_agent.py`)
+  structurally verifies both of the above on every run: it scans every other agent's source
+  for any reference to an external AI provider, and confirms the Narrative Agent's own file
+  reads are scoped to the two report files. A regression here fails the QA report loudly,
+  the same way a hallucinated figure does.
+- **Nothing is sent to anyone automatically.** The Orchestrator (`orchestrator.py`) chains
+  the pipeline end to end and assembles a single draft pack (`output/board_pack.md`), but
+  that pack is explicitly marked **DRAFT — PENDING HUMAN SIGN-OFF** with a literal
+  reviewed-by/approved-for-distribution line at the bottom. No step in this pipeline
+  publishes, emails, or exports anything — a human always reviews the pack and the QA
+  report before either goes anywhere.
+
 ## Results
 
 ## Tech Stack
