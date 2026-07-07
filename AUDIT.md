@@ -178,7 +178,8 @@ hardcoded absolute paths exist anywhere; all paths are repo-root-relative.
   `orchestrator.py`, followed by a pipeline re-run; editing the outputs alone would be
   undone by the next run. The executive summary is edited directly, and the Narrative
   Agent's system prompt gets a no-em-dash style rule so future generated runs comply too.
-  The report titles ("Variance Report — EventCo...") are included. Validator-load-bearing
+  The report titles (each is currently "Report Title, em dash, EventCo") are included.
+  Validator-load-bearing
   phrases ("no clear driver identified", "one-off", "episode", "data entry error", section
   headers, the signed-number table format) must survive the rewrite; the validators will
   be re-run to prove it.
