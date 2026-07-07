@@ -90,26 +90,33 @@ resolution should be — so agent outputs can be checked against it later.
 ## 6. Repo Structure
 
 ```
-fpa-agent-team/
-├── CLAUDE.md              (this file)
+fpa-project/
+├── CLAUDE.md               (this file)
 ├── PROGRESS.md             (detailed log, one entry per session)
-├── README.md               (recruiter-facing: diagram + results)
+├── AUDIT.md                (pre-publication audit findings, 2026-07-06)
+├── README.md               (recruiter-facing: problem/solution/results + diagram)
+├── orchestrator.py         (chains the agents; assembles output/board_pack.md)
+├── make_charts.py          (regenerates docs/*.png from pipeline outputs)
+├── requirements.txt
 ├── data/
 │   ├── generate_dataset.py
-│   ├── eventco_monthly.csv
-│   └── ground_truth.md
+│   ├── eventco_monthly.csv / eventco_monthly_cleaned.csv
+│   ├── business_notes.csv
+│   └── ground_truth.md     (answer key — agents never read it; tests/ do)
 ├── agents/
-│   ├── ingestion_agent.py
-│   ├── variance_agent.py
-│   ├── forecast_agent.py
-│   ├── narrative_agent.py
-│   └── qa_agent.py
-├── orchestrator.py
+│   ├── ingestion_agent.py, variance_agent.py, forecast_agent.py,
+│   ├── narrative_agent.py, qa_agent.py
+│   └── grounding_check.py  (shared narrative-grounding logic)
+├── tests/
+│   └── validate_{ingestion,variance,forecast,narrative}.py
 ├── output/
-│   ├── sample_report.md
-│   └── dashboard/ (or Power BI/Plotly notebook)
+│   ├── data_quality_report.md, variance_report.md, variance_table.csv,
+│   ├── forecast_report.md, forecast.csv, executive_summary.md,
+│   └── qa_report.md, pipeline_log.md, board_pack.md
 └── docs/
-    └── architecture_diagram.png
+    ├── variance_bridge_2025.png   (flagship: FY2025 budget→actual waterfall)
+    ├── variance_highlights.png
+    └── forecast_outlook.png
 ```
 
 ## 7. Expected Deliverables (portfolio)
@@ -122,8 +129,12 @@ fpa-agent-team/
 
 ## 8. PROGRESS LOG (update every session)
 
-**Last session:** 2026-07-06 — Fable 5 + Sonnet 5 (Phases 4-7). Full session-by-session detail lives in PROGRESS.md — this is a condensed current-state summary only.
+**Last session:** 2026-07-06 — Fable 5 (pre-publication audit + fixes). Full session-by-session detail lives in PROGRESS.md — this is a condensed current-state summary only.
 **Done:**
+- Pre-publication audit (AUDIT.md, committed on its own before any fix — read it for the full findings list). Verified with pandas that every figure in the executive summary traces to the variance/forecast reports; scanned all git history for secrets (clean, nothing to rotate); re-ran the pipeline end to end (byte-identical outputs except timestamps). Then fixed everything flagged: exec-summary time framing ("this year" → the actual 30-month window; cutoff is June 2026, not July), the Marketing savings episode window now disclosed as wider than the programme, orchestrator board pack now labels a carried-over narrative instead of claiming "included below" after a failed narrative step, `.gitignore` covers `.env`, deleted `output/sample_report.md` placeholder + stale `.gitkeep`s + empty `output/dashboard/`, duplicate typo-log entry deduped in ingestion.
+- Writing pass per explicit user style rules, now enforced in the GENERATOR templates (agents/*.py, orchestrator.py), not just the outputs: zero em dashes and zero buzzwords in README.md and all output/*.md ("robust growth" → "median year-over-year growth"; report titles use colons). The narrative system prompt now bans em dashes/filler too. Validators updated where they parsed old headers (validate_ingestion section 6/7). CLAUDE.md/PROGRESS.md are internal and keep their style.
+- Charts rebuilt via committed `make_charts.py` (was: no script in repo, PNGs irreproducible). New flagship `docs/variance_bridge_2025.png`: FY2025 budget→actual net-result waterfall (EUR52.0M → EUR48.9M, reconciles exactly, asserted in the script), named driver blocks + a hatched "no documented driver" block, trap row held at budget with a footnote. `variance_highlights.png` re-encoded as P&L impact (favorable always right, green/red per finance convention, CVD-validated palette); `forecast_outlook.png` adds normalized PY revenue markers. README fully rewritten (2-minute pitch, deterministic-vs-LLM rationale, Known limitations section covering the IQR 5/11 tier, episode over-detection, keyword trap-check gap, hand-written summary provenance, synthetic data; per-OS run instructions). `ant` CLI link verified live.
+**Earlier (Phases 4-7, same day):**
 - Phases 4-6 (Variance, Forecast, Narrative): full pipeline Ingestion → Variance → Forecast → Narrative built and chained via real file handoffs (`output/variance_table.csv` → `output/forecast_report.md` → `output/executive_summary.md`). Narrative Agent (`agents/narrative_agent.py`, `claude-sonnet-5`) is the ONE deliberate LLM call in the whole pipeline; every other agent is deterministic Python. Auth resolves automatically via a bare `anthropic.Anthropic()` client (API key OR `ant auth login` OAuth profile — no hardcoded credential). `output/executive_summary.md` was hand-written in an interactive session (not via an actual script run) because the user only has a Claude subscription and `ant` CLI install was sandbox-blocked this session; header documents this, re-run the real script once OAuth/API credentials are set up locally for the authoritative version.
 - Phase 7 (QA/Reviewer Agent + Orchestrator): **reframed by explicit user correction mid-project — read this before touching the pipeline again.** The point of this whole repo is a portfolio piece proving the author can run a *supervised, multi-agent* FP&A process, NOT a fully autonomous one — and proving sensitive data isn't leaked to AI providers. Two concrete, checked (not just claimed) mechanisms now exist for this:
   - `agents/qa_agent.py` structurally verifies (a) no agent file other than `narrative_agent.py` references an external AI provider, and (b) `narrative_agent.py`'s actual `open()` calls are scoped to the two aggregated report files only (never the raw dataset or ground truth) — a source-code scan, not a comment someone could quietly invalidate. It also cross-checks pipeline-internal consistency (every material variance evidence-cited or explicitly unexplained; every flagged month accounted for in the forecast audit trail) without ever touching `data/ground_truth.md`.
@@ -132,9 +143,9 @@ fpa-agent-team/
   - Full 4-validator suite (ingestion/variance/forecast/narrative) re-run green after the orchestrator regenerated every file from scratch — the whole pipeline is reproducible end to end.
 - README polish (stayed on Sonnet 5 — no architecture decision required, per the user's standing instruction to flag before switching): filled Problem/Solution/Results (previously empty), added a Mermaid architecture diagram embedded in README.md (renders on GitHub, colors the one LLM-calling node and the human sign-off gate), and two chart images in `docs/` (`variance_highlights.png` — the flagship visual, hatched vs solid distinguishing "no clear driver identified" from evidence-grounded; `forecast_outlook.png` — Q3 2026 P&L). Built following the dataviz skill's procedure.
 **In progress:**
-- Nothing — README/visuals pass is complete.
+- Nothing — audit + fixes pass is complete; repo is in publish-ready state.
 **Next step:**
-- A demo (GIF/video of `orchestrator.py` running) is the one remaining open item — recording a terminal session isn't achievable from this environment, so it's a task for the user locally. Once `ant auth login` or an API key is set up, re-run `orchestrator.py` once more for the authoritative narrative + a fully-real end-to-end run to use in that demo.
+- A demo (GIF/video of `orchestrator.py` running) is the one remaining open item — recording a terminal session isn't achievable from this environment, so it's a task for the user locally. Once `ant auth login` or an API key is set up, re-run `agents/narrative_agent.py` for the authoritative script-generated narrative (the committed one is hand-written per its header; note the new system prompt bans em dashes so a fresh run stays style-compliant), then `orchestrator.py` once more for a fully-real end-to-end run to use in that demo.
 **Decisions made (and why) — see PROGRESS.md for full reasoning on each:**
 - Project positioning (Phase 7 reframe): human-in-the-loop control and provable data non-leakage are the two things this portfolio must demonstrate, not full automation — every Phase 7 design choice serves one or both of these.
 - Narrative Agent model: Sonnet 5 (writing-quality step-up over Haiku is worth it for the one deliverable recruiters read closely; Fable 5 is reserved for hard architecture calls per §5, not needed here).

@@ -1,6 +1,6 @@
 # Pipeline Run Log
 
-Run at 2026-07-06 15:59 by `orchestrator.py`.
+Run at 2026-07-06 22:33 by `orchestrator.py`.
 
 | Step | Script | Exit code | Result |
 |---|---|---|---|
@@ -16,7 +16,7 @@ Run at 2026-07-06 15:59 by `orchestrator.py`.
 
 ```
 Raw rows: 124 -> cleaned rows: 120
-BU typos corrected: 8
+BU typos corrected: 7
 Duplicates removed: 4
 Opex values imputed: 9
 Currency-formatted cells parsed: 10

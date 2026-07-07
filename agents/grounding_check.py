@@ -144,7 +144,7 @@ def check_trap_not_narrated(narrative_text):
     paragraphs = [p for p in re.split(r"\n\s*\n", narrative_text) if p.strip()]
     trap_paragraphs = [p for p in paragraphs if any(kw in p.lower() for kw in TRAP_KEYWORDS)]
     if not trap_paragraphs:
-        return True, "excluded data-error row not mentioned (acceptable — one sentence was optional)"
+        return True, "excluded data-error row not mentioned (acceptable, one sentence was optional)"
     for p in trap_paragraphs:
         if any(kw in p.lower() for kw in BUSINESS_FRAMING_KEYWORDS):
             return False, f"a paragraph mentioning the excluded data-error row also uses business-framing language: {p.strip()[:200]!r}"
@@ -164,7 +164,7 @@ def run_all_checks(variance_text, forecast_text, narrative_text):
     unmatched_money = [v for v in narrative_money if not money_matches_source(v, source_money)]
     if unmatched_money:
         results.append((False, (
-            f"HALLUCINATED MONEY FIGURE(S) — not within {MONEY_TOLERANCE_REL:.1%}/"
+            f"HALLUCINATED MONEY FIGURE(S), not within {MONEY_TOLERANCE_REL:.1%}/"
             f"EUR{MONEY_TOLERANCE_ABS:,.0f} of any source figure: "
             f"{[f'EUR{v:,.0f}' for v in unmatched_money]}"
         )))
@@ -177,7 +177,7 @@ def run_all_checks(variance_text, forecast_text, narrative_text):
     unmatched_percent = [v for v in narrative_percent if not percent_matches_source(v, source_percent)]
     if unmatched_percent:
         results.append((False, (
-            f"HALLUCINATED PERCENTAGE(S) — not within {PERCENT_TOLERANCE_ABS} pp of any source "
+            f"HALLUCINATED PERCENTAGE(S), not within {PERCENT_TOLERANCE_ABS} pp of any source "
             f"figure: {unmatched_percent}"
         )))
     else:

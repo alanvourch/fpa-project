@@ -81,10 +81,10 @@ def parse_report(path):
     text = open(path, encoding="utf-8").read()
 
     errors_section = get_section(
-        text, "## 6. Flagged values — likely data entry errors",
-        "## 7. Flagged values — notable variances",
+        text, "## 6. Flagged values: likely data entry errors",
+        "## 7. Flagged values: notable variances",
     )
-    notable_section = get_section(text, "## 7. Flagged values — notable variances")
+    notable_section = get_section(text, "## 7. Flagged values: notable variances")
 
     def rows_to_keys(rows):
         # table columns: Month | Business Unit | Column | Actual | Budget | Ratio...

@@ -58,7 +58,7 @@ STEPS = [
 ]
 
 
-def run_step(script, description):
+def run_step(script):
     result = subprocess.run(
         [sys.executable, script],
         capture_output=True, text=True,
@@ -75,18 +75,35 @@ def load_if_exists(path):
 
 def assemble_board_pack(log_entries):
     now = datetime.datetime.now()
-    narrative_status = "included below" if os.path.exists(NARRATIVE_PATH) else (
-        "NOT GENERATED THIS RUN — the Narrative Agent needs an Anthropic API key or "
-        "`ant auth login` OAuth profile configured. Run `agents/narrative_agent.py` "
-        "separately once available, then re-run the orchestrator."
+    # The status must reflect what actually happened THIS run: a pre-existing
+    # summary from an earlier run is included, but labeled as carried over, so
+    # a stale narrative can never silently pass itself off as freshly generated.
+    narrative_ran = any(
+        e["script"] == "agents/narrative_agent.py" and e["ok"] for e in log_entries
     )
+    if narrative_ran:
+        narrative_status = "generated this run, included below"
+    elif os.path.exists(NARRATIVE_PATH):
+        narrative_status = (
+            "included below, but CARRIED OVER from an earlier run. The Narrative step "
+            "did not complete this time (see `output/pipeline_log.md`). The QA report "
+            "checks its figures against this run's reports; re-run "
+            "`agents/narrative_agent.py` once credentials are configured for a freshly "
+            "generated version."
+        )
+    else:
+        narrative_status = (
+            "NOT GENERATED. The Narrative Agent needs an Anthropic API key or "
+            "`ant auth login` OAuth profile configured. Run `agents/narrative_agent.py` "
+            "separately once available, then re-run the orchestrator."
+        )
 
     lines = [
-        "# EventCo Budget vs Actual & Rolling Forecast — Draft Board Pack",
+        "# EventCo Budget vs Actual & Rolling Forecast: Draft Board Pack",
         "",
         f"Assembled {now:%Y-%m-%d %H:%M} by `orchestrator.py`.",
         "",
-        "> ## DRAFT — PENDING HUMAN SIGN-OFF",
+        "> ## DRAFT: PENDING HUMAN SIGN-OFF",
         "> This pack was assembled automatically but is **not approved for distribution**.",
         "> No step in this pipeline sends this document anywhere. Review this pack and",
         f"> `{QA_REPORT_PATH}` in full, resolve anything flagged, and sign off below",
@@ -98,22 +115,22 @@ def assemble_board_pack(log_entries):
         "",
         "## 1. Variance & Root-Cause",
         "",
-        load_if_exists(VARIANCE_REPORT_PATH) or "*(not available — the Variance Agent did not run successfully this session)*",
+        load_if_exists(VARIANCE_REPORT_PATH) or "*(not available: the Variance Agent did not run successfully this session)*",
         "---",
         "",
         "## 2. Rolling Forecast",
         "",
-        load_if_exists(FORECAST_REPORT_PATH) or "*(not available — the Forecast Agent did not run successfully this session)*",
+        load_if_exists(FORECAST_REPORT_PATH) or "*(not available: the Forecast Agent did not run successfully this session)*",
         "---",
         "",
         "## 3. Executive Narrative",
         "",
-        load_if_exists(NARRATIVE_PATH) or "*(not generated this run — see status above)*",
+        load_if_exists(NARRATIVE_PATH) or "*(not generated this run: see status above)*",
         "---",
         "",
         "## 4. QA Review",
         "",
-        load_if_exists(QA_REPORT_PATH) or "*(not available — the QA Agent did not run successfully this session)*",
+        load_if_exists(QA_REPORT_PATH) or "*(not available: the QA Agent did not run successfully this session)*",
         "---",
         "",
         "## Sign-off",
@@ -122,7 +139,7 @@ def assemble_board_pack(log_entries):
         "",
         "- Reviewed by: ______________________",
         "- Date: ______________________",
-        "- Approved for distribution: [ ] Yes  [ ] No — changes requested (see notes)",
+        "- Approved for distribution: [ ] Yes  [ ] No, changes requested (see notes)",
         "- Notes: ______________________",
         "",
     ]
@@ -135,7 +152,7 @@ def main():
 
     for script, description, halt_on_failure in STEPS:
         print(f"--- Running {description} ({script}) ---")
-        result = run_step(script, description)
+        result = run_step(script)
         ok = result.returncode == 0
         print(result.stdout.strip())
         if not ok:
@@ -153,7 +170,7 @@ def main():
                 print(f"\nHALTING: {description} failed and is required for downstream steps.\n")
                 break
             else:
-                print(f"\n{description} did not complete (non-fatal) — continuing.\n")
+                print(f"\n{description} did not complete (non-fatal), continuing.\n")
 
     now = datetime.datetime.now()
     log_lines = [
@@ -184,7 +201,7 @@ def main():
 
     print(f"\nWrote {PIPELINE_LOG_PATH} and {BOARD_PACK_PATH}.")
     print(
-        "\nPIPELINE COMPLETE — DRAFT ONLY.\n"
+        "\nPIPELINE COMPLETE. DRAFT ONLY.\n"
         f"Review {BOARD_PACK_PATH} and {QA_REPORT_PATH} before distributing anything.\n"
         "Nothing produced by this run has been sent anywhere outside this repository."
     )

@@ -85,6 +85,9 @@ first), not by favorable/unfavorable.
 STYLE:
 - Plain business English. No AI or technical jargon anywhere ("agent", "pipeline", "model", \
 "LLM", "automated" or similar words must not appear) — write as a human FP&A analyst would.
+- Never use an em dash anywhere in the output; punctuate with commas, periods, or colons \
+instead. Avoid filler words like "leverage", "streamline", "seamless", "robust", "holistic", \
+"data-driven" — say the concrete thing.
 - Concise: aim for roughly 500-800 words of prose, using short section headers to aid scanning, \
 not a wall of text and not a bullet-only outline.
 - Structure: (1) a short 2-4 sentence opening on overall performance and outlook, (2) a \
