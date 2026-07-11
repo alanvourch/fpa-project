@@ -84,3 +84,28 @@ re-deciding anything.
   rows count as analyst-explained (16/0 instead of 14/2). Reworded the open
   template. Rule: when classifying by marker phrases, never let one class's
   phrase appear in another class's template.
+- **2026-07-11 / Showcase v3 (user feedback, 2nd round):** user found v2 too
+  text-heavy and dev-flavored. Rebuilt for a 30-second recruiter scan with
+  depth on demand: first-person business-partnering intro (ten years, value is
+  in the time automation frees up), six numbered sections (data / how-it-works
+  diagram / results / why / see-it-run / about), a hand-built CSS flow diagram
+  (SYSTEM vs ME colour-coded, the "Me" node accented) as the how-it-works
+  centrepiece, raw data behind a `<details>` expander, real terminal transcript
+  in the demo, email alan.vourch@gmail.com added (user confirmed it's already
+  on his portfolio, no new scrape risk), light theme only. Structure/copy came
+  from the user's own numbered sketch. Standing rule reaffirmed: this page is
+  him selling himself to recruiters (want-a-meeting), not selling a product.
+- **2026-07-11 / Showcase honesty catch (self):** first draft of the raw-export
+  table invented a "4 792 422 EUR" text cell that isn't in the dataset. Replaced
+  with the real text-formatted cell (Oct-2025 Production revenue_budget =
+  "EUR4,819,709"). Rule: the raw-data table on the page must only ever show
+  verbatim strings from `data/eventco_monthly.csv` (the page's whole pitch is
+  honesty) — pull exact values, never approximate or invent one.
+- **2026-07-11 / Narrative step now errors, still non-fatal:** `orchestrator.py`'s
+  narrative step now throws a token-cache traceback (an `ant auth login` profile
+  exists on the machine but its token is expired/invalid) instead of the clean
+  AuthenticationError/TypeError seen before. It is still the non-fatal step, the
+  pipeline finishes exit 0 with QA 8/8, and the committed hand-written
+  executive_summary.md remains authoritative. If the user wants the real
+  LLM-generated summary, they need to refresh `ant auth login` (or set
+  ANTHROPIC_API_KEY) and re-run the narrative agent; not blocking.
