@@ -1,6 +1,6 @@
 # EventCo Budget vs Actual & Rolling Forecast: Draft Board Pack
 
-Assembled 2026-07-06 22:33 by `orchestrator.py`.
+Assembled 2026-07-11 00:53 by `orchestrator.py`.
 
 > ## DRAFT: PENDING HUMAN SIGN-OFF
 > This pack was assembled automatically but is **not approved for distribution**.
@@ -178,7 +178,18 @@ No sustained programme was still active at the cutoff, so no episode effect is c
 
 ---
 
-## 3. Executive Narrative
+## 3. Business Unit One-Pagers
+
+One page per business unit, for that BU's manager: FY2025 bridge, payroll and revenue driver splits, material variances with grounded explanations, follow-ups, and the Q3 2026 outlook. Each exists as Markdown and as a print-ready PDF:
+
+- **Back-Office**: `output/bu_reports/back_office.md` / `output/bu_reports/back_office.pdf`
+- **Digital**: `output/bu_reports/digital.md` / `output/bu_reports/digital.pdf`
+- **Marketing**: `output/bu_reports/marketing.md` / `output/bu_reports/marketing.pdf`
+- **Production**: `output/bu_reports/production.md` / `output/bu_reports/production.pdf`
+
+---
+
+## 4. Executive Narrative
 
 <!-- Provenance note: agents/narrative_agent.py is fully built and calls claude-sonnet-5
 via the Anthropic API (see the script and README.md for how to run it). This particular
@@ -266,7 +277,7 @@ into the next close.
 
 ---
 
-## 4. QA Review
+## 5. QA Review
 
 # QA Report: EventCo Budget vs Actual & Rolling Forecast
 

@@ -53,9 +53,12 @@ STEPS = [
     ("agents/ingestion_agent.py", "Data Ingestion", True),
     ("agents/variance_agent.py", "Variance & Root-Cause", True),
     ("agents/forecast_agent.py", "Rolling Forecast", True),
+    ("agents/bu_report_agent.py", "BU One-Pagers", True),
     ("agents/narrative_agent.py", "Narrative (LLM)", False),
     ("agents/qa_agent.py", "QA/Reviewer", False),
 ]
+
+BU_REPORTS_DIR = "output/bu_reports"
 
 
 def run_step(script):
@@ -71,6 +74,28 @@ def load_if_exists(path):
         return None
     with open(path, encoding="utf-8") as f:
         return f.read()
+
+
+def bu_reports_section():
+    """Link each BU manager one-pager rather than inlining them: they are
+    distribution-ready documents in their own right (.md and .pdf)."""
+    if not os.path.isdir(BU_REPORTS_DIR):
+        return "*(not available: the BU Report Agent did not run successfully this session)*"
+    slugs = sorted(
+        f[:-3] for f in os.listdir(BU_REPORTS_DIR) if f.endswith(".md"))
+    if not slugs:
+        return "*(not available: the BU Report Agent did not run successfully this session)*"
+    lines = [
+        "One page per business unit, for that BU's manager: FY2025 bridge, "
+        "payroll and revenue driver splits, material variances with grounded "
+        "explanations, follow-ups, and the Q3 2026 outlook. Each exists as "
+        "Markdown and as a print-ready PDF:",
+        "",
+    ]
+    for slug in slugs:
+        name = slug.replace("_", " ").title().replace("Back Office", "Back-Office")
+        lines.append(f"- **{name}**: `{BU_REPORTS_DIR}/{slug}.md` / `{BU_REPORTS_DIR}/{slug}.pdf`")
+    return "\n".join(lines) + "\n"
 
 
 def assemble_board_pack(log_entries):
@@ -123,12 +148,17 @@ def assemble_board_pack(log_entries):
         load_if_exists(FORECAST_REPORT_PATH) or "*(not available: the Forecast Agent did not run successfully this session)*",
         "---",
         "",
-        "## 3. Executive Narrative",
+        "## 3. Business Unit One-Pagers",
+        "",
+        bu_reports_section(),
+        "---",
+        "",
+        "## 4. Executive Narrative",
         "",
         load_if_exists(NARRATIVE_PATH) or "*(not generated this run: see status above)*",
         "---",
         "",
-        "## 4. QA Review",
+        "## 5. QA Review",
         "",
         load_if_exists(QA_REPORT_PATH) or "*(not available: the QA Agent did not run successfully this session)*",
         "---",
