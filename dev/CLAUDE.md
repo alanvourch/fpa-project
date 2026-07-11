@@ -100,7 +100,8 @@ fpa-project/
 │   ├── CLAUDE.md           (this file: project brief + progress log)
 │   ├── PROGRESS.md         (detailed log, one entry per session)
 │   ├── AUDIT.md            (pre-publication audit findings, 2026-07-06)
-│   └── NOTES.md            (v2 rebuild: running decisions + validator catches)
+│   ├── NOTES.md            (v2 rebuild: running decisions + validator catches)
+│   └── DEMO_SCRIPT.md      (60-90s demo video: script + storyboard, user films)
 ├── data/
 │   ├── generate_dataset.py
 │   ├── generate_drivers.py (v2: seeded FTE + volume×price drivers, P&L-consistent)
@@ -136,7 +137,19 @@ fpa-project/
 
 ## 8. PROGRESS LOG (update every session)
 
-**Last session:** 2026-07-06 — Fable 5 (pre-publication audit + fixes). Full session-by-session detail lives in PROGRESS.md — this is a condensed current-state summary only.
+**Last session:** 2026-07-10/11 — Fable 5 (v2 rebuild: legibility + shopfront for a non-technical finance audience). Full detail in PROGRESS.md; running decisions in NOTES.md — read both before changing anything.
+**Done (all verified in-session; 6/6 validators green, orchestrator end-to-end green):**
+- **Repo hygiene:** PROGRESS/AUDIT/CLAUDE moved to `dev/`; root CLAUDE.md is a 2-line import stub (do not delete). `dev/NOTES.md` = v2 decision log, `dev/DEMO_SCRIPT.md` = video storyboard (user films it).
+- **Driver dataset:** `data/generate_drivers.py` replays the main generator's seeded path to recover TRUE actuals in memory, derives monthly FTE + projects per BU (`data/eventco_drivers.csv`, clean by design), documents in `data/ground_truth_drivers.md`. All v1 committed outputs stayed byte-identical (this was the point; `tests/validate_drivers.py` is the tripwire). FX month = pure price (volume at budget, corroborates N08); trap month drivers reflect TRUE revenue, exposing the corrupted figure at 9.7x implied project value.
+- **BU one-pagers (the new hero artifact):** `agents/bu_report_agent.py` (deterministic, no LLM) writes per-BU md + single-page PDF (fpdf2) + bridge PNG into `output/bu_reports/`: FY2025 scorecard + waterfall, payroll headcount/rate split, revenue volume/price split (reconcile exactly, asserted), material variances with grounded one-liners or "no clear driver identified", follow-ups, Q3 2026 outlook. Wired into orchestrator between Forecast and Narrative; board pack gained section 3 linking them. `tests/validate_bu_reports.py` recomputes every figure shown.
+- **Showcase (LIVE):** `showcase/index.html`, deployed at **https://alanvourch.com/fpa-project/** via a `gh-pages` branch (Vercel connector had no project-create permission — see NOTES.md for the redeploy procedure). Outcome-first copy in Alan's voice (humanizer-checked), real raw rows vs generated outputs, the EUR52M trap story, one-pager PDFs downloadable, LinkedIn (linkedin.com/in/alan-vourch — USER MUST CONFIRM this is his profile), quiet GitHub footer link.
+- **README re-thesis:** top now leads with "AI applied to the finance function, auditable and CFO-runnable" + the user-picked personal story (option B, employer generic); showcase linked; six agents documented; new Known limitation added (driver splits reconcile only because synthetic-consistent by construction).
+**User decisions this session (do not re-litigate):** deploy publicly now; name + LinkedIn only (no email) on the page; story option B "concrete first"; employer stays generic (never name Auditoire in public artifacts).
+**Next step:**
+- User: confirm the LinkedIn URL on the showcase; film the demo per dev/DEMO_SCRIPT.md (set up `ant auth login` first and re-run narrative_agent.py + orchestrator.py for an authoritative LLM-generated summary — the committed one is still the hand-written provenance-noted version); optionally import the repo into Vercel dashboard if he prefers that URL.
+**Earlier sessions (v1, condensed):** see the block below and PROGRESS.md.
+
+**v1 summary (2026-07-06):**
 **Done:**
 - Pre-publication audit (AUDIT.md, committed on its own before any fix — read it for the full findings list). Verified with pandas that every figure in the executive summary traces to the variance/forecast reports; scanned all git history for secrets (clean, nothing to rotate); re-ran the pipeline end to end (byte-identical outputs except timestamps). Then fixed everything flagged: exec-summary time framing ("this year" → the actual 30-month window; cutoff is June 2026, not July), the Marketing savings episode window now disclosed as wider than the programme, orchestrator board pack now labels a carried-over narrative instead of claiming "included below" after a failed narrative step, `.gitignore` covers `.env`, deleted `output/sample_report.md` placeholder + stale `.gitkeep`s + empty `output/dashboard/`, duplicate typo-log entry deduped in ingestion.
 - Writing pass per explicit user style rules, now enforced in the GENERATOR templates (agents/*.py, orchestrator.py), not just the outputs: zero em dashes and zero buzzwords in README.md and all output/*.md ("robust growth" → "median year-over-year growth"; report titles use colons). The narrative system prompt now bans em dashes/filler too. Validators updated where they parsed old headers (validate_ingestion section 6/7). CLAUDE.md/PROGRESS.md are internal and keep their style.

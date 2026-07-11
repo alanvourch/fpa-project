@@ -31,6 +31,26 @@ re-deciding anything.
   HR/ops systems, not the messy finance export) - enrichment is for drivers, not
   for more data-quality noise.
 
+- **2026-07-11 / Showcase hosting:** the claude.ai Vercel connector returned 403
+  "You don't have permission to create a project" (zero teams visible), so the
+  user-approved "deploy now" went to GitHub Pages instead: a `gh-pages` branch
+  holding only `index.html` (source of truth stays `showcase/index.html` on
+  master; copy it over and force-push the branch to redeploy). GitHub Pages
+  auto-published it, and the user's custom domain made the live URL
+  **https://alanvourch.com/fpa-project/**. Vercel remains a one-click "Import
+  Git Repository" in his dashboard if he prefers it later (root: `showcase/`).
+- **2026-07-11 / Showcase asset strategy:** the page references committed
+  artifacts via raw.githubusercontent.com (bridge PNG from docs/, one-pager
+  PDFs from output/bu_reports/, preview PNG from showcase/) instead of
+  duplicating binaries, so the deployable is a single HTML file and the repo
+  holds each artifact once. Consequence: the page needs the repo to stay
+  public, and asset changes go live on push without redeploying.
+- **2026-07-11 / One-pager PDF stack:** fpdf2 (pinned 2.8.7) for the PDF,
+  matplotlib PNG for the bridge, ASCII-only text (Helvetica core font is
+  latin-1; the repo's "EUR" convention already avoids the euro sign). pymupdf
+  is installed in the venv for rasterizing PDFs during visual checks but is
+  deliberately NOT in requirements.txt (dev-only).
+
 ## Lessons (validator catches, surprises)
 
 - **2026-07-11 / ground_truth.md was NOT fully generator-owned.** The Phase 4

@@ -1,6 +1,6 @@
 # EventCo Budget vs Actual & Rolling Forecast: Draft Board Pack
 
-Assembled 2026-07-11 00:53 by `orchestrator.py`.
+Assembled 2026-07-11 01:43 by `orchestrator.py`.
 
 > ## DRAFT: PENDING HUMAN SIGN-OFF
 > This pack was assembled automatically but is **not approved for distribution**.

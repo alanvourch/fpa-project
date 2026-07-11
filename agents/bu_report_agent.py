@@ -32,6 +32,7 @@ Outputs, per BU:
 Run: .venv/Scripts/python.exe agents/bu_report_agent.py
 """
 
+import datetime
 import os
 import re
 import textwrap
@@ -441,6 +442,10 @@ class OnePagerPDF(FPDF):
 
     def __init__(self):
         super().__init__(orientation="P", unit="mm", format="A4")
+        # Pin the embedded creation date to the reporting cutoff so re-running
+        # the pipeline produces byte-identical PDFs (same guarantee as every
+        # other report in this repo).
+        self.set_creation_date(datetime.datetime(2026, 6, 30, tzinfo=datetime.timezone.utc))
         self.set_margins(self.MARGIN, self.MARGIN, self.MARGIN)
         self.set_auto_page_break(auto=True, margin=11)
         self.width = 210 - 2 * self.MARGIN

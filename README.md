@@ -1,11 +1,25 @@
-# FP&A Agent Team: EventCo Budget vs Actual and Rolling Forecast
+# EventCo FP&A: the monthly close, run by software, signed by a human
 
-A multi-agent pipeline that runs a monthly FP&A close for a fictional EUR100M events
-agency: cleans the raw export, computes Budget vs Actual variances with evidence-backed
-root causes, updates a rolling 3-month forecast, drafts the executive commentary, and
-assembles a board pack that always stops at a human sign-off gate. Four of the five agents
-are plain, auditable Python; exactly one step calls an LLM, and a QA agent verifies that
-boundary on every run by scanning the source code.
+AI applied to the finance function, in a form a finance team could actually adopt. This
+repo runs a complete monthly FP&A cycle for a fictional EUR100M events agency: it cleans
+the raw accounting export, explains Budget vs Actual variances with documented evidence,
+refreshes the rolling 3-month forecast, writes the executive commentary, builds a
+driver-based one-pager for every business unit, and assembles a board pack that always
+stops at a human sign-off. Every number is reproducible, every claim is checkable, and a
+CFO can run the whole thing with one command.
+
+EventCo is fictional, but its monthly close is not. I ran this cycle for real at a
+EUR100M events agency, including stepping in to close the books when the finance director
+was out. The overruns, the currency hits and the fat-fingered digits planted in this
+dataset are the ones that actually happen; this repo shows what that cycle looks like
+when software does the repetitive part and a human keeps the final word.
+
+**Rather see it than read it?** The 2-minute version, with the real artifacts:
+**[the live showcase](https://alanvourch.com/fpa-project/)**.
+
+Under the hood this is a small team of single-purpose agents chained through real files.
+Five of the six are plain, auditable Python; exactly one step calls an LLM, and a QA
+agent verifies that boundary on every run by scanning the source code.
 
 Two design principles run through everything here, because they are what a real finance
 team would demand before trusting any of this:
@@ -35,7 +49,7 @@ and one deliberate trap (a 10x revenue typo shaped exactly like a huge business 
 
 ## What it does
 
-Five agents, each handling one stage and handing off through real files, not hidden calls
+Six agents, each handling one stage and handing off through real files, not hidden calls
 inside one black box:
 
 1. **Ingestion** cleans the raw export (typos, duplicates, currency-formatted text, mixed
@@ -50,17 +64,23 @@ inside one black box:
    and concluded programmes are removed from the base so last year's accident is not
    re-forecast as this year's plan. Every adjustment is logged in an audit trail with its
    evidence.
-4. **Narrative** turns the two finished reports into an executive summary. This is the
+4. **BU Reports** builds a one-page business review per business unit from the variance
+   table, the forecast and the operational drivers (monthly FTE and projects delivered
+   per BU): a budget-to-actual bridge, the payroll variance split into headcount vs rate,
+   the revenue variance split into volume vs price/mix (both reconcile exactly,
+   asserted), the BU's material variances with their grounded explanations, follow-ups,
+   and next quarter's outlook. Exported as Markdown and a print-ready PDF per BU.
+5. **Narrative** turns the two finished reports into an executive summary. This is the
    only step that calls an LLM (Claude), and it is instructed never to introduce a
    number, cause, or conclusion that is not already in its inputs. A validation script
    then traces every figure in the prose back to a source figure (tolerance: 0.5%
    relative and EUR15,000 absolute, both required).
-5. **QA/Reviewer** cross-checks the other agents' outputs against each other and
+6. **QA/Reviewer** cross-checks the other agents' outputs against each other and
    verifies, by scanning the actual source code, that only the Narrative Agent references
    an external AI provider and that its file reads are limited to the two aggregated
    reports.
 
-An **Orchestrator** runs all five as separate processes and assembles
+An **Orchestrator** runs all six as separate processes and assembles
 `output/board_pack.md`, which ends in a literal DRAFT banner and a reviewed-by /
 approved-for-distribution sign-off block.
 
@@ -89,6 +109,15 @@ On the synthetic 30-month dataset (4 business units, ~EUR100M annual revenue):
 
 ![All 20 material variances as P&L impact, hatched where no documented driver exists](docs/variance_highlights.png)
 
+- **Every business unit gets a one-page review with driver-based commentary.** Production's
+  FY2025 page splits its payroll variance into a headcount effect (average 54.6 FTE vs 55
+  planned) and a rate effect, and its revenue variance into projects volume (140 delivered
+  vs 141 planned) and price/mix. Both splits reconcile exactly to the reported variances
+  (asserted in code, re-checked by a validator), and the commentary cites the same
+  evidence notes as the variance report. See
+  [`output/bu_reports/production.pdf`](output/bu_reports/production.pdf) and its three
+  siblings, each also available as Markdown.
+
 - **The Q3 2026 rolling forecast projects EUR22.6M revenue at a 47.9% margin**, built
   from each line's own seasonal base and median year-over-year growth, with 34 distorted
   month-values normalized out of the history first (each one logged with its reason and
@@ -113,6 +142,11 @@ flowchart TD
     VAR --> VTAB[("Variance report and table")]
     VTAB --> FC["Forecast Agent\n(deterministic)"]
     FC --> FTAB[("Forecast report")]
+    DRV[("Drivers: FTE and\nprojects per BU")] --> BUR
+    VTAB --> BUR["BU Report Agent\n(deterministic)"]
+    FTAB --> BUR
+    BUR --> BUPACK[("4 BU one-pagers\n(md + pdf)")]
+    BUPACK --> ORCH
     VTAB --> NARR["Narrative Agent"]
     FTAB --> NARR
     NARR -.->|"only step calling an\nexternal AI provider"| LLM[["Claude\n(claude-sonnet-5)"]]
@@ -138,7 +172,7 @@ The orange node is the only one that ever talks to an external AI provider (the 
 edge). Everything else is plain Python running locally. The green diamond is a real
 control point, not a formality: `orchestrator.py` always stops there.
 
-### Why four agents are plain Python and only one calls an LLM
+### Why five agents are plain Python and only one calls an LLM
 
 Materiality thresholds, evidence matching, episode detection, and history normalization
 decide which numbers reach a board. Those decisions must be reproducible (same input,
@@ -158,9 +192,9 @@ is why the tolerance is a tight 0.5% AND EUR15,000 rather than "close enough".
 ### Data governance and human control
 
 - **Only one component ever touches an external AI provider.** Ingestion, Variance,
-  Forecast, and QA never leave the local machine. The Narrative Agent receives only the
-  two aggregated summary reports, never the raw dataset, never anything below BU/month
-  aggregation.
+  Forecast, BU Reports, and QA never leave the local machine. The Narrative Agent
+  receives only the two aggregated summary reports, never the raw dataset, never the
+  driver data, never anything below BU/month aggregation.
 - **This is checked structurally, not asserted.** On every run, the QA agent scans the
   other agents' source for any AI-provider reference and inspects the Narrative Agent's
   actual `open()` calls. A regression fails the QA report the same way a hallucinated
@@ -194,7 +228,13 @@ close reading of the logs:
 - **The dataset is synthetic and seeded.** The anomalies and errors were planted, so task
   difficulty is calibrated by construction. The agents never read the answer key
   (`data/ground_truth.md`); separate validation scripts in `tests/` check their outputs
-  against it after the fact, and all four pass.
+  against it after the fact, and all six pass.
+- **Driver splits reconcile exactly because the driver data is consistent by
+  construction.** `data/generate_drivers.py` derives monthly FTE and project counts from
+  the same seeded world as the P&L, which is what makes payroll = FTE × rate and
+  revenue = volume × price tie out to the cent on every one-pager. Real HR and CRM
+  extracts never reconcile this cleanly; on real data the one-pagers would need a
+  reconciliation tolerance and an explicit unallocated line.
 
 ## Run it yourself
 
@@ -222,11 +262,12 @@ python3 -m venv .venv
 ```
 
 This runs the full pipeline, prints each agent's output, and writes
-`output/pipeline_log.md`, `output/qa_report.md`, and `output/board_pack.md`. The run is
-deterministic: regenerated outputs are byte-identical apart from timestamps.
+`output/pipeline_log.md`, `output/qa_report.md`, `output/board_pack.md`, and the four
+one-pagers in `output/bu_reports/`. The run is deterministic: regenerated outputs are
+byte-identical apart from timestamps.
 
 The charts in `docs/` are regenerated with `make_charts.py` (same interpreter), and the
-validation suite is the four `tests/validate_*.py` scripts.
+validation suite is the six `tests/validate_*.py` scripts.
 
 **Narrative Agent credentials** (optional; every other step runs without them). The agent
 builds a bare `anthropic.Anthropic()` client, so either works:
@@ -245,7 +286,7 @@ labels the carried-over or missing narrative instead of pretending one was gener
 ## Tech stack
 
 - **Python 3.12** with pandas and numpy for the deterministic agents, Faker for the
-  synthetic dataset generator, matplotlib for the charts.
+  synthetic dataset generator, matplotlib for the charts, fpdf2 for the one-pager PDFs.
 - **Anthropic API** (`claude-sonnet-5`) in exactly one place, the Narrative Agent.
 - **Claude Code** built this repo across sessions, following the model strategy in
   `dev/CLAUDE.md`: hard methodology calls (materiality rules, forecast normalization) went
