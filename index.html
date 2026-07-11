@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The monthly close, run by software, signed by a human &middot; Alan Vourc'h</title>
+<meta name="description" content="A working FP&A demo: a messy accounting export goes in, a board-ready monthly pack comes out, and nothing leaves without a human signature.">
+<style>
+  :root {
+    --bg: #fcfcfb;
+    --surface: #ffffff;
+    --ink: #171715;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --line: #e5e4dd;
+    --accent: #2a78d6;
+    --accent-ink: #1d5aa6;
+    --good: #0a7d0a;
+    --bad: #c23434;
+    --warn-bg: #fdf6e7;
+    --warn-line: #e8d9b0;
+    --mark-bg: #fbeaea;
+    --mark-ink: #a12626;
+    --card-shadow: 0 1px 2px rgba(20,20,15,.04), 0 8px 24px rgba(20,20,15,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161613;
+      --surface: #1e1e1a;
+      --ink: #f0efe9;
+      --ink-2: #c9c7bd;
+      --muted: #8f8d84;
+      --line: #34332d;
+      --accent: #5f9be0;
+      --accent-ink: #8ab6ea;
+      --good: #4fbf4f;
+      --bad: #e07070;
+      --warn-bg: #292417;
+      --warn-line: #4a4128;
+      --mark-bg: #3a2222;
+      --mark-ink: #e79999;
+      --card-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font: 16px/1.65 "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 72px 0; }
+  h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; letter-spacing: -0.015em; }
+  h2 { font-size: clamp(23px, 3.4vw, 30px); line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 10px; }
+  h3 { font-size: 17px; margin-bottom: 6px; }
+  p { color: var(--ink-2); }
+  .lead { font-size: 18px; max-width: 46em; }
+  .kicker {
+    display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .04em;
+    color: var(--accent-ink); text-transform: uppercase; margin-bottom: 14px;
+  }
+  .sub { color: var(--muted); font-size: 14.5px; max-width: 44em; }
+  a { color: var(--accent-ink); }
+
+  /* hero */
+  .hero { padding: 88px 0 56px; }
+  .hero .note {
+    font-size: 13.5px; color: var(--muted); border: 1px solid var(--line);
+    border-radius: 99px; padding: 5px 14px; display: inline-block; margin-bottom: 22px;
+    background: var(--surface);
+  }
+  .hero p.lead { margin-top: 18px; }
+  .cta-row { margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 11px 20px; border-radius: 8px; font-weight: 600;
+    font-size: 15px; text-decoration: none; border: 1px solid var(--line);
+    color: var(--ink); background: var(--surface);
+  }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { background: var(--accent-ink); }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 44px; }
+  .stat { border-top: 2px solid var(--line); padding-top: 12px; }
+  .stat b { display: block; font-size: 21px; color: var(--ink); }
+  .stat span { font-size: 13.5px; color: var(--muted); line-height: 1.4; display: block; }
+
+  /* cards */
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 26px; box-shadow: var(--card-shadow);
+  }
+  .grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+
+  /* before table */
+  .rawtable { overflow-x: auto; margin-top: 14px; }
+  .rawtable table { border-collapse: collapse; width: 100%; font: 12px/1.5 Consolas, "Cascadia Mono", Menlo, monospace; }
+  .rawtable th, .rawtable td { padding: 6px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; color: var(--ink-2); }
+  .rawtable th { color: var(--muted); font-weight: 600; }
+  .mark { background: var(--mark-bg); color: var(--mark-ink); border-radius: 4px; padding: 1px 5px; font-weight: 600; }
+  .legend { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
+  .legend li { margin: 3px 0 3px 0; list-style: none; }
+  .legend ul { padding: 0; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); margin-right: 8px; vertical-align: 1px; }
+
+  blockquote {
+    border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; margin: 14px 0;
+    color: var(--ink); font-size: 15.5px; font-style: italic;
+  }
+  blockquote .attr { display: block; margin-top: 8px; font-size: 13px; font-style: normal; color: var(--muted); }
+  .card img.artifact { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; margin-top: 14px; }
+  .filelinks { margin-top: 14px; font-size: 14px; }
+
+  /* trap */
+  .trap { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 14px; padding: 30px; }
+  .trap .big {
+    font: 700 clamp(26px, 4.5vw, 38px)/1.1 Consolas, "Cascadia Mono", Menlo, monospace;
+    color: var(--bad); display: block; margin: 10px 0 16px;
+  }
+
+  /* one-pagers */
+  .pager-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); gap: 28px; align-items: start; }
+  .dl-list { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+  .dl {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    border: 1px solid var(--line); background: var(--surface); border-radius: 10px;
+    padding: 12px 16px; text-decoration: none; color: var(--ink); font-weight: 600; font-size: 15px;
+  }
+  .dl small { color: var(--muted); font-weight: 400; }
+  .dl:hover { border-color: var(--accent); }
+
+  /* steps */
+  .steps { counter-reset: step; display: grid; gap: 14px; margin-top: 22px; }
+  .step { display: flex; gap: 16px; align-items: baseline; }
+  .step::before {
+    counter-increment: step; content: counter(step);
+    flex: 0 0 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff;
+    font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center;
+    transform: translateY(4px);
+  }
+  .step p { max-width: 56em; }
+  .aibox { margin-top: 26px; border-left: 3px solid var(--accent); padding: 2px 0 2px 18px; }
+
+  /* trust tiles */
+  .tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+  .tile { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 20px; }
+  .tile h3 { font-size: 15.5px; }
+  .tile p { font-size: 14px; color: var(--muted); }
+
+  /* about */
+  .about { display: flex; gap: 26px; align-items: flex-start; }
+  .about .who b { font-size: 17px; }
+  .about .who span { color: var(--muted); font-size: 14px; display: block; margin-bottom: 12px; }
+
+  footer { border-top: 1px solid var(--line); padding: 36px 0 56px; font-size: 13.5px; color: var(--muted); }
+  footer a { color: var(--muted); }
+  footer .quiet { margin-top: 6px; }
+
+  @media (max-width: 760px) {
+    section { padding: 52px 0; }
+    .grid2, .pager-grid, .tiles { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="note">EventCo is a fictional EUR100M events agency. Everything on this page is a real, working system running on synthetic data.</span>
+    <h1>A messy export goes in.<br>A board-ready pack comes out.</h1>
+    <p class="lead">This is a monthly FP&amp;A close run by software: every budget gap measured and explained,
+    the rolling forecast refreshed, the commentary drafted, one page per business unit ready to hand out.
+    AI writes only the words. Plain, checkable calculations produce every number. And the pack stops at a
+    human signature before it goes anywhere.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="#beforeafter">See it work</a>
+      <a class="btn" href="#onepagers">The one-pagers</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>30 months</b><span>of budget, actuals and prior year, across 4 business units</span></div>
+      <div class="stat"><b>840</b><span>line-level budget checks in every close</span></div>
+      <div class="stat"><b>1 of 1</b><span>planted data trap caught before it reached the report</span></div>
+      <div class="stat"><b>16 of 20</b><span>material gaps honestly reported as unexplained, not dressed up</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="beforeafter">
+  <div class="wrap">
+    <span class="kicker">Before / after</span>
+    <h2>The same close, in and out</h2>
+    <p class="lead">On the left, the kind of export finance teams actually receive. On the right, what the CFO reads minutes later.</p>
+
+    <div class="grid2" style="margin-top: 28px;">
+      <div class="card">
+        <h3>In: the raw export</h3>
+        <p class="sub">Five real rows from the demo file. Every problem below was planted on purpose, because every one of them happens in real life.</p>
+        <div class="rawtable">
+          <table>
+            <tr><th>month</th><th>business_unit</th><th>revenue_budget</th><th>revenue_actual</th><th>payroll_budget</th></tr>
+            <tr><td><span class="mark">2024/08</span></td><td>Production</td><td>2302070.569481089</td><td>2309849.1588302534</td><td>270456.745733044</td></tr>
+            <tr><td><span class="mark">2024-12-01</span></td><td><span class="mark">Producton</span></td><td>4276001.483833633</td><td>4309897.281548161</td><td>273134.709455636</td></tr>
+            <tr><td><span class="mark">May 2025</span></td><td>Production</td><td>4939152.093623364</td><td>4792422.243743062</td><td><span class="mark">276,519 EUR</span></td></tr>
+            <tr><td>November 2025</td><td>Production</td><td>5238445.244445545</td><td><span class="mark">52243583.97067126</span></td><td>280636.6251137856</td></tr>
+            <tr><td>April 2026</td><td><span class="mark">Digitial</span></td><td>2616866.7941705612</td><td>2687265.017168981</td><td>256504.50514775925</td></tr>
+            <tr><td>April 2026</td><td><span class="mark">Digitial</span></td><td><span class="mark">2616866.7941705612</span></td><td>2687265.017168981</td><td>256504.50514775925</td></tr>
+          </table>
+        </div>
+        <div class="legend"><ul>
+          <li><span class="dot"></span>Four different date formats in one column</li>
+          <li><span class="dot"></span>Unit names with typos ("Producton", "Digitial")</li>
+          <li><span class="dot"></span>Amounts typed as text ("276,519 EUR")</li>
+          <li><span class="dot"></span>One revenue figure with an extra digit: EUR52m in a EUR5m month</li>
+          <li><span class="dot"></span>The same row entered twice</li>
+        </ul></div>
+      </div>
+
+      <div class="card">
+        <h3>Out: the pack the CFO reads</h3>
+        <p class="sub">The opening of the generated executive summary, word for word:</p>
+        <blockquote>
+          "Three stories dominate the variances over the 30 months under review: a EUR2.08 million
+          cost overrun on a single client project, an unfavorable currency swing on an international
+          contract, and a cost-savings programme that ran ahead of plan. The rolling forecast points
+          to continued top-line growth into the third quarter of 2026, with the group margin holding
+          at 47.9% over the forecast period."
+          <span class="attr">output/executive_summary.md, generated from the variance and forecast reports</span>
+        </blockquote>
+        <img class="artifact" src="https://raw.githubusercontent.com/alanvourch/fpa-project/master/docs/variance_bridge_2025.png" alt="FY2025 waterfall chart walking from EUR52.0M budgeted net result to EUR48.9M actual, with named driver blocks and one hatched block for variances with no documented driver.">
+        <p class="filelinks sub">The full pack, exactly as generated:
+          <a href="https://github.com/alanvourch/fpa-project/blob/master/output/board_pack.md">board pack</a> &middot;
+          <a href="https://github.com/alanvourch/fpa-project/blob/master/output/executive_summary.md">executive summary</a> &middot;
+          <a href="https://github.com/alanvourch/fpa-project/blob/master/output/variance_report.md">variance report</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="trap">
+      <span class="kicker">The detail that matters</span>
+      <h2>The EUR52 million that wasn't</h2>
+      <span class="big">52,243,584</span>
+      <p style="max-width: 54em;">That figure sat in the November revenue column of the export. The unit's normal month
+      is around EUR5 million, and its costs and payroll did not move. A rushed close builds a growth story around a
+      number like that, and it looks spectacular right up until someone checks. This system flagged it as a probable
+      data entry error, kept it out of every calculation and every sentence of commentary, and asked for a correction
+      at source. The operations data backed that call: 18 projects delivered that month, against 17 planned. A typo
+      stayed a typo, and the report says so.</p>
+    </div>
+  </div>
+</section>
+
+<section id="onepagers">
+  <div class="wrap">
+    <span class="kicker">For each team</span>
+    <h2>One page per business unit, ready to hand out</h2>
+    <p class="lead">Group reporting is half the job. The other half is giving each business unit a view it can act on,
+    and that is usually what falls off the table when the close runs late.</p>
+
+    <div class="pager-grid" style="margin-top: 28px;">
+      <div class="card">
+        <img class="artifact" style="margin-top: 0;" src="https://raw.githubusercontent.com/alanvourch/fpa-project/master/showcase/production_onepager.png" alt="The Production business unit one-pager: scorecard, budget-to-actual waterfall, driver commentary, material variances table, follow-ups and next-quarter outlook, on a single page.">
+      </div>
+      <div>
+        <p>Each page shows where the year stands against budget, what drove payroll (people or pay rates) and revenue
+        (how many projects, at what value), which gaps have a documented cause, which need a follow-up, and what next
+        quarter looks like.</p>
+        <p style="margin-top: 12px;">Production's page, for example, splits its payroll gap into a headcount effect
+        (an average 54.6 people against 55 planned) plus a small rate effect, and its revenue gap into 140 projects
+        delivered against 141 planned plus a price effect. That is the level where a conversation with a manager
+        actually starts.</p>
+        <div class="dl-list">
+          <a class="dl" href="https://raw.githubusercontent.com/alanvourch/fpa-project/master/output/bu_reports/production.pdf" download>Production one-pager <small>PDF</small></a>
+          <a class="dl" href="https://raw.githubusercontent.com/alanvourch/fpa-project/master/output/bu_reports/marketing.pdf" download>Marketing one-pager <small>PDF</small></a>
+          <a class="dl" href="https://raw.githubusercontent.com/alanvourch/fpa-project/master/output/bu_reports/digital.pdf" download>Digital one-pager <small>PDF</small></a>
+          <a class="dl" href="https://raw.githubusercontent.com/alanvourch/fpa-project/master/output/bu_reports/back_office.pdf" download>Back-Office one-pager <small>PDF</small></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="kicker">Under the hood, in plain terms</span>
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><p>It tidies the export: dates, unit names, duplicates, amounts typed as text. Every fix is
+      listed in a data quality report; nothing is changed silently.</p></div>
+      <div class="step"><p>It measures every line against budget, all 840 of them, and speaks only when a gap is big
+      enough to matter.</p></div>
+      <div class="step"><p>It explains a gap only when a dated note from the business corroborates it. Otherwise the
+      report says "no clear driver identified" and recommends a follow-up. It never invents a cause.</p></div>
+      <div class="step"><p>It refreshes the next quarter's forecast, keeping one-off events out of the base so last
+      year's accident does not become next year's plan.</p></div>
+      <div class="step"><p>It drafts the commentary and assembles the pack, then stops. A human reviews and signs.
+      There is no send button.</p></div>
+    </div>
+    <div class="aibox">
+      <p style="max-width: 56em;"><strong style="color: var(--ink);">Where is the AI in all this?</strong>
+      In exactly one place: turning the two finished reports into readable commentary. It never sees the raw data,
+      only the aggregated results, and that boundary is re-verified on every run. Every figure in its prose is traced
+      back to a source figure; if one cannot be traced, the run fails. Everything else is ordinary, inspectable
+      calculation that gives the same answer every time.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="kicker">Why you could trust it</span>
+    <h2>Built the way finance already works</h2>
+    <div class="tiles">
+      <div class="tile"><h3>No invented numbers</h3><p>Commentary is checked figure by figure against the source
+      reports, with a tight tolerance. Anything untraceable fails the run before a human ever sees the pack.</p></div>
+      <div class="tile"><h3>Honest about what it doesn't know</h3><p>16 of the 20 material variances had no documented
+      cause. The pack says so and lists them as follow-ups. A gap with no evidence is a task, not a story.</p></div>
+      <div class="tile"><h3>A human signs, every time</h3><p>The pack is assembled as a draft with a review and
+      sign-off block. The system has no way to send anything anywhere, by design.</p></div>
+      <div class="tile"><h3>Your data stays yours</h3><p>Only one step talks to an AI service, it only receives
+      aggregated summaries, and a check on every run verifies the raw data never leaves the machine.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="card about">
+      <div class="who">
+        <b>Alan Vourc'h</b>
+        <span>FP&amp;A &middot; finance and data, together</span>
+        <p>EventCo is fictional, but its monthly close is not. I ran this cycle for real at a EUR100M events agency,
+        including stepping in to close the books when the finance director was out. The overruns, the currency hits
+        and the fat-fingered digits planted in this dataset are the ones that actually happen. I built this to show
+        what the close looks like when software does the repetitive part and a human keeps the final word.</p>
+        <div class="cta-row" style="margin-top: 18px;">
+          <a class="btn primary" href="https://www.linkedin.com/in/alan-vourch/">Find me on LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>All data on this page is synthetic and generated from a fixed seed. No employer data, no client names, nothing real except the method.</p>
+    <p class="quiet">For the technically curious: the full code and methods, including an honest list of limitations,
+    are in the <a href="https://github.com/alanvourch/fpa-project">GitHub repository</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
