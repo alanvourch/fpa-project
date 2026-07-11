@@ -23,7 +23,7 @@ instructed never to introduce a new number, cause, or claim of its own.
 Model: claude-sonnet-5. The judgment calls (materiality thresholds, evidence
 grounding, forecast normalization) are already resolved by the upstream
 agents; this step is disciplined prose generation from structured, cited
-inputs, not open-ended reasoning. Claude Fable 5 (reserved per CLAUDE.md
+inputs, not open-ended reasoning. Claude Fable 5 (reserved per dev/CLAUDE.md
 section 5 for the hard architectural/methodology calls) would be overkill
 and far more expensive for a formatting/writing pass; Haiku 4.5 was
 considered but rejected because this is the single deliverable recruiters

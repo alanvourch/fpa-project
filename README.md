@@ -248,6 +248,7 @@ labels the carried-over or missing narrative instead of pretending one was gener
   synthetic dataset generator, matplotlib for the charts.
 - **Anthropic API** (`claude-sonnet-5`) in exactly one place, the Narrative Agent.
 - **Claude Code** built this repo across sessions, following the model strategy in
-  `CLAUDE.md`: hard methodology calls (materiality rules, forecast normalization) went to
-  a more capable model, routine scaffolding and writing to a faster one. `PROGRESS.md`
-  records every session, including the bugs the validators caught along the way.
+  `dev/CLAUDE.md`: hard methodology calls (materiality rules, forecast normalization) went
+  to a more capable model, routine scaffolding and writing to a faster one.
+  `dev/PROGRESS.md` records every session, including the bugs the validators caught along
+  the way.
