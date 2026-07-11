@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The monthly close, run by software, signed by a human &middot; Alan Vourc'h</title>
-<meta name="description" content="A working FP&A demo: a messy accounting export goes in, a board-ready monthly pack comes out, and nothing leaves without a human signature.">
+<title>How I use AI to run the monthly close &middot; Alan Vourc'h</title>
+<meta name="description" content="A working FP&A demo by Alan Vourc'h: AI and data skills applied to the monthly close of a fictional EUR100M events agency, with every report generated and a human signature at the end.">
 <style>
   :root {
     --bg: #fcfcfb;
     --surface: #ffffff;
     --ink: #171715;
-    --ink-2: #52514e;
-    --muted: #898781;
+    --ink-2: #4f4e4a;
+    --muted: #85837d;
     --line: #e5e4dd;
     --accent: #2a78d6;
     --accent-ink: #1d5aa6;
@@ -21,26 +21,9 @@
     --warn-line: #e8d9b0;
     --mark-bg: #fbeaea;
     --mark-ink: #a12626;
+    --me-bg: #e9f2fc;
+    --me-ink: #1d5aa6;
     --card-shadow: 0 1px 2px rgba(20,20,15,.04), 0 8px 24px rgba(20,20,15,.05);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #161613;
-      --surface: #1e1e1a;
-      --ink: #f0efe9;
-      --ink-2: #c9c7bd;
-      --muted: #8f8d84;
-      --line: #34332d;
-      --accent: #5f9be0;
-      --accent-ink: #8ab6ea;
-      --good: #4fbf4f;
-      --bad: #e07070;
-      --warn-bg: #292417;
-      --warn-line: #4a4128;
-      --mark-bg: #3a2222;
-      --mark-ink: #e79999;
-      --card-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
-    }
   }
   * { box-sizing: border-box; margin: 0; }
   html { scroll-behavior: smooth; }
@@ -50,12 +33,12 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
-  section { padding: 72px 0; }
-  h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; letter-spacing: -0.015em; }
+  section { padding: 68px 0; }
+  h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.15; letter-spacing: -0.015em; }
   h2 { font-size: clamp(23px, 3.4vw, 30px); line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 10px; }
   h3 { font-size: 17px; margin-bottom: 6px; }
   p { color: var(--ink-2); }
-  .lead { font-size: 18px; max-width: 46em; }
+  .lead { font-size: 18px; max-width: 47em; }
   .kicker {
     display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .04em;
     color: var(--accent-ink); text-transform: uppercase; margin-bottom: 14px;
@@ -64,14 +47,14 @@
   a { color: var(--accent-ink); }
 
   /* hero */
-  .hero { padding: 88px 0 56px; }
+  .hero { padding: 80px 0 52px; }
   .hero .note {
     font-size: 13.5px; color: var(--muted); border: 1px solid var(--line);
     border-radius: 99px; padding: 5px 14px; display: inline-block; margin-bottom: 22px;
     background: var(--surface);
   }
   .hero p.lead { margin-top: 18px; }
-  .cta-row { margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .cta-row { margin-top: 26px; display: flex; gap: 12px; flex-wrap: wrap; }
   .btn {
     display: inline-block; padding: 11px 20px; border-radius: 8px; font-weight: 600;
     font-size: 15px; text-decoration: none; border: 1px solid var(--line);
@@ -79,7 +62,7 @@
   }
   .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn.primary:hover { background: var(--accent-ink); }
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 44px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 40px; }
   .stat { border-top: 2px solid var(--line); padding-top: 12px; }
   .stat b { display: block; font-size: 21px; color: var(--ink); }
   .stat span { font-size: 13.5px; color: var(--muted); line-height: 1.4; display: block; }
@@ -91,15 +74,15 @@
   }
   .grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; }
 
-  /* before table */
+  /* raw table */
   .rawtable { overflow-x: auto; margin-top: 14px; }
   .rawtable table { border-collapse: collapse; width: 100%; font: 12px/1.5 Consolas, "Cascadia Mono", Menlo, monospace; }
   .rawtable th, .rawtable td { padding: 6px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; color: var(--ink-2); }
   .rawtable th { color: var(--muted); font-weight: 600; }
   .mark { background: var(--mark-bg); color: var(--mark-ink); border-radius: 4px; padding: 1px 5px; font-weight: 600; }
   .legend { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
-  .legend li { margin: 3px 0 3px 0; list-style: none; }
   .legend ul { padding: 0; }
+  .legend li { margin: 3px 0; list-style: none; }
   .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); margin-right: 8px; vertical-align: 1px; }
 
   blockquote {
@@ -108,7 +91,24 @@
   }
   blockquote .attr { display: block; margin-top: 8px; font-size: 13px; font-style: normal; color: var(--muted); }
   .card img.artifact { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; margin-top: 14px; }
-  .filelinks { margin-top: 14px; font-size: 14px; }
+
+  /* steps with who-does-what tags */
+  .steps { counter-reset: step; display: grid; gap: 16px; margin-top: 24px; }
+  .step { display: flex; gap: 16px; align-items: baseline; }
+  .step::before {
+    counter-increment: step; content: counter(step);
+    flex: 0 0 30px; height: 30px; border-radius: 50%; background: var(--ink-2); color: #fff;
+    font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center;
+    transform: translateY(4px);
+  }
+  .step p { max-width: 54em; }
+  .tag {
+    display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .05em;
+    text-transform: uppercase; border-radius: 5px; padding: 2px 8px; margin-right: 8px;
+    background: var(--line); color: var(--ink-2); vertical-align: 1px;
+  }
+  .tag.me { background: var(--me-bg); color: var(--me-ink); }
+  .step.mine::before { background: var(--accent); }
 
   /* trap */
   .trap { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 14px; padding: 30px; }
@@ -128,26 +128,24 @@
   .dl small { color: var(--muted); font-weight: 400; }
   .dl:hover { border-color: var(--accent); }
 
-  /* steps */
-  .steps { counter-reset: step; display: grid; gap: 14px; margin-top: 22px; }
-  .step { display: flex; gap: 16px; align-items: baseline; }
-  .step::before {
-    counter-increment: step; content: counter(step);
-    flex: 0 0 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff;
-    font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center;
-    transform: translateY(4px);
+  /* reports grid */
+  .reports { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .report-card {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 12px;
+    padding: 20px; text-decoration: none; display: block;
   }
-  .step p { max-width: 56em; }
-  .aibox { margin-top: 26px; border-left: 3px solid var(--accent); padding: 2px 0 2px 18px; }
+  .report-card:hover { border-color: var(--accent); }
+  .report-card h3 { color: var(--ink); font-size: 15.5px; }
+  .report-card p { font-size: 13.5px; color: var(--muted); }
+  .report-card .open { display: block; margin-top: 10px; font-size: 13px; font-weight: 600; color: var(--accent-ink); }
 
-  /* trust tiles */
+  /* value tiles */
   .tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
   .tile { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 20px; }
   .tile h3 { font-size: 15.5px; }
   .tile p { font-size: 14px; color: var(--muted); }
 
   /* about */
-  .about { display: flex; gap: 26px; align-items: flex-start; }
   .about .who b { font-size: 17px; }
   .about .who span { color: var(--muted); font-size: 14px; display: block; margin-bottom: 12px; }
 
@@ -156,8 +154,9 @@
   footer .quiet { margin-top: 6px; }
 
   @media (max-width: 760px) {
-    section { padding: 52px 0; }
+    section { padding: 50px 0; }
     .grid2, .pager-grid, .tiles { grid-template-columns: 1fr; }
+    .reports { grid-template-columns: 1fr; }
     .stats { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
@@ -166,21 +165,24 @@
 
 <header class="hero">
   <div class="wrap">
-    <span class="note">EventCo is a fictional EUR100M events agency. Everything on this page is a real, working system running on synthetic data.</span>
-    <h1>A messy export goes in.<br>A board-ready pack comes out.</h1>
-    <p class="lead">This is a monthly FP&amp;A close run by software: every budget gap measured and explained,
-    the rolling forecast refreshed, the commentary drafted, one page per business unit ready to hand out.
-    AI writes only the words. Plain, checkable calculations produce every number. And the pack stops at a
-    human signature before it goes anywhere.</p>
+    <span class="note">A portfolio project by Alan Vourc'h, FP&amp;A. The data is synthetic; the process is the real one.</span>
+    <h1>How I use AI to run the monthly close</h1>
+    <p class="lead">This demo shows how I apply my data and AI toolkit to the FP&amp;A work I know best:
+    closing the month and reporting on it. The company is EventCo, a fictional events agency I built a
+    full dataset for: EUR100M of annual revenue, four business lines, thirty months of budget, actuals
+    and prior year, with the usual real-world mess left in on purpose. From one command I get the
+    reports a finance team actually produces each month: the variance analysis, a refreshed quarterly
+    forecast, the executive summary, and a one-pager for each business line. My judgment stays where it
+    belongs: I explain what the data alone can't, and I sign before anything goes out.</p>
     <div class="cta-row">
       <a class="btn primary" href="#beforeafter">See it work</a>
-      <a class="btn" href="#onepagers">The one-pagers</a>
+      <a class="btn" href="#reports">Read the reports</a>
     </div>
     <div class="stats">
-      <div class="stat"><b>30 months</b><span>of budget, actuals and prior year, across 4 business units</span></div>
+      <div class="stat"><b>EUR100M</b><span>of annual revenue in the modeled company</span></div>
+      <div class="stat"><b>4</b><span>business lines, 30 months of budget, actuals and prior year</span></div>
       <div class="stat"><b>840</b><span>line-level budget checks in every close</span></div>
-      <div class="stat"><b>1 of 1</b><span>planted data trap caught before it reached the report</span></div>
-      <div class="stat"><b>16 of 20</b><span>material gaps honestly reported as unexplained, not dressed up</span></div>
+      <div class="stat"><b>10</b><span>finished documents per close, from one command</span></div>
     </div>
   </div>
 </header>
@@ -189,12 +191,14 @@
   <div class="wrap">
     <span class="kicker">Before / after</span>
     <h2>The same close, in and out</h2>
-    <p class="lead">On the left, the kind of export finance teams actually receive. On the right, what the CFO reads minutes later.</p>
+    <p class="lead">On the left, the export I start from, with the problems every finance team will
+    recognize. On the right, what lands on the CFO's desk a few minutes later.</p>
 
     <div class="grid2" style="margin-top: 28px;">
       <div class="card">
-        <h3>In: the raw export</h3>
-        <p class="sub">Five real rows from the demo file. Every problem below was planted on purpose, because every one of them happens in real life.</p>
+        <h3>The raw export I start from</h3>
+        <p class="sub">Five real rows from the demo file. I planted every one of these problems
+        deliberately, because I have met every one of them in real closes.</p>
         <div class="rawtable">
           <table>
             <tr><th>month</th><th>business_unit</th><th>revenue_budget</th><th>revenue_actual</th><th>payroll_budget</th></tr>
@@ -208,7 +212,7 @@
         </div>
         <div class="legend"><ul>
           <li><span class="dot"></span>Four different date formats in one column</li>
-          <li><span class="dot"></span>Unit names with typos ("Producton", "Digitial")</li>
+          <li><span class="dot"></span>Business line names with typos ("Producton", "Digitial")</li>
           <li><span class="dot"></span>Amounts typed as text ("276,519 EUR")</li>
           <li><span class="dot"></span>One revenue figure with an extra digit: EUR52m in a EUR5m month</li>
           <li><span class="dot"></span>The same row entered twice</li>
@@ -216,22 +220,51 @@
       </div>
 
       <div class="card">
-        <h3>Out: the pack the CFO reads</h3>
-        <p class="sub">The opening of the generated executive summary, word for word:</p>
+        <h3>The pack the CFO reads</h3>
+        <p class="sub">The opening of the executive summary, word for word:</p>
         <blockquote>
           "Three stories dominate the variances over the 30 months under review: a EUR2.08 million
           cost overrun on a single client project, an unfavorable currency swing on an international
-          contract, and a cost-savings programme that ran ahead of plan. The rolling forecast points
-          to continued top-line growth into the third quarter of 2026, with the group margin holding
-          at 47.9% over the forecast period."
-          <span class="attr">output/executive_summary.md, generated from the variance and forecast reports</span>
+          contract, and a cost-savings programme that ran ahead of plan. Of the twenty variances
+          large enough to warrant comment, four are corroborated by documented business notes,
+          fourteen carry the FP&amp;A analyst's own commentary after follow-up, and two remain open."
+          <span class="attr">From the executive summary. <a href="reports/executive_summary.html">Read it in full</a>.</span>
         </blockquote>
-        <img class="artifact" src="https://raw.githubusercontent.com/alanvourch/fpa-project/master/docs/variance_bridge_2025.png" alt="FY2025 waterfall chart walking from EUR52.0M budgeted net result to EUR48.9M actual, with named driver blocks and one hatched block for variances with no documented driver.">
-        <p class="filelinks sub">The full pack, exactly as generated:
-          <a href="https://github.com/alanvourch/fpa-project/blob/master/output/board_pack.md">board pack</a> &middot;
-          <a href="https://github.com/alanvourch/fpa-project/blob/master/output/executive_summary.md">executive summary</a> &middot;
-          <a href="https://github.com/alanvourch/fpa-project/blob/master/output/variance_report.md">variance report</a></p>
+        <img class="artifact" src="assets/variance_bridge_2025.png" alt="FY2025 waterfall chart walking from EUR52.0M budgeted net result to EUR48.9M actual, with named driver blocks and one hatched block for variances routed to the analyst.">
+        <p class="sub" style="margin-top: 12px;">The full-year walk from budget to actual, reconciled
+        to the euro. Named drivers are solid; the hatched block is what the data alone could not
+        explain and came to me instead.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="kicker">Who does what</span>
+    <h2>The system does the legwork. The judgment stays with me.</h2>
+    <p class="lead">This is the part I care most about getting right. AI in finance is only useful if
+    you can always tell what the machine found, what a human decided, and what nobody knows yet.</p>
+    <div class="steps">
+      <div class="step"><p><span class="tag">System</span>It cleans the export: dates, names,
+      duplicates, amounts typed as text. Every fix is listed in a data quality report; nothing is
+      changed silently.</p></div>
+      <div class="step"><p><span class="tag">System</span>It checks all 840 budget lines and keeps only
+      the gaps big enough to matter: twenty, in this close.</p></div>
+      <div class="step"><p><span class="tag">System</span>It matches each gap against the dated notes
+      the business wrote during the period. Four of the twenty had a documented cause; those get cited,
+      with their source.</p></div>
+      <div class="step mine"><p><span class="tag me">Me</span>The other sixteen come to me as a
+      follow-up list. I investigate with the business lines and write the explanation myself; my
+      commentary goes back in through its own input file, and the pack labels each of those rows
+      "analyst input" with a name and a date. Fourteen are now explained that way. Two are still open,
+      and the pack says so instead of papering over them.</p></div>
+      <div class="step"><p><span class="tag">System</span>It rebuilds the next quarter's forecast on a
+      cleaned history, keeping one-off events out of the base so an accident never becomes a trend.</p></div>
+      <div class="step mine"><p><span class="tag me">Me</span>AI drafts the commentary and the per-line
+      one-pagers from the finished analysis, with a hard rule: it may only reword what has already been
+      computed and labeled, never add a number or a cause. Then everything waits for my review and
+      signature. There is no send button.</p></div>
     </div>
   </div>
 </section>
@@ -242,11 +275,12 @@
       <span class="kicker">The detail that matters</span>
       <h2>The EUR52 million that wasn't</h2>
       <span class="big">52,243,584</span>
-      <p style="max-width: 54em;">That figure sat in the November revenue column of the export. The unit's normal month
-      is around EUR5 million, and its costs and payroll did not move. A rushed close builds a growth story around a
-      number like that, and it looks spectacular right up until someone checks. This system flagged it as a probable
-      data entry error, kept it out of every calculation and every sentence of commentary, and asked for a correction
-      at source. The operations data backed that call: 18 projects delivered that month, against 17 planned. A typo
+      <p style="max-width: 54em;">That figure sat in the November revenue column of the export. The
+      business line's normal month is around EUR5 million, and its costs and payroll did not move. A
+      rushed close builds a growth story around a number like that, and it looks great right up until
+      someone checks. Here, the system flagged it as a probable data entry error, kept it out of every
+      calculation and every sentence of commentary, and put it on my list for correction at source. The
+      operations data backed the call: 18 projects delivered that month, against 17 planned. A typo
       stayed a typo, and the report says so.</p>
     </div>
   </div>
@@ -254,73 +288,91 @@
 
 <section id="onepagers">
   <div class="wrap">
-    <span class="kicker">For each team</span>
-    <h2>One page per business unit, ready to hand out</h2>
-    <p class="lead">Group reporting is half the job. The other half is giving each business unit a view it can act on,
-    and that is usually what falls off the table when the close runs late.</p>
+    <span class="kicker">For each business line</span>
+    <h2>One page per team, ready to hand out</h2>
+    <p class="lead">Group reporting is half the job. The other half is giving each business line a view
+    it can act on, and in my experience that is what falls off the table when the close runs late. So
+    the close produces it automatically.</p>
 
     <div class="pager-grid" style="margin-top: 28px;">
       <div class="card">
-        <img class="artifact" style="margin-top: 0;" src="https://raw.githubusercontent.com/alanvourch/fpa-project/master/showcase/production_onepager.png" alt="The Production business unit one-pager: scorecard, budget-to-actual waterfall, driver commentary, material variances table, follow-ups and next-quarter outlook, on a single page.">
+        <img class="artifact" style="margin-top: 0;" src="assets/production_onepager.png" alt="The Production business line one-pager: scorecard, budget-to-actual waterfall, driver commentary, material variances table, follow-ups and next-quarter outlook, on a single page.">
       </div>
       <div>
-        <p>Each page shows where the year stands against budget, what drove payroll (people or pay rates) and revenue
-        (how many projects, at what value), which gaps have a documented cause, which need a follow-up, and what next
-        quarter looks like.</p>
-        <p style="margin-top: 12px;">Production's page, for example, splits its payroll gap into a headcount effect
-        (an average 54.6 people against 55 planned) plus a small rate effect, and its revenue gap into 140 projects
-        delivered against 141 planned plus a price effect. That is the level where a conversation with a manager
-        actually starts.</p>
+        <p>Each page shows where the year stands against budget, what drove payroll (headcount or pay
+        rates) and revenue (how many projects, at what value), which gaps are explained and by whom,
+        what is still open, and what next quarter looks like.</p>
+        <p style="margin-top: 12px;">Production's page, for example, splits its payroll gap into a
+        headcount effect (an average 54.6 people against 55 planned) plus a small rate effect, and its
+        revenue gap into 140 projects delivered against 141 planned plus a price effect. That is the
+        level where a conversation with a manager actually starts.</p>
         <div class="dl-list">
-          <a class="dl" href="https://raw.githubusercontent.com/alanvourch/fpa-project/master/output/bu_reports/production.pdf" download>Production one-pager <small>PDF</small></a>
-          <a class="dl" href="https://raw.githubusercontent.com/alanvourch/fpa-project/master/output/bu_reports/marketing.pdf" download>Marketing one-pager <small>PDF</small></a>
-          <a class="dl" href="https://raw.githubusercontent.com/alanvourch/fpa-project/master/output/bu_reports/digital.pdf" download>Digital one-pager <small>PDF</small></a>
-          <a class="dl" href="https://raw.githubusercontent.com/alanvourch/fpa-project/master/output/bu_reports/back_office.pdf" download>Back-Office one-pager <small>PDF</small></a>
+          <a class="dl" href="assets/production.pdf" target="_blank" rel="noopener">Production one-pager <small>opens as PDF</small></a>
+          <a class="dl" href="assets/marketing.pdf" target="_blank" rel="noopener">Marketing one-pager <small>opens as PDF</small></a>
+          <a class="dl" href="assets/digital.pdf" target="_blank" rel="noopener">Digital one-pager <small>opens as PDF</small></a>
+          <a class="dl" href="assets/back_office.pdf" target="_blank" rel="noopener">Back-Office one-pager <small>opens as PDF</small></a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section>
+<section id="reports">
   <div class="wrap">
-    <span class="kicker">Under the hood, in plain terms</span>
-    <h2>How it works</h2>
-    <div class="steps">
-      <div class="step"><p>It tidies the export: dates, unit names, duplicates, amounts typed as text. Every fix is
-      listed in a data quality report; nothing is changed silently.</p></div>
-      <div class="step"><p>It measures every line against budget, all 840 of them, and speaks only when a gap is big
-      enough to matter.</p></div>
-      <div class="step"><p>It explains a gap only when a dated note from the business corroborates it. Otherwise the
-      report says "no clear driver identified" and recommends a follow-up. It never invents a cause.</p></div>
-      <div class="step"><p>It refreshes the next quarter's forecast, keeping one-off events out of the base so last
-      year's accident does not become next year's plan.</p></div>
-      <div class="step"><p>It drafts the commentary and assembles the pack, then stops. A human reviews and signs.
-      There is no send button.</p></div>
-    </div>
-    <div class="aibox">
-      <p style="max-width: 56em;"><strong style="color: var(--ink);">Where is the AI in all this?</strong>
-      In exactly one place: turning the two finished reports into readable commentary. It never sees the raw data,
-      only the aggregated results, and that boundary is re-verified on every run. Every figure in its prose is traced
-      back to a source figure; if one cannot be traced, the run fails. Everything else is ordinary, inspectable
-      calculation that gives the same answer every time.</p>
+    <span class="kicker">The deliverables</span>
+    <h2>Read the reports themselves</h2>
+    <p class="lead">Nothing here is a mockup. These are the documents the close produced, exactly as
+    generated, one click away.</p>
+    <div class="reports">
+      <a class="report-card" href="reports/executive_summary.html">
+        <h3>Executive summary</h3>
+        <p>The two-page story of the close: headline variances, analyst commentary, open items, outlook.</p>
+        <span class="open">Read it</span>
+      </a>
+      <a class="report-card" href="reports/board_pack.html">
+        <h3>Board pack</h3>
+        <p>Everything assembled in one document, ending on the review and sign-off block.</p>
+        <span class="open">Read it</span>
+      </a>
+      <a class="report-card" href="reports/variance_report.html">
+        <h3>Variance analysis</h3>
+        <p>All twenty material variances with their explanation and its source: documented note, analyst input, or still open.</p>
+        <span class="open">Read it</span>
+      </a>
+      <a class="report-card" href="reports/forecast_report.html">
+        <h3>Rolling forecast</h3>
+        <p>Next quarter by business line, with the full audit trail of what was excluded from the base and why.</p>
+        <span class="open">Read it</span>
+      </a>
+      <a class="report-card" href="reports/data_quality_report.html">
+        <h3>Data quality report</h3>
+        <p>Every fix applied to the raw export, listed one by one, including the EUR52M flag.</p>
+        <span class="open">Read it</span>
+      </a>
+      <a class="report-card" href="reports/qa_report.html">
+        <h3>QA review</h3>
+        <p>The checks that run before I even look: figures traced, boundaries verified, consistency confirmed.</p>
+        <span class="open">Read it</span>
+      </a>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <span class="kicker">Why you could trust it</span>
-    <h2>Built the way finance already works</h2>
+    <span class="kicker">What this changes</span>
+    <h2>Why this matters for a finance team</h2>
     <div class="tiles">
-      <div class="tile"><h3>No invented numbers</h3><p>Commentary is checked figure by figure against the source
-      reports, with a tight tolerance. Anything untraceable fails the run before a human ever sees the pack.</p></div>
-      <div class="tile"><h3>Honest about what it doesn't know</h3><p>16 of the 20 material variances had no documented
-      cause. The pack says so and lists them as follow-ups. A gap with no evidence is a task, not a story.</p></div>
-      <div class="tile"><h3>A human signs, every time</h3><p>The pack is assembled as a draft with a review and
-      sign-off block. The system has no way to send anything anywhere, by design.</p></div>
-      <div class="tile"><h3>Your data stays yours</h3><p>Only one step talks to an AI service, it only receives
-      aggregated summaries, and a check on every run verifies the raw data never leaves the machine.</p></div>
+      <div class="tile"><h3>The close stops eating the calendar</h3><p>The mechanical part runs in
+      minutes, identically every month. The time goes into explaining the two open items, not into
+      reformatting dates.</p></div>
+      <div class="tile"><h3>Commentary you can defend</h3><p>Every cause in the pack is documented,
+      signed by the analyst, or explicitly open. In a board meeting, that difference matters.</p></div>
+      <div class="tile"><h3>An auditor can re-run it</h3><p>Same input, same numbers, every time. The
+      AI step is fenced to writing prose from finished analysis, and that fence is checked on every
+      run.</p></div>
+      <div class="tile"><h3>Your data stays in-house</h3><p>Only one step talks to an AI service, and
+      it only ever receives aggregated summaries. The raw ledger never leaves the machine.</p></div>
     </div>
   </div>
 </section>
@@ -331,12 +383,15 @@
       <div class="who">
         <b>Alan Vourc'h</b>
         <span>FP&amp;A &middot; finance and data, together</span>
-        <p>EventCo is fictional, but its monthly close is not. I ran this cycle for real at a EUR100M events agency,
-        including stepping in to close the books when the finance director was out. The overruns, the currency hits
-        and the fat-fingered digits planted in this dataset are the ones that actually happen. I built this to show
-        what the close looks like when software does the repetitive part and a human keeps the final word.</p>
+        <p>EventCo is fictional, but its monthly close is not. I ran this cycle for real at a EUR100M
+        events agency, including stepping in to close the books when the finance director was out. The
+        overruns, the currency hits and the fat-fingered digits planted in this dataset are the ones
+        that actually happen. I built this to show what the close looks like when software does the
+        repetitive part and a human keeps the final word.</p>
+        <p style="margin-top: 12px;">If you're wondering what this would look like on your numbers, or
+        your clients', I'm happy to walk you through it. Twenty minutes, my screen, your questions.</p>
         <div class="cta-row" style="margin-top: 18px;">
-          <a class="btn primary" href="https://www.linkedin.com/in/alan-vourch/">Find me on LinkedIn</a>
+          <a class="btn primary" href="https://www.linkedin.com/in/alan-vourch/">Message me on LinkedIn</a>
         </div>
       </div>
     </div>
