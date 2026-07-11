@@ -23,19 +23,16 @@ Net margin 54.9%.
 
 | Period | Line | Variance EUR | % | F/U | Driver |
 |---|---|---|---|---|---|
-| 2024-10 | Revenue | +215,565 | +10.5% | F | No clear driver identified; follow up with the BU controller. |
-| 2024-10 | COGS | +125,565 | +17.4% | U | No clear driver identified; follow up with the BU controller. |
-| 2025-04..2026-02 | Opex - Marketing | -81,464 | -16.4% | F | Media buying and content creation move in-house from 1 July; (notes N12, N16) |
-| 2024-06 | COGS | -75,009 | -10.5% | F | No clear driver identified; follow up with the BU controller. |
-| 2025-12 | COGS | +71,249 | +10.3% | U | No clear driver identified; follow up with the BU controller. |
-| 2025-03 | COGS | +55,202 | +10.0% | U | No clear driver identified; follow up with the BU controller. |
+| 2024-10 | Revenue | +215,565 | +10.5% | F | A brand activation sold for early 2025 was pulled into October at the client's request. (analyst input, manual) |
+| 2024-10 | COGS | +125,565 | +17.4% | U | Production costs of the pulled-forward October activation; (analyst input, manual) |
+| 2025-04..2026-02 | Opex - Marketing | -81,464 | -16.4% | F | Media buying and content creation move in-house from 1 July; (business note N12, N16) |
+| 2024-06 | COGS | -75,009 | -10.5% | F | The June campaign reused spring creative assets instead of commissioning a new shoot. (analyst input, manual) |
+| 2025-12 | COGS | +71,249 | +10.3% | U | No clear driver identified; still open with the BU controller. |
+| 2025-03 | COGS | +55,202 | +10.0% | U | Print and media rates increased at the main supplier from March; (analyst input, manual) |
 
 ## Follow-ups
 
-- Revenue 2024-10: +216k (+10.5%, favorable). No documented driver; review with the BU controller.
-- COGS 2024-10: +126k (+17.4%, unfavorable). No documented driver; review with the BU controller.
-- COGS 2024-06: -75k (-10.5%, favorable). No documented driver; review with the BU controller.
-- 2 further material item(s) without a documented driver; see the variance report for the full list.
+- COGS 2025-12: +71k (+10.3%, unfavorable). No documented driver and no analyst input yet; still open with the BU controller.
 
 ## Q3 2026 outlook (Jul 2026 / Aug 2026 / Sep 2026)
 

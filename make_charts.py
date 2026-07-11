@@ -120,7 +120,7 @@ def bridge_chart(v):
         ("Falcon project\noverrun (COGS)", falcon, False),
         ("FX on USD\ncontract (revenue)", fx, False),
         ("Marketing savings\nprogramme (opex)", savings, False),
-        (f"No documented\ndriver, net of\n{unexplained_mask.sum()} material items", unexplained, True),
+        (f"Routed to analyst\n(no documented note),\nnet of {unexplained_mask.sum()} items", unexplained, True),
         ("All other,\nbelow materiality", other, False),
     ]
     recon = budget_net + sum(d[1] for d in deltas)
@@ -188,7 +188,7 @@ def bridge_chart(v):
         fig,
         "FY2025 net result: budget to actual",
         "EventCo group, EUR. Green favorable, red unfavorable; the hatched block groups "
-        "material variances with no documented driver.\n"
+        "material variances with no documented note, routed to the analyst.\n"
         "Y-axis zoomed to the variance range; every bar is value-labeled. Production "
         "Nov-2025 revenue held at budget pending correction of a suspected data entry error.",
         top=0.84,
@@ -270,15 +270,16 @@ def highlights_chart(v):
         plt.Rectangle((0, 0), 1, 1, facecolor=SURFACE, edgecolor=INK_2,
                       linewidth=1),
     ]
-    ax.legend(handles, ["Favorable", "Unfavorable", "No documented driver",
+    ax.legend(handles, ["Favorable", "Unfavorable", "No documented note: analyst follow-up",
                         "Grounded in cited evidence (solid fill)"],
               loc="lower left", frameon=False, fontsize=8.5)
 
     fig_titles(
         fig,
         "Material budget variances, 2024-2026",
-        "All 20 items that met materiality, as P&L impact. Hatched bars are honestly "
-        "unexplained: no business note corroborates them, so no cause is invented.",
+        "All 20 items that met materiality, as P&L impact. Hatched bars have no "
+        "corroborating business note: they went to the FP&A analyst as follow-ups "
+        "instead of being given an invented cause.",
         top=0.90,
     )
     fig.savefig(HIGHLIGHTS_PNG, bbox_inches="tight")

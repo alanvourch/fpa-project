@@ -171,7 +171,12 @@ def main():
                 false_attributions.append((row_id, sorted(m["cited"])))
             if m["cited"] & noise_notes:
                 noise_cited.append((row_id, sorted(m["cited"] & noise_notes)))
-        elif not overlaps_truth and "no clear driver identified" not in m["explanation"].lower():
+        elif not overlaps_truth and "no clear driver identified" not in m["explanation"].lower() \
+                and "analyst input" not in m["explanation"].lower():
+            # A row outside any real anomaly may carry clearly-labeled manual
+            # analyst commentary (the human half of the workflow) or the
+            # explicit no-driver statement — anything else is the agent
+            # inventing a cause, which is exactly what must never happen.
             invented.append(row_id)
     if false_attributions:
         failures.append(f"FALSE ATTRIBUTION(S) — rows citing notes that don't belong to their anomaly: {false_attributions}")
@@ -182,10 +187,14 @@ def main():
     else:
         passes.append(f"None of the {len(noise_notes)} noise notes is cited anywhere")
     if invented:
-        failures.append(f"INVENTED CAUSE(S) — material rows outside any real anomaly lacking a 'no clear driver' statement: {invented}")
+        failures.append(f"INVENTED CAUSE(S) — material rows outside any real anomaly lacking a 'no clear driver' statement or a labeled analyst input: {invented}")
     else:
-        n_no_driver = sum(1 for m in material if not m["cited"])
-        passes.append(f"All {n_no_driver} material rows without evidence honestly say 'no clear driver identified'")
+        n_analyst = sum(1 for m in material if not m["cited"]
+                        and "analyst input" in m["explanation"].lower())
+        n_open = sum(1 for m in material if not m["cited"]
+                     and "no clear driver identified" in m["explanation"].lower())
+        passes.append(f"All {n_analyst + n_open} material rows without evidence are honest: "
+                      f"{n_analyst} carry clearly-labeled analyst input, {n_open} say 'no clear driver identified'")
 
     # 6: the favorable anomaly is reported and marked F
     favorable_rows = [

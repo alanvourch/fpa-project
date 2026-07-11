@@ -24,18 +24,14 @@ Net margin 32.4%. Nov-2025 revenue held at budget pending correction of a suspec
 
 | Period | Line | Variance EUR | % | F/U | Driver |
 |---|---|---|---|---|---|
-| 2025-04..2025-06 | COGS | +2,077,456 | +26.6% | U | Falcon product-launch event (Riyadh): client requested a major on-site scope expansion during build week. (notes N11, N13) |
-| 2026-04 | COGS | +407,217 | +15.7% | U | No clear driver identified; follow up with the BU controller. |
-| 2026-04 | Revenue | +388,823 | +8.3% | F | No clear driver identified; follow up with the BU controller. |
-| 2024-11 | COGS | -294,277 | -10.6% | F | No clear driver identified; follow up with the BU controller. |
-| 2025-07 | Revenue | +247,346 | +7.3% | F | No clear driver identified; follow up with the BU controller. |
+| 2025-04..2025-06 | COGS | +2,077,456 | +26.6% | U | Falcon product-launch event (Riyadh): client requested a major on-site scope expansion during build week. (business note N11, N13) |
+| 2026-04 | COGS | +407,217 | +15.7% | U | An unplanned client project was won in late March and delivered inside April; (analyst input, manual) |
+| 2026-04 | Revenue | +388,823 | +8.3% | F | Unbudgeted revenue from the same late-won April project; (analyst input, manual) |
+| 2024-11 | COGS | -294,277 | -10.6% | F | November events were delivered with in-house crew and staging stock instead of the subcontracting assumed in budget; (analyst input, manual) |
+| 2025-07 | Revenue | +247,346 | +7.3% | F | A client brought part of its September roadshow forward into July. (analyst input, manual) |
 
 ## Follow-ups
 
-- COGS 2026-04: +407k (+15.7%, unfavorable). No documented driver; review with the BU controller.
-- Revenue 2026-04: +389k (+8.3%, favorable). No documented driver; review with the BU controller.
-- COGS 2024-11: -294k (-10.6%, favorable). No documented driver; review with the BU controller.
-- 1 further material item(s) without a documented driver; see the variance report for the full list.
 - Correct the Nov-2025 revenue entry at source: the recorded figure fails the magnitude plausibility check while the ops system shows normal project activity, so it is treated as a data error, not performance.
 
 ## Q3 2026 outlook (Jul 2026 / Aug 2026 / Sep 2026)

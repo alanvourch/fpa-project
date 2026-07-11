@@ -65,3 +65,22 @@ re-deciding anything.
   (payroll everywhere; revenue everywhere except the trap row, which must be
   exactly 10x). If someone reorders rng calls in `generate_dataset.py`, the
   drivers validator is the tripwire.
+- **2026-07-11 / Analyst-input workflow (user feedback, structural):** the user
+  reframed the follow-up loop: unexplained material variances go TO the FP&A
+  analyst, whose written explanations come BACK through
+  `data/analyst_commentary.csv` (period strings must match fmt_period exactly,
+  e.g. "2024-12..2025-01" for episodes) before the BU reports and exec summary
+  are produced. Provenance is always visible: every material row is one of
+  (1) corroborated by business notes, (2) "Analyst input (author, date)" =
+  manual, (3) "no clear driver identified" = still open. Current counts 4/14/2.
+  The analyst comments are authored demo narrative (the underlying variances
+  are seeded noise); they contain NO money figures on purpose, so they can
+  never legitimize a hallucinated number in the grounding check. Evidence
+  always outranks analyst input; commentary on an evidenced or unmatched row
+  triggers a loud warning, never a silent merge.
+- **2026-07-11 / Substring-collision lesson:** the QA agent classifies rows by
+  searching explanation text; the still-open template originally said "no
+  analyst input received yet", which contains "analyst input" and made open
+  rows count as analyst-explained (16/0 instead of 14/2). Reworded the open
+  template. Rule: when classifying by marker phrases, never let one class's
+  phrase appear in another class's template.

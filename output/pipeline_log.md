@@ -1,6 +1,6 @@
 # Pipeline Run Log
 
-Run at 2026-07-11 01:43 by `orchestrator.py`.
+Run at 2026-07-11 11:13 by `orchestrator.py`.
 
 | Step | Script | Exit code | Result |
 |---|---|---|---|
@@ -32,8 +32,9 @@ Wrote data/eventco_monthly_cleaned.csv and output/data_quality_report.md
 Variance rows computed: 840
 Excluded as suspected data errors: 1
 Material items: 20 (3 episodes, 17 single months)
-  with grounded evidence: 4
-  no clear driver identified: 16
+  corroborated by business notes: 4
+  explained by analyst input (manual, labeled): 14
+  still open, no clear driver identified: 2
 Wrote output/variance_table.csv and output/variance_report.md
 ```
 
@@ -66,9 +67,9 @@ Wrote 4 BU one-pagers to output/bu_reports/
 stderr:
 ```
 Traceback (most recent call last):
-  File "C:\Users\snip1\Documents\GitHub\fpa-project\agents\narrative_agent.py", line 177, in <module>
+  File "C:\Users\snip1\Documents\GitHub\fpa-project\agents\narrative_agent.py", line 182, in <module>
     main()
-  File "C:\Users\snip1\Documents\GitHub\fpa-project\agents\narrative_agent.py", line 131, in main
+  File "C:\Users\snip1\Documents\GitHub\fpa-project\agents\narrative_agent.py", line 136, in main
     response = client.messages.create(
                ^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Users\snip1\Documents\GitHub\fpa-project\.venv\Lib\site-packages\anthropic\_utils\_utils.py", line 294, in wrapper
@@ -111,7 +112,7 @@ Traceback (most recent call last):
     _raise_token_endpoint_error(resp, message_prefix="user_oauth refresh failed")
   File "C:\Users\snip1\Documents\GitHub\fpa-project\.venv\Lib\site-packages\anthropic\lib\credentials\_workload.py", line 85, in _raise_token_endpoint_error
     raise WorkloadIdentityError(
-anthropic.lib.credentials._workload.WorkloadIdentityError: user_oauth refresh failed (HTTP 400): {'error': 'invalid_grant', 'error_description': 'Refresh token not found or invalid'} [request_id=req_011CcujkHQy9dFeSiTVNU4JU]
+anthropic.lib.credentials._workload.WorkloadIdentityError: user_oauth refresh failed (HTTP 400): {'error': 'invalid_grant', 'error_description': 'Refresh token not found or invalid'} [request_id=req_011CcvVCscG7bGvHNav1BvNC]
 ```
 
 ### QA/Reviewer

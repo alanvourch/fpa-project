@@ -23,20 +23,17 @@ Net margin 56.9%.
 
 | Period | Line | Variance EUR | % | F/U | Driver |
 |---|---|---|---|---|---|
-| 2025-01 | Revenue | -224,810 | -14.8% | U | No clear driver identified; follow up with the BU controller. |
-| 2025-09 | Revenue | -196,953 | -9.3% | U | NovaTech (US client) roadshow is invoiced in USD. (notes N08) |
-| 2024-12..2025-01 | COGS | -143,626 | -12.3% | F | No clear driver identified; follow up with the BU controller. |
-| 2025-08 | Revenue | +135,341 | +10.2% | F | No clear driver identified; follow up with the BU controller. |
-| 2024-07 | COGS | -84,412 | -15.6% | F | No clear driver identified; follow up with the BU controller. |
-| 2025-06 | COGS | -82,563 | -10.4% | F | No clear driver identified; follow up with the BU controller. |
-| 2025-03 | COGS | +66,523 | +11.3% | U | No clear driver identified; follow up with the BU controller. |
+| 2025-01 | Revenue | -224,810 | -14.8% | U | Two platform go-lives slipped from January into February on client-side content delays. (analyst input, manual) |
+| 2025-09 | Revenue | -196,953 | -9.3% | U | NovaTech (US client) roadshow is invoiced in USD. (business note N08) |
+| 2024-12..2025-01 | COGS | -143,626 | -12.3% | F | External development spend paused over the year-end delivery freeze and resumed in February. (analyst input, manual) |
+| 2025-08 | Revenue | +135,341 | +10.2% | F | One retainer client commissioned an out-of-cycle campaign microsite in an otherwise quiet August. (analyst input, manual) |
+| 2024-07 | COGS | -84,412 | -15.6% | F | Contractor spend deferred during the summer staffing gap on the delivery bench; (analyst input, manual) |
+| 2025-06 | COGS | -82,563 | -10.4% | F | June delivery mix skewed toward license resale rather than custom build, which carries lower external cost. (analyst input, manual) |
+| 2025-03 | COGS | +66,523 | +11.3% | U | No clear driver identified; still open with the BU controller. |
 
 ## Follow-ups
 
-- Revenue 2025-01: -225k (-14.8%, unfavorable). No documented driver; review with the BU controller.
-- COGS 2024-12..2025-01: -144k (-12.3%, favorable). No documented driver; review with the BU controller.
-- Revenue 2025-08: +135k (+10.2%, favorable). No documented driver; review with the BU controller.
-- 3 further material item(s) without a documented driver; see the variance report for the full list.
+- COGS 2025-03: +67k (+11.3%, unfavorable). No documented driver and no analyst input yet; still open with the BU controller.
 
 ## Q3 2026 outlook (Jul 2026 / Aug 2026 / Sep 2026)
 

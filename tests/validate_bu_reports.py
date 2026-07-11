@@ -89,11 +89,15 @@ def main():
         check(not missing,
               f"{bu}: all {len(items)} material item(s) appear on the page"
               if not missing else f"{bu}: material item(s) MISSING from the page: {missing}")
-        n_unexplained = sum(1 for it in items if not it["evidence_ids"])
-        if n_unexplained:
-            check(md.count("No clear driver identified") >= n_unexplained,
+        n_analyst = sum(1 for it in items if not it["evidence_ids"] and it["analyst_comment"])
+        n_open = sum(1 for it in items if not it["evidence_ids"] and not it["analyst_comment"])
+        if n_analyst:
+            check(md.count("(analyst input, manual)") >= n_analyst,
+                  f"{bu}: all {n_analyst} analyst-explained item(s) are labeled '(analyst input, manual)'")
+        if n_open:
+            check(md.count("No clear driver identified") >= n_open,
                   f"{bu}: 'No clear driver identified' appears for each of the "
-                  f"{n_unexplained} unexplained item(s)")
+                  f"{n_open} still-open item(s)")
 
         # 6. Style rules
         check("—" not in md, f"{bu}: no em dashes on the page")

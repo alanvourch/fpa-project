@@ -102,6 +102,7 @@ def load_inputs():
     vt = pd.read_csv(VARIANCE_TABLE_PATH)
     vt["materiality"] = vt["materiality"].fillna("")
     vt["evidence_notes"] = vt["evidence_notes"].fillna("")
+    vt["analyst_comment"] = vt["analyst_comment"].fillna("")
     vt["is_cost"] = vt["line_item"] != "Revenue"
     vt["impact"] = vt.apply(
         lambda r: -r["variance_eur"] if r["is_cost"] else r["variance_eur"], axis=1)
@@ -234,23 +235,34 @@ def _aggregate(line, run):
     period = months[0] if len(months) == 1 else f"{months[0]}..{months[-1]}"
     ids = sorted({i.strip() for cell in seg["evidence_notes"] if cell
                   for i in cell.split(",")})
+    analyst = next((c for c in seg["analyst_comment"] if c), "")
     return {
         "line_item": line, "period": period, "variance_eur": var,
         "variance_pct": var / budget if budget else float("nan"),
         "direction": seg["direction"].iloc[0], "evidence_ids": ids,
+        "analyst_comment": analyst,
     }
 
 
 def driver_label(item, notes):
-    """One-line explanation: the first sentence of the top cited note, or the
-    explicit no-driver statement. Never an invented cause."""
-    if not item["evidence_ids"]:
-        return "No clear driver identified; follow up with the BU controller."
-    top = notes.loc[item["evidence_ids"][0], "note"]
-    first = re.split(r"(?<=[.;])\s", str(top))[0].strip()
-    if len(first) > 130:
-        first = first[:127].rstrip() + "..."
-    return f"{first} (notes {', '.join(item['evidence_ids'])})"
+    """One-line explanation with its provenance always visible: the first
+    sentence of the top cited note, the analyst's manual input labeled as
+    such, or the explicit still-open statement. Never an invented cause."""
+    if item["evidence_ids"]:
+        top = notes.loc[item["evidence_ids"][0], "note"]
+        first = _first_sentence(top)
+        return f"{first} (business note {', '.join(item['evidence_ids'])})"
+    if item["analyst_comment"]:
+        first = _first_sentence(item["analyst_comment"].rsplit(" (", 1)[0])
+        return f"{first} (analyst input, manual)"
+    return "No clear driver identified; still open with the BU controller."
+
+
+def _first_sentence(text, limit=130):
+    first = re.split(r"(?<=[.;])\s", str(text))[0].strip()
+    if len(first) > limit:
+        first = first[:limit - 3].rstrip() + "..."
+    return first
 
 
 def outlook(fc, bu):
@@ -336,15 +348,15 @@ def bridge_chart(bu, card, blocks, png_path):
 
 
 def follow_ups(items, card):
-    ups = [it for it in items if not it["evidence_ids"]]
+    ups = [it for it in items if not it["evidence_ids"] and not it["analyst_comment"]]
     lines = []
     for it in ups[:3]:
         lines.append(
             f"{it['line_item']} {it['period']}: {fmt_signed_k(it['variance_eur'])} "
             f"({it['variance_pct']:+.1%}, {'favorable' if it['direction'] == 'F' else 'unfavorable'}). "
-            "No documented driver; review with the BU controller.")
+            "No documented driver and no analyst input yet; still open with the BU controller.")
     if len(ups) > 3:
-        lines.append(f"{len(ups) - 3} further material item(s) without a documented driver; "
+        lines.append(f"{len(ups) - 3} further material item(s) still open; "
                      "see the variance report for the full list.")
     if card["held_rows"]:
         lines.append("Correct the Nov-2025 revenue entry at source: the recorded figure fails "

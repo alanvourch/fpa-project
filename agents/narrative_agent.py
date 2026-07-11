@@ -70,11 +70,16 @@ source text.
 EUR2.08 million" for a source value of "EUR2,077,456") as long as the rounded figure clearly \
 derives from the source number and preserves its sign and order of magnitude. Never alter, \
 combine, or extrapolate figures beyond what is given.
-- Where the Variance Report explicitly says "no clear driver identified" for a material \
-variance, you must preserve that honesty. Describe the variance as material but undocumented \
-or unexplained, and note that it warrants follow-up with the business unit. Do NOT invent a \
-plausible-sounding cause, and do NOT phrase it in a way that reads as confidently explained — a \
-reader must come away understanding that this specific number has no documented driver yet.
+- The Variance Report labels every material row with one of three explanation types, and \
+you must preserve that provenance in your prose: (1) rows "corroborated by the business \
+notes log" are documented evidence and may be narrated directly; (2) rows marked "Analyst \
+input" carry an explanation a human analyst entered manually after follow-up — when you \
+use one, attribute it (for example "per the analyst's review" or "the analyst attributes \
+this to"), and never present it as if it came from documented records; (3) rows that say \
+"no clear driver identified" are still open. For those, you must preserve that honesty: \
+describe the variance as material but unexplained, note that it stays on the follow-up \
+list, do NOT invent a plausible-sounding cause, and do NOT phrase it in a way that reads \
+as confidently explained.
 - The report also lists a row excluded as a suspected data entry error. Mention only that a \
 data quality issue was identified and excluded pending correction at source. Do not narrate it \
 as a business event or attempt to explain it as if it were a real variance.

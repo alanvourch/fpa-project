@@ -1,6 +1,6 @@
 # EventCo Budget vs Actual & Rolling Forecast: Draft Board Pack
 
-Assembled 2026-07-11 01:43 by `orchestrator.py`.
+Assembled 2026-07-11 11:13 by `orchestrator.py`.
 
 > ## DRAFT: PENDING HUMAN SIGN-OFF
 > This pack was assembled automatically but is **not approved for distribution**.
@@ -28,7 +28,11 @@ Variance = actual − budget, computed for every line item, BU and month (28 BU/
 - *Monthly (absolute trigger):* |variance| ≥ EUR150,000 **and** ≥ 7% of budget. On a large line, a miss of this size (~2% of monthly group revenue) warrants comment even below the 10% tolerance; the % floor sits just above the routine forecast-noise band of the biggest lines (±6% in a normal month).
 - *Sustained episodes:* ≥ 2 consecutive months in the same direction, each ≥ 8% off budget, with a cumulative gap ≥ EUR40,000 and ≥ 10% of the period budget. Persistent drifts are material in aggregate even when no single month clears the monthly EUR floor. A single below-threshold month is bridged when the drift resumes in the same direction immediately after, because one month of noise masking a sustained programme doesn't end the episode. A direction flip or two quiet months in a row do end it.
 
-**Root-cause discipline:** an explanation is only given when a dated, BU-relevant note in the business log corroborates the variance (right BU or group-wide, dated within the evidence window of 10 days before to 20 days after the variance period, and actually about that kind of spend). Otherwise the report says **no clear driver identified**. A material number with no documented cause is a follow-up item, not a story to invent.
+**Root-cause discipline:** this agent never invents a cause. Every material row carries exactly one of three explanation types, and the type is always visible:
+
+1. *Corroborated by the business notes log:* a dated, BU-relevant note found automatically (right BU or group-wide, dated within the evidence window of 10 days before to 20 days after the variance period, and actually about that kind of spend).
+2. *Analyst input:* no note corroborates the variance, so it went to the FP&A analyst as a follow-up; the explanation shown is what the analyst wrote back in `data/analyst_commentary.csv` after investigating with the business. Labeled as manual input so it can never be mistaken for machine-found evidence.
+3. *No clear driver identified:* no note and no analyst input yet. The item stays on the follow-up list; the number is reported without a story.
 
 ## Excluded from analysis: suspected data entry errors
 
@@ -45,24 +49,24 @@ Sorted by absolute EUR impact. Period spans of more than one month are sustained
 | Business Unit | Line item | Period | Actual | Budget | Variance EUR | Variance % | F/U | Evidence | Explanation |
 |---|---|---|---|---|---|---|---|---|---|
 | Production | COGS | 2025-04..2025-06 | EUR9,901,455 | EUR7,823,999 | +2,077,456 | +26.6% | U | N11, N13 | Corroborated by the business notes log: N11 (2025-04-14, Production, Project Director): "Falcon product-launch event (Riyadh): client requested a major on-site scope expansion during build week. Overtime crews, additional staging and expedited freight all booked at premium rates. Expect a production cost overrun through the end of Q2 while the change-order negotiation with the client is still open." / N13 (2025-06-30, Production, BU Controller): "Q2 close: Falcon launch cost overrun confirmed at roughly EUR2.0m above plan across April-June, concentrated in external production costs. Change order signed for partial recovery only; margin impact flagged to group controlling." |
-| Production | COGS | 2026-04 | EUR2,997,915 | EUR2,590,698 | +407,217 | +15.7% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Production | Revenue | 2026-04 | EUR5,099,183 | EUR4,710,360 | +388,823 | +8.3% | F | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Production | COGS | 2024-11 | EUR2,476,055 | EUR2,770,332 | -294,277 | -10.6% | F | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Production | Revenue | 2025-07 | EUR3,627,996 | EUR3,380,650 | +247,346 | +7.3% | F | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Digital | Revenue | 2025-01 | EUR1,291,857 | EUR1,516,667 | -224,810 | -14.8% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Marketing | Revenue | 2024-10 | EUR2,275,270 | EUR2,059,705 | +215,565 | +10.5% | F | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
+| Production | COGS | 2026-04 | EUR2,997,915 | EUR2,590,698 | +407,217 | +15.7% | U | - | Analyst input (FP&A Analyst, 2026-05-12): "An unplanned client project was won in late March and delivered inside April; external production was booked at short-notice premium rates. Together with the matching revenue line the net margin impact is slightly negative. Change-order discipline flagged to the project director." Written manually after follow-up; not derived from the business notes log. |
+| Production | Revenue | 2026-04 | EUR5,099,183 | EUR4,710,360 | +388,823 | +8.3% | F | - | Analyst input (FP&A Analyst, 2026-05-12): "Unbudgeted revenue from the same late-won April project; see the matching COGS variance. Recognized on delivery." Written manually after follow-up; not derived from the business notes log. |
+| Production | COGS | 2024-11 | EUR2,476,055 | EUR2,770,332 | -294,277 | -10.6% | F | - | Analyst input (FP&A Analyst, 2024-12-10): "November events were delivered with in-house crew and staging stock instead of the subcontracting assumed in budget; Q4 freight was also renegotiated. Genuine savings, not a timing shift." Written manually after follow-up; not derived from the business notes log. |
+| Production | Revenue | 2025-07 | EUR3,627,996 | EUR3,380,650 | +247,346 | +7.3% | F | - | Analyst input (FP&A Analyst, 2025-08-11): "A client brought part of its September roadshow forward into July. Timing between months rather than new business; the September shortfall stayed within tolerance." Written manually after follow-up; not derived from the business notes log. |
+| Digital | Revenue | 2025-01 | EUR1,291,857 | EUR1,516,667 | -224,810 | -14.8% | U | - | Analyst input (FP&A Analyst, 2025-02-10): "Two platform go-lives slipped from January into February on client-side content delays. Revenue is recognized on delivery, so January carries the gap; both projects were invoiced in February." Written manually after follow-up; not derived from the business notes log. |
+| Marketing | Revenue | 2024-10 | EUR2,275,270 | EUR2,059,705 | +215,565 | +10.5% | F | - | Analyst input (FP&A Analyst, 2024-11-08): "A brand activation sold for early 2025 was pulled into October at the client's request. The matching cost variance appears on the COGS line the same month." Written manually after follow-up; not derived from the business notes log. |
 | Digital | Revenue | 2025-09 | EUR1,915,910 | EUR2,112,863 | -196,953 | -9.3% | U | N08 | Corroborated by the business notes log: N08 (2025-09-26, Digital, Account Manager): "NovaTech (US client) roadshow is invoiced in USD. The euro strengthened sharply against the dollar this month, so reported revenue on the contract translates materially lower in EUR. No change in delivered scope or client commitment; delivery costs are EUR-denominated and unaffected." |
-| Digital | COGS | 2024-12..2025-01 | EUR1,024,041 | EUR1,167,667 | -143,626 | -12.3% | F | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Digital | Revenue | 2025-08 | EUR1,465,426 | EUR1,330,085 | +135,341 | +10.2% | F | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Marketing | COGS | 2024-10 | EUR846,462 | EUR720,897 | +125,565 | +17.4% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Back-Office | Revenue | 2024-10 | EUR913,903 | EUR1,029,852 | -115,950 | -11.3% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Digital | COGS | 2024-07 | EUR457,359 | EUR541,771 | -84,412 | -15.6% | F | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Digital | COGS | 2025-06 | EUR710,289 | EUR792,851 | -82,563 | -10.4% | F | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
+| Digital | COGS | 2024-12..2025-01 | EUR1,024,041 | EUR1,167,667 | -143,626 | -12.3% | F | - | Analyst input (FP&A Analyst, 2025-02-10): "External development spend paused over the year-end delivery freeze and resumed in February. This recurs every holiday season; budget phasing to be corrected in the next cycle." Written manually after follow-up; not derived from the business notes log. |
+| Digital | Revenue | 2025-08 | EUR1,465,426 | EUR1,330,085 | +135,341 | +10.2% | F | - | Analyst input (FP&A Analyst, 2025-09-09): "One retainer client commissioned an out-of-cycle campaign microsite in an otherwise quiet August." Written manually after follow-up; not derived from the business notes log. |
+| Marketing | COGS | 2024-10 | EUR846,462 | EUR720,897 | +125,565 | +17.4% | U | - | Analyst input (FP&A Analyst, 2024-11-08): "Production costs of the pulled-forward October activation; see the matching revenue variance." Written manually after follow-up; not derived from the business notes log. |
+| Back-Office | Revenue | 2024-10 | EUR913,903 | EUR1,029,852 | -115,950 | -11.3% | U | - | Analyst input (FP&A Analyst, 2024-11-08): "Lower internal rebilling of shared services in October; two group entities were invoiced in November instead. Timing only." Written manually after follow-up; not derived from the business notes log. |
+| Digital | COGS | 2024-07 | EUR457,359 | EUR541,771 | -84,412 | -15.6% | F | - | Analyst input (FP&A Analyst, 2024-08-09): "Contractor spend deferred during the summer staffing gap on the delivery bench; caught up from September." Written manually after follow-up; not derived from the business notes log. |
+| Digital | COGS | 2025-06 | EUR710,289 | EUR792,851 | -82,563 | -10.4% | F | - | Analyst input (FP&A Analyst, 2025-07-10): "June delivery mix skewed toward license resale rather than custom build, which carries lower external cost." Written manually after follow-up; not derived from the business notes log. |
 | Marketing | Opex - Marketing | 2025-04..2026-02 | EUR414,886 | EUR496,350 | -81,464 | -16.4% | F | N12, N16 | Corroborated by the business notes log: N12 (2025-06-25, Marketing, Head of Marketing): "Media buying and content creation move in-house from 1 July; both external agency retainers terminated end of June. Marketing spend expected to run 20-30% under budget for the rest of the year." / N16 (2025-09-15, Marketing, BU Controller): "In-housing of media buying is tracking ahead of plan - marketing spend well under budget again this month, and the underspend should persist through year-end." |
-| Marketing | COGS | 2024-06 | EUR636,525 | EUR711,533 | -75,009 | -10.5% | F | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Marketing | COGS | 2025-12 | EUR763,011 | EUR691,762 | +71,249 | +10.3% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Digital | COGS | 2025-03 | EUR655,359 | EUR588,837 | +66,523 | +11.3% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Marketing | COGS | 2025-03 | EUR604,783 | EUR549,581 | +55,202 | +10.0% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
+| Marketing | COGS | 2024-06 | EUR636,525 | EUR711,533 | -75,009 | -10.5% | F | - | Analyst input (FP&A Analyst, 2024-07-09): "The June campaign reused spring creative assets instead of commissioning a new shoot." Written manually after follow-up; not derived from the business notes log. |
+| Marketing | COGS | 2025-12 | EUR763,011 | EUR691,762 | +71,249 | +10.3% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period, and the analyst has not yet returned commentary from follow-up. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
+| Digital | COGS | 2025-03 | EUR655,359 | EUR588,837 | +66,523 | +11.3% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period, and the analyst has not yet returned commentary from follow-up. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
+| Marketing | COGS | 2025-03 | EUR604,783 | EUR549,581 | +55,202 | +10.0% | U | - | Analyst input (FP&A Analyst, 2025-04-10): "Print and media rates increased at the main supplier from March; a rate-card renegotiation is underway." Written manually after follow-up; not derived from the business notes log. |
 | Back-Office | Opex - IT | 2024-11 | EUR39,366 | EUR15,250 | +24,116 | +158.1% | U | N06 | Corroborated by the business notes log: N06 (2024-11-08, Back-Office, IT Manager): "Storage cluster in the Paris server room failed on 4 November; emergency replacement hardware and expedited vendor licenses procured outside the normal purchasing cycle. One-off cost; insurance claim filed with the provider." |
 
 All other BU/line/month combinations are within materiality tolerance and are not individually commented; the full variance grain is in `output/variance_table.csv`.
@@ -194,24 +198,25 @@ One page per business unit, for that BU's manager: FY2025 bridge, payroll and re
 <!-- Provenance note: agents/narrative_agent.py is fully built and calls claude-sonnet-5
 via the Anthropic API (see the script and README.md for how to run it). This particular
 file was instead written directly in an interactive Claude Code session (Claude Fable 5,
-2026-07-06), because the script's own API/OAuth credentials were not available on the
-local machine at the time. The same strict-grounding system prompt from the script was
-followed by hand: every figure below is sourced from output/variance_report.md and
-output/forecast_report.md, and this file has been checked with tests/validate_narrative.py.
-Revised in the 2026-07-06 pre-publication audit (framing and style only; every figure
-unchanged and re-validated). Anyone running the pipeline end to end should re-run
-agents/narrative_agent.py once credentials are set up, to get the authoritative,
-reproducible output from the pinned model. -->
+2026-07-06; rewritten 2026-07-11 when the analyst-commentary workflow was added), because
+the script's own API/OAuth credentials were not available on the local machine at the
+time. The same strict-grounding system prompt from the script was followed by hand: every
+figure below is sourced from output/variance_report.md and output/forecast_report.md, and
+this file has been checked with tests/validate_narrative.py. Anyone running the pipeline
+end to end should re-run agents/narrative_agent.py once credentials are set up, to get
+the authoritative, reproducible output from the pinned model. -->
 
 # Executive Summary: EventCo Budget vs Actual & Rolling Forecast
 
 Three stories dominate the variances over the 30 months under review: a EUR2.08 million
 cost overrun on a single client project, an unfavorable currency swing on an international
-contract, and a cost-savings programme that ran ahead of plan. The rolling forecast points
-to continued top-line growth into the third quarter of 2026, with the group margin holding
-at 47.9% over the forecast period.
+contract, and a cost-savings programme that ran ahead of plan. Of the twenty variances
+large enough to warrant comment, four are corroborated by documented business notes,
+fourteen carry the FP&A analyst's own commentary after follow-up, and two remain open.
+The rolling forecast points to continued top-line growth into the third quarter of 2026,
+with the group margin holding at 47.9% over the forecast period.
 
-## Variance Highlights
+## Variance Highlights (documented in the business notes log)
 
 **Production COGS, April to June 2025: EUR2.08 million over budget (+26.6%).** The largest
 variance in the period, tied to the Falcon product-launch event in Riyadh. The client
@@ -231,25 +236,44 @@ favorable.** Media buying and content creation moved in-house from July 2025, en
 external agency retainers, and the business unit controller confirmed in September that the
 savings were tracking ahead of plan. One caveat on the dates: the reported window is the
 full run of consecutive under-budget months grouped by the episode test, and it starts
-three months before the programme did. The months before July drifted below budget in the
-same direction but have no documented driver of their own. This is the only favorable
-variance in the period with a documented cause.
+three months before the programme did. This is the only favorable variance in the period
+with a documented cause in the notes log.
 
 **Back-Office IT opex, November 2024: EUR24,116 over budget (+158.1%).** An emergency
 storage cluster failure in the Paris server room required expedited replacement hardware
 and vendor licenses outside the normal purchasing cycle. A one-off cost with an insurance
 claim filed against it, not the start of a trend.
 
-## Items Requiring Follow-Up
+## Analyst Commentary (manual input after follow-up)
 
-Sixteen further variances across the period are large enough to be material, ranging from
-roughly EUR55,000 to EUR407,000 in absolute impact, both favorable and unfavorable, but
-have no documented driver in the business notes log reviewed for this report. The three
-largest are Production COGS in April 2026 (roughly EUR407,000 over budget, +15.7%),
-Production revenue that same month (roughly EUR389,000 above budget, +8.3%, favorable), and
-Digital revenue in January 2025 (roughly EUR225,000 under budget, -14.8%). These are
-numerically material but genuinely unexplained. Each is recommended for follow-up with the
-relevant business unit controller rather than assigned a cause here.
+Fourteen further material variances had no corroborating note in the business log, so they
+went to the FP&A analyst as follow-up items. The explanations below were entered manually
+by the analyst after investigating with the business units, and the variance report labels
+each one as analyst input rather than documented evidence. The largest:
+
+**Production, April 2026.** COGS ran roughly EUR407,000 over budget (+15.7%) while revenue
+ran roughly EUR389,000 above budget (+8.3%). Per the analyst's review, both trace to the
+same event: a client project won in late March and delivered inside April, with external
+production booked at short-notice premium rates. The net margin impact is slightly
+negative, and change-order discipline has been flagged to the project director.
+
+**Digital revenue, January 2025: roughly EUR225,000 under budget (-14.8%).** The analyst
+attributes this to two platform go-lives slipping into February on client-side content
+delays; revenue is recognized on delivery, and both projects were invoiced in February.
+
+**Marketing, October 2024.** Revenue came in roughly EUR216,000 above budget (+10.5%) with
+costs roughly EUR126,000 over (+17.4%): a brand activation sold for early 2025 was pulled
+into October at the client's request, carrying its production costs with it.
+
+The remaining analyst-explained items are mostly timing shifts between months and
+delivery-mix effects, each documented row by row in the variance report.
+
+## Items Still Open
+
+Two material variances have no documented driver and no analyst input yet: Marketing COGS
+in December 2025 (roughly EUR71,000 over budget, +10.3%) and Digital COGS in March 2025
+(EUR66,500 over budget, +11.3%). Both remain unexplained and stay on the follow-up list
+with the relevant BU controllers rather than being assigned a cause here.
 
 Separately, a data entry issue was identified in Production's November 2025 revenue figure
 and has been excluded from this analysis pending correction at source.
@@ -267,13 +291,12 @@ events, including the Falcon cost overrun and the Back-Office IT incident above,
 deliberately excluded from that base so they are not projected forward as if they were
 normal, recurring activity. The Marketing savings programme is treated the same way: it had
 already concluded before the forecast cutoff of June 2026, the last closed month, so its
-effect is not carried into the outlook, consistent with how any other concluded programme
-is handled.
+effect is not carried into the outlook.
 
 No cost-saving or overrun programme was still running at the June 2026 cutoff, so this
 quarter's outlook reflects normal seasonal business growth with no special adjustment
-carried forward. The sixteen undocumented variances above are the main open item going
-into the next close.
+carried forward. The two still-open variances above are the main follow-up going into the
+next close.
 
 ---
 
@@ -291,7 +314,7 @@ Generated by `agents/qa_agent.py`. This agent never reads `data/ground_truth.md`
 
 ## Consistency checks
 
-- **PASS**: all 20 material variance row(s) are either evidence-cited or explicitly marked as having no clear driver
+- **PASS**: all 20 material variance row(s) carry a legitimate explanation type: 4 evidence-cited, 14 labeled analyst input, 2 explicitly open
 - **PASS**: all 34 variance-flagged row(s) are accounted for in the forecast normalization audit trail
 
 ## Data governance checks
@@ -303,9 +326,9 @@ Confirms the project's core control principle: only the Narrative Agent may call
 
 ## Narrative grounding checks
 
-- **PASS**: All 13 monetary figure(s) in the narrative trace back to a source figure within 0.5%/EUR15,000
-- **PASS**: All 13 percentage(s) in the narrative trace back to a source figure within 1.0 pp
-- **PASS**: narrative preserves the honesty language (16 source rows had no driver)
+- **PASS**: All 15 monetary figure(s) in the narrative trace back to a source figure within 0.5%/EUR15,000
+- **PASS**: All 17 percentage(s) in the narrative trace back to a source figure within 1.0 pp
+- **PASS**: narrative preserves the honesty language (3 source rows had no driver)
 - **PASS**: excluded data-error row is mentioned without being framed as a business event
 
 ---

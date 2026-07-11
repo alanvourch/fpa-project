@@ -56,6 +56,7 @@ NARRATIVE_AGENT_FILENAME = "narrative_agent.py"
 # scope-crept beyond the two aggregated report files it was designed to see.
 FORBIDDEN_NARRATIVE_INPUTS = (
     "eventco_monthly", "ground_truth", "business_notes.csv", "variance_table.csv",
+    "analyst_commentary.csv", "eventco_drivers.csv",
 )
 
 
@@ -72,24 +73,35 @@ def extract_table_rows(section_text):
 
 
 def check_every_material_row_explained(variance_text):
-    """Every row in the rendered material-variance table must have a
-    non-empty explanation that is either evidence-cited or an explicit
-    'no clear driver identified' — never silently blank."""
+    """Every row in the rendered material-variance table must carry exactly
+    one of the three legitimate explanation types: an evidence citation, a
+    clearly-labeled manual analyst input, or an explicit 'no clear driver
+    identified' — never silently blank, never an unlabeled cause."""
     start = variance_text.index("## Material variances")
     rows = extract_table_rows(variance_text[start:])
     if not rows:
         return False, "no material-variance rows found to check (unexpected, verify the report rendered)"
     bad = []
+    counts = {"evidence": 0, "analyst": 0, "open": 0}
     for r in rows:
         bu, line, period = r[0], r[1], r[2]
         evidence, explanation = r[8], r[9]
         has_citation = bool(re.search(r"N\d+", evidence))
+        has_analyst = "analyst input" in explanation.lower()
         has_no_driver = "no clear driver identified" in explanation.lower()
-        if not explanation.strip() or not (has_citation or has_no_driver):
+        if has_citation:
+            counts["evidence"] += 1
+        elif has_analyst:
+            counts["analyst"] += 1
+        elif has_no_driver:
+            counts["open"] += 1
+        if not explanation.strip() or not (has_citation or has_analyst or has_no_driver):
             bad.append(f"{bu}/{line}/{period}")
     if bad:
-        return False, f"material row(s) with neither an evidence citation nor an explicit 'no clear driver identified': {bad}"
-    return True, f"all {len(rows)} material variance row(s) are either evidence-cited or explicitly marked as having no clear driver"
+        return False, f"material row(s) with no evidence citation, no labeled analyst input, and no explicit 'no clear driver identified': {bad}"
+    return True, (f"all {len(rows)} material variance row(s) carry a legitimate explanation type: "
+                  f"{counts['evidence']} evidence-cited, {counts['analyst']} labeled analyst input, "
+                  f"{counts['open']} explicitly open")
 
 
 def check_forecast_covers_all_flagged_rows(variance_table_text, forecast_text):

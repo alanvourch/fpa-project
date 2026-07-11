@@ -23,12 +23,12 @@ Net margin 67.6%.
 
 | Period | Line | Variance EUR | % | F/U | Driver |
 |---|---|---|---|---|---|
-| 2024-10 | Revenue | -115,950 | -11.3% | U | No clear driver identified; follow up with the BU controller. |
-| 2024-11 | Opex - IT | +24,116 | +158.1% | U | Storage cluster in the Paris server room failed on 4 November; (notes N06) |
+| 2024-10 | Revenue | -115,950 | -11.3% | U | Lower internal rebilling of shared services in October; (analyst input, manual) |
+| 2024-11 | Opex - IT | +24,116 | +158.1% | U | Storage cluster in the Paris server room failed on 4 November; (business note N06) |
 
 ## Follow-ups
 
-- Revenue 2024-10: -116k (-11.3%, unfavorable). No documented driver; review with the BU controller.
+- No open follow-ups this cycle.
 
 ## Q3 2026 outlook (Jul 2026 / Aug 2026 / Sep 2026)
 

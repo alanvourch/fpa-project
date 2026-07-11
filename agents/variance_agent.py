@@ -47,6 +47,7 @@ Outputs:
 Run: .venv/Scripts/python.exe agents/variance_agent.py
 """
 
+import os
 import re
 from datetime import timedelta
 
@@ -54,6 +55,7 @@ import pandas as pd
 
 CLEANED_PATH = "data/eventco_monthly_cleaned.csv"
 NOTES_PATH = "data/business_notes.csv"
+ANALYST_PATH = "data/analyst_commentary.csv"
 REPORT_PATH = "output/variance_report.md"
 TABLE_PATH = "output/variance_table.csv"
 
@@ -120,6 +122,26 @@ def load_data():
     df = pd.read_csv(CLEANED_PATH, parse_dates=["month"])
     notes = pd.read_csv(NOTES_PATH, parse_dates=["date"])
     return df, notes
+
+
+def load_analyst_commentary():
+    """The FP&A analyst's manual input file: explanations they wrote after
+    investigating the follow-up items this agent raised on earlier runs.
+    Keyed by (business_unit, line_item, period) where period matches this
+    report's own period format (YYYY-MM, or YYYY-MM..YYYY-MM for episodes).
+
+    This is the human half of the workflow: the agent itself NEVER invents a
+    cause, it only (a) cites documented business notes it can point to, or
+    (b) hands the item to the analyst. What comes back through this file is
+    rendered clearly labeled as manual analyst input, so a reader can always
+    tell machine-evidenced explanations from human-written ones."""
+    if not os.path.exists(ANALYST_PATH):
+        return {}
+    df = pd.read_csv(ANALYST_PATH)
+    return {
+        (r["business_unit"], r["line_item"], r["period"]): r
+        for _, r in df.iterrows()
+    }
 
 
 def build_variance_table(df):
@@ -252,8 +274,14 @@ def explanation_text(item):
                 f"{n['author_role']}): \"{n['note']}\""
             )
         return "Corroborated by the business notes log: " + " / ".join(parts)
+    if item.get("analyst") is not None:
+        a = item["analyst"]
+        return (f"Analyst input ({a['author']}, {a['date']}): \"{a['comment']}\" "
+                "Written manually after follow-up; not derived from the "
+                "business notes log.")
     return ("No clear driver identified: no corroborating note found in the "
-            "business log for this BU, line item and period. The variance is "
+            "business log for this BU, line item and period, and the analyst "
+            "has not yet returned commentary from follow-up. The variance is "
             "numerically material but unexplained. Recommend follow-up with "
             "the BU controller rather than attributing a cause.")
 
@@ -300,14 +328,23 @@ def render_report(material, excluded, var_df):
         "of noise masking a sustained programme doesn't end the episode. A "
         "direction flip or two quiet months in a row do end it.",
         "",
-        "**Root-cause discipline:** an explanation is only given when a dated, "
-        "BU-relevant note in the business log corroborates the variance "
-        "(right BU or group-wide, dated within the evidence window of "
-        f"{EVIDENCE_LOOKBACK_DAYS} days before to {EVIDENCE_LOOKAHEAD_DAYS} "
-        "days after the variance period, and actually about that kind of "
-        "spend). Otherwise the report says **no clear driver identified**. "
-        "A material number with no documented cause is a follow-up item, not "
-        "a story to invent.",
+        "**Root-cause discipline:** this agent never invents a cause. Every "
+        "material row carries exactly one of three explanation types, and the "
+        "type is always visible:",
+        "",
+        "1. *Corroborated by the business notes log:* a dated, BU-relevant "
+        "note found automatically (right BU or group-wide, dated within the "
+        f"evidence window of {EVIDENCE_LOOKBACK_DAYS} days before to "
+        f"{EVIDENCE_LOOKAHEAD_DAYS} days after the variance period, and "
+        "actually about that kind of spend).",
+        "2. *Analyst input:* no note corroborates the variance, so it went to "
+        "the FP&A analyst as a follow-up; the explanation shown is what the "
+        "analyst wrote back in `data/analyst_commentary.csv` after "
+        "investigating with the business. Labeled as manual input so it can "
+        "never be mistaken for machine-found evidence.",
+        "3. *No clear driver identified:* no note and no analyst input yet. "
+        "The item stays on the follow-up list; the number is reported "
+        "without a story.",
         "",
         "## Excluded from analysis: suspected data entry errors",
         "",
@@ -358,6 +395,7 @@ def render_report(material, excluded, var_df):
 
 def main():
     df, notes = load_data()
+    analyst = load_analyst_commentary()
     var_df = build_variance_table(df)
 
     excluded = [
@@ -370,32 +408,57 @@ def main():
     material = attach_evidence(episodes + single_months, notes)
     material.sort(key=lambda x: -abs(x["variance_eur"]))
 
-    # Mark each month-row with its materiality classification and evidence, so
-    # downstream agents (Forecast) can tell one-off months from sustained
-    # programmes without re-deriving the analysis.
+    # Attach analyst input to evidence-less items only: a documented note
+    # always outranks manual commentary, and commentary for a row the agent
+    # already evidenced (or never flagged) is a hygiene problem worth a
+    # loud warning, not a silent merge.
+    matched_keys = set()
+    for item in material:
+        key = (item["business_unit"], item["line_item"], fmt_period(item["months"]))
+        if key in analyst:
+            if item["evidence"]:
+                print(f"WARNING: analyst commentary for {key} ignored: the row "
+                      "already has documented evidence")
+            else:
+                item["analyst"] = analyst[key]
+            matched_keys.add(key)
+    for key in analyst.keys() - matched_keys:
+        print(f"WARNING: analyst commentary for {key} matches no material item "
+              "in this run; check the period spelling in data/analyst_commentary.csv")
+
+    # Mark each month-row with its materiality classification, evidence, and
+    # analyst input, so downstream agents (Forecast, BU Reports) can tell
+    # one-off months from sustained programmes, and machine-evidenced from
+    # human-explained items, without re-deriving the analysis.
     flag_map = {}
     for item in material:
         kind = "episode" if len(item["months"]) > 1 else "single"
         ids = ", ".join(h["note"]["note_id"] for h in item["evidence"])
+        a = item.get("analyst")
+        comment = f"{a['comment']} ({a['author']}, {a['date']})" if a is not None else ""
         for m in item["months"]:
-            flag_map[(item["business_unit"], item["line_item"], m)] = (kind, ids)
+            flag_map[(item["business_unit"], item["line_item"], m)] = (kind, ids, comment)
     out = var_df.copy()
     keys = list(zip(out["business_unit"], out["line_item"], out["month"]))
-    out["materiality"] = [flag_map.get(k, ("", ""))[0] for k in keys]
-    out["evidence_notes"] = [flag_map.get(k, ("", ""))[1] for k in keys]
+    out["materiality"] = [flag_map.get(k, ("", "", ""))[0] for k in keys]
+    out["evidence_notes"] = [flag_map.get(k, ("", "", ""))[1] for k in keys]
+    out["analyst_comment"] = [flag_map.get(k, ("", "", ""))[2] for k in keys]
     out["month"] = out["month"].dt.strftime("%Y-%m")
     out.to_csv(TABLE_PATH, index=False)
 
     with open(REPORT_PATH, "w", encoding="utf-8") as f:
         f.write(render_report(material, excluded, var_df))
 
-    n_explained = sum(1 for m in material if m["evidence"])
+    n_evidenced = sum(1 for m in material if m["evidence"])
+    n_analyst = sum(1 for m in material if not m["evidence"] and m.get("analyst") is not None)
+    n_open = len(material) - n_evidenced - n_analyst
     print(f"Variance rows computed: {len(var_df)}")
     print(f"Excluded as suspected data errors: {len(excluded)}")
     print(f"Material items: {len(material)} "
           f"({len(episodes)} episodes, {len(single_months)} single months)")
-    print(f"  with grounded evidence: {n_explained}")
-    print(f"  no clear driver identified: {len(material) - n_explained}")
+    print(f"  corroborated by business notes: {n_evidenced}")
+    print(f"  explained by analyst input (manual, labeled): {n_analyst}")
+    print(f"  still open, no clear driver identified: {n_open}")
     print(f"Wrote {TABLE_PATH} and {REPORT_PATH}")
 
 
