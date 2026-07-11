@@ -26,9 +26,13 @@ team would demand before trusting any of this:
 
 1. **A human stays in charge.** The pipeline assembles a draft and stops. Nothing is
    emailed, published, or distributed by code.
-2. **If there is no evidence, say so.** Of the 20 material variances found, 16 are
-   reported as "no clear driver identified" with a follow-up recommendation, because no
-   business note corroborates them. The pipeline never invents a plausible-sounding cause.
+2. **If there is no evidence, route it to a human.** The system explains a variance only
+   when a documented business note corroborates it (4 of the 20 material variances here).
+   Everything else goes to the FP&A analyst as a follow-up; the analyst's written
+   explanations come back through a separate input file and are labeled as manual input
+   (14 of 20), and whatever is still open says so plainly (2 of 20). The system itself
+   never invents a plausible-sounding cause, and a reader can always tell which kind of
+   explanation they are looking at.
 
 ## Problem
 
@@ -57,9 +61,12 @@ inside one black box:
    error, without correcting it. That decision stays with a human.
 2. **Variance & Root-Cause** computes all 840 BU/line/month variances, applies a
    three-rule materiality test, and explains a variance only when a dated internal
-   business note corroborates it. Otherwise it says "no clear driver identified" and
-   recommends follow-up. The flagged data-error row is excluded before analysis, so the
-   typo can never be dressed up as a story.
+   business note corroborates it. Anything unexplained goes to the FP&A analyst as a
+   follow-up; the analyst's findings come back through `data/analyst_commentary.csv` and
+   are rendered clearly labeled as manual input, never blended with machine-found
+   evidence. Items with neither say "no clear driver identified" and stay open. The
+   flagged data-error row is excluded before analysis, so the typo can never be dressed
+   up as a story.
 3. **Forecast** projects the next three months from a normalized history: one-off events
    and concluded programmes are removed from the base so last year's accident is not
    re-forecast as this year's plan. Every adjustment is logged in an audit trail with its
@@ -92,22 +99,26 @@ On the synthetic 30-month dataset (4 business units, ~EUR100M annual revenue):
   EUR52.0M, actual EUR48.9M. The three named drivers: a EUR2.08M client project overrun
   (change order recovered only part of it), a EUR197k unfavorable FX translation on a
   USD-invoiced contract, and EUR69k of in-housing savings on marketing spend in 2025.
-  Material items with no documented driver net out to +EUR123k and are shown as their own
-  block, hatched, rather than absorbed into a story.
+  Material items with no documented note net out to +EUR123k and are shown as their own
+  hatched block, labeled as routed to the analyst, rather than absorbed into a story.
 
-![FY2025 net result waterfall from budget to actual, with named variance drivers and an explicitly unexplained block](docs/variance_bridge_2025.png)
+![FY2025 net result waterfall from budget to actual, with named variance drivers and a hatched block for items routed to the analyst](docs/variance_bridge_2025.png)
 
 - **The one planted data trap was caught.** Production's November 2025 revenue came in at
   10x budget, the signature of an extra digit, not a business event. It was flagged at
   ingestion, excluded from variance analysis, normalized out of the forecast history, and
   mentioned in the executive summary only as a data issue pending correction. Every
   downstream agent handled it; none narrated it.
-- **16 of 20 material variances are honestly unexplained.** Each says "no clear driver
-  identified" and recommends follow-up with the BU controller. That ratio is realistic
-  for a monthly close, and resisting the urge to fill the gap with invented causes is the
-  core discipline this pipeline demonstrates.
+- **The machine-versus-human boundary is visible on every variance.** The system
+  attributed a cause to only the 4 material variances a documented note corroborates. The
+  other 16 went to the FP&A analyst as follow-ups: 14 now carry the analyst's written
+  explanation, labeled "Analyst input" with author and date, and 2 remain open and say
+  so. That split (4 documented, 14 analyst-explained, 2 open) is a realistic monthly
+  close, and keeping the three types visibly distinct is the core discipline this
+  pipeline demonstrates. (The analyst commentary in this demo is authored narrative; see
+  Known limitations.)
 
-![All 20 material variances as P&L impact, hatched where no documented driver exists](docs/variance_highlights.png)
+![All 20 material variances as P&L impact, hatched where no documented note exists and the item went to the analyst](docs/variance_highlights.png)
 
 - **Every business unit gets a one-page review with driver-based commentary.** Production's
   FY2025 page splits its payroll variance into a headcount effect (average 54.6 FTE vs 55
@@ -138,6 +149,7 @@ flowchart TD
     RAW[("Raw monthly export\n(CSV)")] --> ING["Ingestion Agent\n(deterministic)"]
     ING --> CLEAN[("Cleaned dataset")]
     NOTES[("Business notes log")] --> VAR
+    ANA[("Analyst commentary\n(manual human input,\nlabeled as such)")] --> VAR
     CLEAN --> VAR["Variance and Root-Cause Agent\n(deterministic)"]
     VAR --> VTAB[("Variance report and table")]
     VTAB --> FC["Forecast Agent\n(deterministic)"]
@@ -229,6 +241,11 @@ close reading of the logs:
   difficulty is calibrated by construction. The agents never read the answer key
   (`data/ground_truth.md`); separate validation scripts in `tests/` check their outputs
   against it after the fact, and all six pass.
+- **The analyst commentary is authored demo narrative.** The 14 "Analyst input" rows
+  were written for this demo the way a real analyst would write them after follow-up,
+  but the underlying variances are seeded generator noise, so those explanations are
+  plausible fiction, documented as such. What the demo actually shows is the workflow
+  and the provenance labeling, not real investigative findings.
 - **Driver splits reconcile exactly because the driver data is consistent by
   construction.** `data/generate_drivers.py` derives monthly FTE and project counts from
   the same seeded world as the P&L, which is what makes payroll = FTE × rate and

@@ -7,3 +7,4 @@ tzdata==2026.2
 anthropic==0.116.0
 matplotlib==3.11.0
 fpdf2==2.8.7
+markdown==3.10.2
