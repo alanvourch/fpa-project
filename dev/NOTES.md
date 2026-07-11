@@ -33,4 +33,15 @@ re-deciding anything.
 
 ## Lessons (validator catches, surprises)
 
-(none yet this rebuild)
+- **2026-07-11 / ground_truth.md was NOT fully generator-owned.** The Phase 4
+  "Business notes evidence map" section had been appended by hand after
+  generation, so the first `generate_dataset.py` re-run silently deleted it and
+  `validate_variance.py` crashed (it parses that section). Fix: the evidence map
+  now lives inside `write_ground_truth()` verbatim (as section 4; the old file
+  had two sections numbered 3), so regeneration can never lose it. Rule going
+  forward: never hand-edit a generated file; move the edit into the generator.
+- **2026-07-11 / Replay fidelity proven, not assumed.** `validate_drivers.py`
+  asserts the replayed true world matches `eventco_monthly_cleaned.csv` exactly
+  (payroll everywhere; revenue everywhere except the trap row, which must be
+  exactly 10x). If someone reorders rng calls in `generate_dataset.py`, the
+  drivers validator is the tripwire.

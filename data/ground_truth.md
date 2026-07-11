@@ -22,6 +22,10 @@ data errors and should survive data cleaning untouched.
 - **Marketing / 2025-11** — Marketing opex actual came in at EUR39,033 vs a pre-savings run-rate of ~EUR50,042 (-22%). Root cause: renegotiated media-buying and agency contracts effective July 2025. Favorable, sustained cost savings (not a data error).
 - **Marketing / 2025-12** — Marketing opex actual came in at EUR44,568 vs a pre-savings run-rate of ~EUR57,139 (-22%). Root cause: renegotiated media-buying and agency contracts effective July 2025. Favorable, sustained cost savings (not a data error).
 
+See also `data/ground_truth_drivers.md` (written by `generate_drivers.py`) for
+the operational-driver dataset: monthly FTE and projects delivered per BU,
+derived consistent with the true actuals above.
+
 ## 2. Data quality issues (for the Ingestion/QA Agent to clean)
 
 These are recording/transcription problems in the raw export. None of them
@@ -46,7 +50,7 @@ purely on percentage deviation without a magnitude/plausibility check would
 misreport this as a business anomaly. It should instead be caught and
 corrected during ingestion/QA, before it ever reaches the Variance Agent.
 
-## 3. Business notes evidence map (added in Phase 4 — validation only)
+## 4. Business notes evidence map (added in Phase 4 — validation only)
 
 `data/business_notes.csv` (21 dated, BU-tagged internal notes) was authored alongside the
 anomalies above so the Variance & Root-Cause Agent has genuine operational evidence to

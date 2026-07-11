@@ -303,6 +303,10 @@ data errors and should survive data cleaning untouched.
 
 {chr(10).join(business_notes)}
 
+See also `data/ground_truth_drivers.md` (written by `generate_drivers.py`) for
+the operational-driver dataset: monthly FTE and projects delivered per BU,
+derived consistent with the true actuals above.
+
 ## 2. Data quality issues (for the Ingestion/QA Agent to clean)
 
 These are recording/transcription problems in the raw export. None of them
@@ -321,6 +325,22 @@ corresponding movement in COGS or payroll. A later agent that flags variances
 purely on percentage deviation without a magnitude/plausibility check would
 misreport this as a business anomaly. It should instead be caught and
 corrected during ingestion/QA, before it ever reaches the Variance Agent.
+
+## 4. Business notes evidence map (added in Phase 4 — validation only)
+
+`data/business_notes.csv` (21 dated, BU-tagged internal notes) was authored alongside the
+anomalies above so the Variance & Root-Cause Agent has genuine operational evidence to
+ground its explanations in, plus deliberate noise so matching isn't trivial. The agent
+must never read this file; `tests/validate_variance.py` uses this map after the fact.
+
+Signal notes (each maps to one real business anomaly documented in section 1):
+
+- **Production / cogs_actual** (client project overrun, Falcon launch) — signal notes: N11, N13
+- **Digital / revenue_actual** (FX on USD contract; revenue-only, delivery costs are EUR-denominated) — signal notes: N08
+- **Back-Office / opex_it_actual** (one-off IT infrastructure failure) — signal notes: N06
+- **Marketing / opex_marketing_actual** (favorable in-housing savings) — signal notes: N12, N16
+
+Noise notes (must never be cited as a variance explanation): N01, N02, N03, N04, N05, N07, N09, N10, N14, N15, N17, N18, N19, N20, N21
 """
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)

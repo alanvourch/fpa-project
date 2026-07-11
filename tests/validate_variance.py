@@ -58,7 +58,7 @@ def month_range(start, end):
 def parse_ground_truth(path):
     text = open(path, encoding="utf-8").read()
     business_section = text.split("## 2. Data quality issues", 1)[0]
-    notes_section = text.split("## 3. Business notes evidence map", 1)[1]
+    notes_section = text.split("## 4. Business notes evidence map", 1)[1]
 
     anomaly_months = []
     for line in business_section.splitlines():
