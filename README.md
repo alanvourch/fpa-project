@@ -104,7 +104,7 @@ On the synthetic 30-month dataset (4 business units, ~EUR100M annual revenue):
 
 ![FY2025 net result waterfall from budget to actual, with named variance drivers and a hatched block for items routed to the analyst](docs/variance_bridge_2025.png)
 
-- **The one planted data trap was caught.** Production's November 2025 revenue came in at
+- **The one planted data trap was caught.** Brand Events' November 2025 revenue came in at
   10x budget, the signature of an extra digit, not a business event. It was flagged at
   ingestion, excluded from variance analysis, normalized out of the forecast history, and
   mentioned in the executive summary only as a data issue pending correction. Every
@@ -120,13 +120,13 @@ On the synthetic 30-month dataset (4 business units, ~EUR100M annual revenue):
 
 ![All 20 material variances as P&L impact, hatched where no documented note exists and the item went to the analyst](docs/variance_highlights.png)
 
-- **Every business unit gets a one-page review with driver-based commentary.** Production's
-  FY2025 page splits its payroll variance into a headcount effect (average 54.6 FTE vs 55
-  planned) and a rate effect, and its revenue variance into projects volume (140 delivered
-  vs 141 planned) and price/mix. Both splits reconcile exactly to the reported variances
-  (asserted in code, re-checked by a validator), and the commentary cites the same
-  evidence notes as the variance report. See
-  [`output/bu_reports/production.pdf`](output/bu_reports/production.pdf) and its three
+- **Every business unit gets a one-page review with driver-based commentary.** Brand
+  Events' FY2025 page splits its payroll variance into a headcount effect (average 54.6
+  FTE vs 55 planned) and a rate effect, and its revenue variance into projects volume (146
+  delivered vs 141 planned) and price/mix. Both splits reconcile exactly to the reported
+  variances (asserted in code, re-checked by a validator), and the commentary cites the
+  same evidence notes as the variance report. See
+  [`output/bu_reports/brand_events.pdf`](output/bu_reports/brand_events.pdf) and its three
   siblings, each also available as Markdown.
 
 - **The Q3 2026 rolling forecast projects EUR22.6M revenue at a 47.9% margin**, built
@@ -224,7 +224,7 @@ close reading of the logs:
   (a long anomaly contaminates its own baseline). The two hard requirements still hold
   exactly: the data trap was caught, and no real anomaly was misclassified as an error.
   The Variance Agent computes its own materiality independently and found all 11.
-- **The episode detector can overstate a window.** The Marketing savings programme
+- **The episode detector can overstate a window.** The Corporate Events savings programme
   started in July 2025, but the detected episode spans April 2025 to February 2026
   because adjacent same-direction noise months get bridged into the run. The executive
   summary discloses this rather than papering over it.
@@ -261,7 +261,7 @@ are relative.
 **Windows (PowerShell):**
 
 ```powershell
-git clone <repo-url>
+git clone https://github.com/alanvourch/fpa-project.git
 cd fpa-project
 python -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
@@ -271,7 +271,7 @@ python -m venv .venv
 **macOS / Linux:**
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/alanvourch/fpa-project.git
 cd fpa-project
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
@@ -287,15 +287,20 @@ The charts in `docs/` are regenerated with `make_charts.py` (same interpreter), 
 validation suite is the six `tests/validate_*.py` scripts.
 
 **Narrative Agent credentials** (optional; every other step runs without them). The agent
-builds a bare `anthropic.Anthropic()` client, so either works:
+builds a bare `anthropic.Anthropic()` client, so any of these work:
 
 - *API key*: set `ANTHROPIC_API_KEY` in your environment (never committed; `.env` is
   git-ignored).
 - *OAuth via your Claude account*: install the
   [Anthropic CLI](https://github.com/anthropics/anthropic-cli) (`ant`), run
-  `ant auth login`, and the Python SDK picks up the stored profile automatically. This is
-  the path used for this project, since it works on a Claude subscription without a
-  separate metered key.
+  `ant auth login`, and the Python SDK picks up the stored profile automatically. This
+  project was developed and tested this way, on a personal Claude Pro subscription rather
+  than a separate metered key.
+- *A company's internal model gateway, or another approved provider*: the same client
+  construction resolves whatever `ANTHROPIC_API_KEY`/`ANTHROPIC_BASE_URL` (or an
+  organization's OAuth profile) point it at. Nothing in `agents/narrative_agent.py` is
+  tied to a personal account; swapping the credential source is a configuration change,
+  not a code change, which is the point of only ever calling the bare client constructor.
 
 Without credentials, the Narrative step is skipped and logged plainly, and the board pack
 labels the carried-over or missing narrative instead of pretending one was generated.

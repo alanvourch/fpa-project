@@ -100,7 +100,7 @@ def fig_titles(fig, title, subtitle, top):
 def bridge_chart(v):
     y = v[v["month"].str.startswith("2025")].copy()
     err = y["suspected_data_error"]
-    # The suspected data-entry row (Production revenue 2025-11) is held at
+    # The suspected data-entry row (Brand Events revenue 2025-11) is held at
     # budget on both sides pending correction at source: zero variance
     # contribution, budget total stays complete.
     y.loc[err, "impact"] = 0.0
@@ -119,7 +119,7 @@ def bridge_chart(v):
     deltas = [
         ("Falcon project\noverrun (COGS)", falcon, False),
         ("FX on USD\ncontract (revenue)", fx, False),
-        ("Marketing savings\nprogramme (opex)", savings, False),
+        ("Corp. Events savings\nprogramme (opex)", savings, False),
         (f"Routed to analyst\n(no documented note),\nnet of {unexplained_mask.sum()} items", unexplained, True),
         ("All other,\nbelow materiality", other, False),
     ]
@@ -189,7 +189,7 @@ def bridge_chart(v):
         "FY2025 net result: budget to actual",
         "EventCo group, EUR. Green favorable, red unfavorable; the hatched block groups "
         "material variances with no documented note, routed to the analyst.\n"
-        "Y-axis zoomed to the variance range; every bar is value-labeled. Production "
+        "Y-axis zoomed to the variance range; every bar is value-labeled. Brand Events "
         "Nov-2025 revenue held at budget pending correction of a suspected data entry error.",
         top=0.84,
     )

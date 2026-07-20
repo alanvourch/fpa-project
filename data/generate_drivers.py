@@ -22,10 +22,10 @@ Consistency by construction (the whole point of the drivers):
   - revenue_actual(TRUE) = projects_actual x implied avg project value,
     exactly. Volume absorbs roughly VOLUME_SHARE of each month's revenue
     variance (quantized); implied price/mix absorbs the rest.
-  - Digital 2025-09 (the FX month): projects held exactly at budget, so the
+  - Digital/Influence 2025-09 (the FX month): projects held exactly at budget, so the
     entire revenue miss is price (EUR translation), consistent with note
     N08 ("no change in delivered scope").
-  - Production 2025-11 (the fat-finger trap): drivers reflect the TRUE
+  - Brand Events 2025-11 (the fat-finger trap): drivers reflect the TRUE
     revenue. Anyone dividing the corrupted EUR52M figure by the normal
     project count gets an implied project value ~10x budget - the ops
     system independently corroborates that the finance figure is a data
@@ -56,10 +56,10 @@ driver_rng = np.random.default_rng(DRIVER_SEED)
 # Average budgeted value of one delivered project, per BU. Chosen so monthly
 # project counts land in a realistic 10-20 band for a EUR100M events group.
 PROJECT_VALUE_BUDGET = {
-    "Production": 300_000,   # large activations/launch events
-    "Marketing": 100_000,    # campaigns and brand programmes
-    "Digital": 175_000,      # platform builds and digital experiences
-    "Back-Office": 50_000,   # internal/pass-through service engagements
+    "Brand Events": 300_000,              # large activations/launch events
+    "Corporate Events": 100_000,          # conferences and corporate programmes
+    "Digital/Influence": 175_000,         # platform builds and digital campaigns
+    "Government & Institutions": 50_000,  # public-sector and institutional engagements
 }
 
 # Share of a month's revenue variance carried by volume (project count);
@@ -67,7 +67,7 @@ PROJECT_VALUE_BUDGET = {
 # per month, exact in the reconciliation (price is the implied residual).
 VOLUME_SHARE = 0.6
 
-FX_MONTH = ("Digital", pd.Timestamp("2025-09-01"))   # note N08: volume on plan
+FX_MONTH = ("Digital/Influence", pd.Timestamp("2025-09-01"))   # note N08: volume on plan
 FTE_SMOOTHING_MONTHS = 3
 FTE_MAX_DEVIATION = 2
 
@@ -120,8 +120,15 @@ def build_projects(df):
     the TRUE revenue achievement ratio, dampened to VOLUME_SHARE, plus a
     small seeded jitter - so volume explains most of a revenue variance and
     implied price/mix explains the rest. The FX month is forced to budget
-    volume: the miss there is purely translation."""
-    df = df.sort_values(["business_unit", "month"]).reset_index(drop=True)
+    volume: the miss there is purely translation.
+
+    Row order below fixes the driver_rng jitter draw sequence, so it must
+    stay independent of the BU names themselves (BUS list order, not an
+    alphabetical sort) -- otherwise a cosmetic rename would silently
+    reshuffle which month gets which +/-1 jitter."""
+    bu_order = {bu: i for i, bu in enumerate(gd.BUS)}
+    df = df.assign(_bu_order=df["business_unit"].map(bu_order))
+    df = df.sort_values(["_bu_order", "month"]).drop(columns="_bu_order").reset_index(drop=True)
     out = []
     for _, r in df.iterrows():
         bu = r["business_unit"]
@@ -145,7 +152,7 @@ def write_ground_truth(df, drivers):
         on=["month", "business_unit"],
     )
     fx = merged[(merged["business_unit"] == FX_MONTH[0]) & (merged["month"] == FX_MONTH[1])].iloc[0]
-    trap = merged[(merged["business_unit"] == "Production")
+    trap = merged[(merged["business_unit"] == "Brand Events")
                   & (merged["month"] == pd.Timestamp("2025-11-01"))].iloc[0]
     trap_corrupted = trap["revenue_actual"] * 10  # the fat-fingered figure in the raw export
     dev_counts = {
@@ -167,8 +174,8 @@ and project-ops systems respectively - deliberately CLEAN data, unlike the
 messy finance export:
 
 - **fte_budget / fte_actual**: planned vs actual headcount. Budget is the
-  BU's planned headcount (Production 55, Marketing 20, Digital 40,
-  Back-Office 35; group 150). Actual follows the 3-month smoothed payroll
+  BU's planned headcount (Brand Events 55, Corporate Events 20,
+  Digital/Influence 40, Government & Institutions 35; group 150). Actual follows the 3-month smoothed payroll
   achievement ratio, in whole heads, capped at +/-2 vs plan. Deviation
   distribution across all 120 rows: {dev_counts}.
 - **projects_budget / projects_actual**: planned vs delivered project count.
@@ -190,17 +197,17 @@ messy finance export:
 
 ## Planted driver stories (only two - drivers are context, not new anomalies)
 
-1. **FX month, Digital / 2025-09**: projects_actual = projects_budget
+1. **FX month, Digital/Influence / 2025-09**: projects_actual = projects_budget
    ({fx['projects_actual']:.0f} = {fx['projects_budget']:.0f}). The EUR{fx['revenue_budget'] - fx['revenue_actual']:,.0f}
    revenue miss is 100% price (USD contract translated at a stronger EUR),
    0% volume - independently corroborating note N08 ("no change in
    delivered scope").
-2. **Trap month, Production / 2025-11**: drivers reflect the TRUE revenue of
+2. **Trap month, Brand Events / 2025-11**: drivers reflect the TRUE revenue of
    EUR{trap['revenue_actual']:,.0f} ({trap['projects_actual']:.0f} projects vs
    {trap['projects_budget']:.0f} budgeted). Dividing the corrupted export figure of
    EUR{trap_corrupted:,.0f} by that project count implies
    EUR{trap_corrupted / trap['projects_actual']:,.0f} per project vs a budget value of
-   EUR{PROJECT_VALUE_BUDGET['Production']:,.0f} - roughly 10x. The ops system
+   EUR{PROJECT_VALUE_BUDGET['Brand Events']:,.0f} - roughly 10x. The ops system
    independently confirms the finance figure is a data entry error, not a
    real business event.
 

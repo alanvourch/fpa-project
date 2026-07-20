@@ -13,11 +13,11 @@ agent's outputs (output/forecast.csv, output/forecast_report.md) against it:
      with their evidence notes cited in the audit trail.
   4. No forecast is based on a raw anomaly month (base_was_normalized must be
      set wherever the base month is a ground-truth anomaly for that series).
-  5. The FX dip is not re-forecast: Digital revenue for cutoff+3 must exceed
-     the raw FX-depressed actual of its base month.
-  6. The concluded savings programme is not extrapolated: the Marketing
-     marketing-opex forecast must sit above the raw deep-savings prior-year
-     actuals.
+  5. The FX dip is not re-forecast: Digital/Influence revenue for cutoff+3
+     must exceed the raw FX-depressed actual of its base month.
+  6. The concluded savings programme is not extrapolated: the Corporate
+     Events marketing-opex forecast must sit above the raw deep-savings
+     prior-year actuals.
   7. Structural sanity: 84 rows (28 series x 3 months), correct horizon,
      positive values, growth factors in a plausible band.
 
@@ -55,7 +55,7 @@ def parse_ground_truth(path):
 
     anomalies = []
     for line in business_section.splitlines():
-        m = re.match(r"- \*\*([\w\- ]+) / (\d{4}-\d{2})\*\* — (.+)", line)
+        m = re.match(r"- \*\*([\w\-&/ ]+) / (\d{4}-\d{2})\*\* — (.+)", line)
         if not m:
             continue
         bu, month, rest = m.groups()
@@ -106,14 +106,14 @@ def main():
     failures, passes = [], []
 
     # 1. Trap normalized with a data-error reason and value actually replaced
-    trap = adj_index.get(("Production", "Revenue", "2025-11"))
+    trap = adj_index.get(("Brand Events", "Revenue", "2025-11"))
     if trap and "data entry error" in trap["reason"]:
         if money_to_float(trap["used"]) < 0.25 * money_to_float(trap["raw"]):
             passes.append("Fat-finger trap normalized out of the history (data-error reason, value replaced)")
         else:
             failures.append("TRAP: listed as data error but the used value was not actually replaced")
     else:
-        failures.append("TRAP: Production revenue 2025-11 missing from the audit trail (or wrong reason)")
+        failures.append("TRAP: Brand Events revenue 2025-11 missing from the audit trail (or wrong reason)")
 
     # 2. Ground-truth one-off months normalized
     missing_singles = [

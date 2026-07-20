@@ -93,7 +93,12 @@ def bu_reports_section():
         "",
     ]
     for slug in slugs:
-        name = slug.replace("_", " ").title().replace("Back Office", "Back-Office")
+        # Read the BU's display name from its own report heading rather than
+        # reverse-guessing it from the filename slug, so this never drifts
+        # from whatever business-line names are actually in the data.
+        with open(os.path.join(BU_REPORTS_DIR, f"{slug}.md"), encoding="utf-8") as f:
+            first_line = f.readline().lstrip("#").strip()
+        name = first_line.split(":", 1)[0].strip()
         lines.append(f"- **{name}**: `{BU_REPORTS_DIR}/{slug}.md` / `{BU_REPORTS_DIR}/{slug}.pdf`")
     return "\n".join(lines) + "\n"
 
@@ -110,16 +115,18 @@ def assemble_board_pack(log_entries):
         narrative_status = "generated this run, included below"
     elif os.path.exists(NARRATIVE_PATH):
         narrative_status = (
-            "included below, but CARRIED OVER from an earlier run. The Narrative step "
-            "did not complete this time (see `output/pipeline_log.md`). The QA report "
-            "checks its figures against this run's reports; re-run "
-            "`agents/narrative_agent.py` once credentials are configured for a freshly "
-            "generated version."
+            "included below from the most recent successful generation, CARRIED OVER "
+            "rather than regenerated: no live model credentials were configured for this "
+            "run (see `output/pipeline_log.md`). The QA report still checks its figures "
+            "against this run's reports. Point `agents/narrative_agent.py` at a Claude "
+            "subscription, an API key, or an organization's internal model gateway and "
+            "re-run it for a freshly generated version."
         )
     else:
         narrative_status = (
-            "NOT GENERATED. The Narrative Agent needs an Anthropic API key or "
-            "`ant auth login` OAuth profile configured. Run `agents/narrative_agent.py` "
+            "NOT GENERATED. The Narrative Agent needs model credentials configured: an "
+            "Anthropic API key, an `ant auth login` OAuth profile, or, in a company "
+            "deployment, an internal model gateway. Run `agents/narrative_agent.py` "
             "separately once available, then re-run the orchestrator."
         )
 

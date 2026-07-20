@@ -444,6 +444,12 @@ def main():
     out["evidence_notes"] = [flag_map.get(k, ("", "", ""))[1] for k in keys]
     out["analyst_comment"] = [flag_map.get(k, ("", "", ""))[2] for k in keys]
     out["month"] = out["month"].dt.strftime("%Y-%m")
+    # Round at the serialization boundary only: every threshold check and
+    # evidence match above already ran on full precision, so this only
+    # trims float noise from the published file, never from the analysis.
+    for col in ("actual", "budget", "variance_eur"):
+        out[col] = out[col].round(2)
+    out["variance_pct"] = out["variance_pct"].round(6)
     out.to_csv(TABLE_PATH, index=False)
 
     with open(REPORT_PATH, "w", encoding="utf-8") as f:

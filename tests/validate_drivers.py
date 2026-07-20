@@ -12,8 +12,8 @@ Checks, in order:
      exactly, for every BU/month.
   5. Revenue bridge: volume effect + price effect == true revenue variance,
      exactly, for every BU/month.
-  6. FX month (Digital 2025-09): projects at budget; the miss is 100% price.
-  7. Trap month (Production 2025-11): implied price from the CORRUPTED
+  6. FX month (Digital/Influence 2025-09): projects at budget; the miss is 100% price.
+  7. Trap month (Brand Events 2025-11): implied price from the CORRUPTED
      export figure is >4x the budget project value (the same magnitude rule
      the ingestion agent uses), i.e. the ops system corroborates the error.
   8. FTE sanity: |actual - budget| <= 2 heads everywhere.
@@ -35,8 +35,8 @@ import generate_drivers as gdr  # noqa: E402
 DRIVERS_PATH = ROOT / "data" / "eventco_drivers.csv"
 CLEANED_PATH = ROOT / "data" / "eventco_monthly_cleaned.csv"
 
-TRAP_BU, TRAP_MONTH = "Production", pd.Timestamp("2025-11-01")
-FX_BU, FX_MONTH = "Digital", pd.Timestamp("2025-09-01")
+TRAP_BU, TRAP_MONTH = "Brand Events", pd.Timestamp("2025-11-01")
+FX_BU, FX_MONTH = "Digital/Influence", pd.Timestamp("2025-09-01")
 
 TOL = 1e-6  # float reconciliation tolerance, EUR
 

@@ -12,8 +12,8 @@ Checks, per BU:
   4. Every material item reconstructed from the variance table appears on
      its BU's page (period + line + formatted EUR), and every item without
      evidence carries the literal "No clear driver identified" language.
-  5. The trap month (Production revenue 2025-11) never appears as a material
-     row, and the Production page discloses the data note.
+  5. The trap month (Brand Events revenue 2025-11) never appears as a material
+     row, and the Brand Events page discloses the data note.
   6. Style: no em dashes, no banned buzzwords, in any .md one-pager.
 
 Run: .venv/Scripts/python.exe tests/validate_bu_reports.py
@@ -105,16 +105,16 @@ def main():
         check(not hits, f"{bu}: no buzzwords on the page"
               if not hits else f"{bu}: buzzword(s) found: {hits}")
 
-    # 5. Trap handling on the Production page
-    prod_md = (OUT_DIR / "production.md").read_text(encoding="utf-8")
+    # 5. Trap handling on the Brand Events page
+    prod_md = (OUT_DIR / "brand_events.md").read_text(encoding="utf-8")
     trap_rows = [l for l in prod_md.splitlines()
                  if l.startswith("|") and "2025-11" in l and "Revenue" in l]
     check(not trap_rows,
-          "Production: the trap month never appears as a material variance row")
+          "Brand Events: the trap month never appears as a material variance row")
     check("data entry error" in prod_md,
-          "Production: the page discloses the Nov-2025 data note")
-    check("18 projects" in prod_md,
-          "Production: the ops-system corroboration (normal project count) is shown")
+          "Brand Events: the page discloses the Nov-2025 data note")
+    check("17 projects" in prod_md,
+          "Brand Events: the ops-system corroboration (normal project count) is shown")
 
     n_fail = sum(1 for ok, _ in results if not ok)
     for ok, msg in results:

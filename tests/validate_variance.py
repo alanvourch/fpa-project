@@ -62,7 +62,7 @@ def parse_ground_truth(path):
 
     anomaly_months = []
     for line in business_section.splitlines():
-        m = re.match(r"- \*\*([\w\- ]+) / (\d{4}-\d{2})\*\* — (.+)", line)
+        m = re.match(r"- \*\*([\w\-&/ ]+) / (\d{4}-\d{2})\*\* — (.+)", line)
         if not m:
             continue
         bu, month, rest = m.groups()
@@ -71,7 +71,7 @@ def parse_ground_truth(path):
 
     signal_notes = {}  # BU -> set of note ids (one real anomaly per BU in this dataset)
     for line in notes_section.splitlines():
-        m = re.match(r"- \*\*([\w\- ]+) / (\w+)\*\*.*signal notes: ([N\d, ]+)", line)
+        m = re.match(r"- \*\*([\w\-&/ ]+) / (\w+)\*\*.*signal notes: ([N\d, ]+)", line)
         if m:
             bu, _column, ids = m.groups()
             signal_notes.setdefault(bu.strip(), set()).update(
@@ -210,11 +210,11 @@ def main():
     # 7: the fat-finger trap stays a data error, not a variance story
     trap_in_material = [
         (m["business_unit"], m["line_item"], m["months"]) for m in material
-        if m["business_unit"] == "Production" and m["line_item"] == "Revenue"
+        if m["business_unit"] == "Brand Events" and m["line_item"] == "Revenue"
         and "2025-11" in m["months"]
     ]
     trap_excluded = any(
-        e["business_unit"] == "Production" and e["line_item"] == "Revenue"
+        e["business_unit"] == "Brand Events" and e["line_item"] == "Revenue"
         and e["month"] == "2025-11" for e in excluded
     )
     if trap_in_material:
@@ -222,7 +222,7 @@ def main():
     elif not trap_excluded:
         failures.append("TRAP NOT LISTED in the excluded-data-errors section")
     else:
-        passes.append("Fat-finger trap (Production revenue 2025-11) correctly excluded as a data error, not narrated")
+        passes.append("Fat-finger trap (Brand Events revenue 2025-11) correctly excluded as a data error, not narrated")
 
     print("=== Variance Agent Validation ===\n")
     print(f"Ground truth: {len(anomaly_months)} anomaly months across "

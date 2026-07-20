@@ -17,7 +17,7 @@ It never reads data/ground_truth.md or data/ground_truth_drivers.md. The same
 discipline as the variance agent applies: a material variance with no
 corroborating note is shown as "no clear driver identified" and lands in the
 follow-up list, never dressed up with an invented cause. The suspected
-data-entry row (Production revenue Nov-2025) is held at budget in the bridge
+data-entry row (Brand Events revenue Nov-2025) is held at budget in the bridge
 and excluded from the revenue driver split, with the ops-system view (normal
 project count) shown as corroboration that it is a data issue, not business.
 
@@ -95,7 +95,8 @@ def fmt_signed_k(v):
 
 
 def slugify(bu):
-    return bu.lower().replace(" ", "_").replace("-", "_")
+    return (bu.lower().replace(" & ", "_").replace("/", "_")
+            .replace(" ", "_").replace("-", "_"))
 
 
 def load_inputs():

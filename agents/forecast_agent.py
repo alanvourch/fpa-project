@@ -279,6 +279,12 @@ def main():
     out = fc.copy()
     out["month"] = out["month"].dt.strftime("%Y-%m")
     out["base_month"] = out["base_month"].dt.strftime("%Y-%m")
+    # Round at the serialization boundary only: the forecast itself is
+    # already computed at full precision above; this only trims float noise
+    # from the published file.
+    out["forecast"] = out["forecast"].round(2)
+    out["base_value"] = out["base_value"].round(2)
+    out["growth_factor"] = out["growth_factor"].round(6)
     out.to_csv(FORECAST_PATH, index=False)
 
     with open(REPORT_PATH, "w", encoding="utf-8") as f:

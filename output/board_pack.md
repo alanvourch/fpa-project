@@ -1,6 +1,6 @@
 # EventCo Budget vs Actual & Rolling Forecast: Draft Board Pack
 
-Assembled 2026-07-11 13:02 by `orchestrator.py`.
+Assembled 2026-07-20 19:14 by `orchestrator.py`.
 
 > ## DRAFT: PENDING HUMAN SIGN-OFF
 > This pack was assembled automatically but is **not approved for distribution**.
@@ -8,7 +8,7 @@ Assembled 2026-07-11 13:02 by `orchestrator.py`.
 > `output/qa_report.md` in full, resolve anything flagged, and sign off below
 > before this leaves your hands.
 
-**Narrative commentary:** included below, but CARRIED OVER from an earlier run. The Narrative step did not complete this time (see `output/pipeline_log.md`). The QA report checks its figures against this run's reports; re-run `agents/narrative_agent.py` once credentials are configured for a freshly generated version.
+**Narrative commentary:** included below from the most recent successful generation, CARRIED OVER rather than regenerated: no live model credentials were configured for this run (see `output/pipeline_log.md`). The QA report still checks its figures against this run's reports. Point `agents/narrative_agent.py` at a Claude subscription, an API key, or an organization's internal model gateway and re-run it for a freshly generated version.
 
 ---
 
@@ -40,7 +40,7 @@ Same magnitude rule as the ingestion agent (actual >4x or <0.25x budget is not a
 
 | Business Unit | Line item | Month | Actual | Budget |
 |---|---|---|---|---|
-| Production | Revenue | 2025-11 | EUR52,243,584 | EUR5,238,445 |
+| Brand Events | Revenue | 2025-11 | EUR52,243,584 | EUR5,238,445 |
 
 ## Material variances
 
@@ -48,26 +48,26 @@ Sorted by absolute EUR impact. Period spans of more than one month are sustained
 
 | Business Unit | Line item | Period | Actual | Budget | Variance EUR | Variance % | F/U | Evidence | Explanation |
 |---|---|---|---|---|---|---|---|---|---|
-| Production | COGS | 2025-04..2025-06 | EUR9,901,455 | EUR7,823,999 | +2,077,456 | +26.6% | U | N11, N13 | Corroborated by the business notes log: N11 (2025-04-14, Production, Project Director): "Falcon product-launch event (Riyadh): client requested a major on-site scope expansion during build week. Overtime crews, additional staging and expedited freight all booked at premium rates. Expect a production cost overrun through the end of Q2 while the change-order negotiation with the client is still open." / N13 (2025-06-30, Production, BU Controller): "Q2 close: Falcon launch cost overrun confirmed at roughly EUR2.0m above plan across April-June, concentrated in external production costs. Change order signed for partial recovery only; margin impact flagged to group controlling." |
-| Production | COGS | 2026-04 | EUR2,997,915 | EUR2,590,698 | +407,217 | +15.7% | U | - | Analyst input (FP&A Analyst, 2026-05-12): "An unplanned client project was won in late March and delivered inside April; external production was booked at short-notice premium rates. Together with the matching revenue line the net margin impact is slightly negative. Change-order discipline flagged to the project director." Written manually after follow-up; not derived from the business notes log. |
-| Production | Revenue | 2026-04 | EUR5,099,183 | EUR4,710,360 | +388,823 | +8.3% | F | - | Analyst input (FP&A Analyst, 2026-05-12): "Unbudgeted revenue from the same late-won April project; see the matching COGS variance. Recognized on delivery." Written manually after follow-up; not derived from the business notes log. |
-| Production | COGS | 2024-11 | EUR2,476,055 | EUR2,770,332 | -294,277 | -10.6% | F | - | Analyst input (FP&A Analyst, 2024-12-10): "November events were delivered with in-house crew and staging stock instead of the subcontracting assumed in budget; Q4 freight was also renegotiated. Genuine savings, not a timing shift." Written manually after follow-up; not derived from the business notes log. |
-| Production | Revenue | 2025-07 | EUR3,627,996 | EUR3,380,650 | +247,346 | +7.3% | F | - | Analyst input (FP&A Analyst, 2025-08-11): "A client brought part of its September roadshow forward into July. Timing between months rather than new business; the September shortfall stayed within tolerance." Written manually after follow-up; not derived from the business notes log. |
-| Digital | Revenue | 2025-01 | EUR1,291,857 | EUR1,516,667 | -224,810 | -14.8% | U | - | Analyst input (FP&A Analyst, 2025-02-10): "Two platform go-lives slipped from January into February on client-side content delays. Revenue is recognized on delivery, so January carries the gap; both projects were invoiced in February." Written manually after follow-up; not derived from the business notes log. |
-| Marketing | Revenue | 2024-10 | EUR2,275,270 | EUR2,059,705 | +215,565 | +10.5% | F | - | Analyst input (FP&A Analyst, 2024-11-08): "A brand activation sold for early 2025 was pulled into October at the client's request. The matching cost variance appears on the COGS line the same month." Written manually after follow-up; not derived from the business notes log. |
-| Digital | Revenue | 2025-09 | EUR1,915,910 | EUR2,112,863 | -196,953 | -9.3% | U | N08 | Corroborated by the business notes log: N08 (2025-09-26, Digital, Account Manager): "NovaTech (US client) roadshow is invoiced in USD. The euro strengthened sharply against the dollar this month, so reported revenue on the contract translates materially lower in EUR. No change in delivered scope or client commitment; delivery costs are EUR-denominated and unaffected." |
-| Digital | COGS | 2024-12..2025-01 | EUR1,024,041 | EUR1,167,667 | -143,626 | -12.3% | F | - | Analyst input (FP&A Analyst, 2025-02-10): "External development spend paused over the year-end delivery freeze and resumed in February. This recurs every holiday season; budget phasing to be corrected in the next cycle." Written manually after follow-up; not derived from the business notes log. |
-| Digital | Revenue | 2025-08 | EUR1,465,426 | EUR1,330,085 | +135,341 | +10.2% | F | - | Analyst input (FP&A Analyst, 2025-09-09): "One retainer client commissioned an out-of-cycle campaign microsite in an otherwise quiet August." Written manually after follow-up; not derived from the business notes log. |
-| Marketing | COGS | 2024-10 | EUR846,462 | EUR720,897 | +125,565 | +17.4% | U | - | Analyst input (FP&A Analyst, 2024-11-08): "Production costs of the pulled-forward October activation; see the matching revenue variance." Written manually after follow-up; not derived from the business notes log. |
-| Back-Office | Revenue | 2024-10 | EUR913,903 | EUR1,029,852 | -115,950 | -11.3% | U | - | Analyst input (FP&A Analyst, 2024-11-08): "Lower internal rebilling of shared services in October; two group entities were invoiced in November instead. Timing only." Written manually after follow-up; not derived from the business notes log. |
-| Digital | COGS | 2024-07 | EUR457,359 | EUR541,771 | -84,412 | -15.6% | F | - | Analyst input (FP&A Analyst, 2024-08-09): "Contractor spend deferred during the summer staffing gap on the delivery bench; caught up from September." Written manually after follow-up; not derived from the business notes log. |
-| Digital | COGS | 2025-06 | EUR710,289 | EUR792,851 | -82,563 | -10.4% | F | - | Analyst input (FP&A Analyst, 2025-07-10): "June delivery mix skewed toward license resale rather than custom build, which carries lower external cost." Written manually after follow-up; not derived from the business notes log. |
-| Marketing | Opex - Marketing | 2025-04..2026-02 | EUR414,886 | EUR496,350 | -81,464 | -16.4% | F | N12, N16 | Corroborated by the business notes log: N12 (2025-06-25, Marketing, Head of Marketing): "Media buying and content creation move in-house from 1 July; both external agency retainers terminated end of June. Marketing spend expected to run 20-30% under budget for the rest of the year." / N16 (2025-09-15, Marketing, BU Controller): "In-housing of media buying is tracking ahead of plan - marketing spend well under budget again this month, and the underspend should persist through year-end." |
-| Marketing | COGS | 2024-06 | EUR636,525 | EUR711,533 | -75,009 | -10.5% | F | - | Analyst input (FP&A Analyst, 2024-07-09): "The June campaign reused spring creative assets instead of commissioning a new shoot." Written manually after follow-up; not derived from the business notes log. |
-| Marketing | COGS | 2025-12 | EUR763,011 | EUR691,762 | +71,249 | +10.3% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period, and the analyst has not yet returned commentary from follow-up. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Digital | COGS | 2025-03 | EUR655,359 | EUR588,837 | +66,523 | +11.3% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period, and the analyst has not yet returned commentary from follow-up. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
-| Marketing | COGS | 2025-03 | EUR604,783 | EUR549,581 | +55,202 | +10.0% | U | - | Analyst input (FP&A Analyst, 2025-04-10): "Print and media rates increased at the main supplier from March; a rate-card renegotiation is underway." Written manually after follow-up; not derived from the business notes log. |
-| Back-Office | Opex - IT | 2024-11 | EUR39,366 | EUR15,250 | +24,116 | +158.1% | U | N06 | Corroborated by the business notes log: N06 (2024-11-08, Back-Office, IT Manager): "Storage cluster in the Paris server room failed on 4 November; emergency replacement hardware and expedited vendor licenses procured outside the normal purchasing cycle. One-off cost; insurance claim filed with the provider." |
+| Brand Events | COGS | 2025-04..2025-06 | EUR9,901,455 | EUR7,823,999 | +2,077,456 | +26.6% | U | N11, N13 | Corroborated by the business notes log: N11 (2025-04-14, Brand Events, Project Director): "Falcon product-launch event (Riyadh): client requested a major on-site scope expansion during build week. Overtime crews, additional staging and expedited freight all booked at premium rates. Expect a production cost overrun through the end of Q2 while the change-order negotiation with the client is still open." / N13 (2025-06-30, Brand Events, BU Controller): "Q2 close: Falcon launch cost overrun confirmed at roughly EUR2.0m above plan across April-June, concentrated in external production costs. Change order signed for partial recovery only; margin impact flagged to group controlling." |
+| Brand Events | COGS | 2026-04 | EUR2,997,915 | EUR2,590,698 | +407,217 | +15.7% | U | - | Analyst input (FP&A Analyst, 2026-05-12): "An unplanned client project was won in late March and delivered inside April; external production was booked at short-notice premium rates. Together with the matching revenue line the net margin impact is slightly negative. Change-order discipline flagged to the project director." Written manually after follow-up; not derived from the business notes log. |
+| Brand Events | Revenue | 2026-04 | EUR5,099,183 | EUR4,710,360 | +388,823 | +8.3% | F | - | Analyst input (FP&A Analyst, 2026-05-12): "Unbudgeted revenue from the same late-won April project; see the matching COGS variance. Recognized on delivery." Written manually after follow-up; not derived from the business notes log. |
+| Brand Events | COGS | 2024-11 | EUR2,476,055 | EUR2,770,332 | -294,277 | -10.6% | F | - | Analyst input (FP&A Analyst, 2024-12-10): "November events were delivered with in-house crew and staging stock instead of the subcontracting assumed in budget; Q4 freight was also renegotiated. Genuine savings, not a timing shift." Written manually after follow-up; not derived from the business notes log. |
+| Brand Events | Revenue | 2025-07 | EUR3,627,996 | EUR3,380,650 | +247,346 | +7.3% | F | - | Analyst input (FP&A Analyst, 2025-08-11): "A client brought part of its September roadshow forward into July. Timing between months rather than new business; the September shortfall stayed within tolerance." Written manually after follow-up; not derived from the business notes log. |
+| Digital/Influence | Revenue | 2025-01 | EUR1,291,857 | EUR1,516,667 | -224,810 | -14.8% | U | - | Analyst input (FP&A Analyst, 2025-02-10): "Two platform go-lives slipped from January into February on client-side content delays. Revenue is recognized on delivery, so January carries the gap; both projects were invoiced in February." Written manually after follow-up; not derived from the business notes log. |
+| Corporate Events | Revenue | 2024-10 | EUR2,275,270 | EUR2,059,705 | +215,565 | +10.5% | F | - | Analyst input (FP&A Analyst, 2024-11-08): "A brand activation sold for early 2025 was pulled into October at the client's request. The matching cost variance appears on the COGS line the same month." Written manually after follow-up; not derived from the business notes log. |
+| Digital/Influence | Revenue | 2025-09 | EUR1,915,910 | EUR2,112,863 | -196,953 | -9.3% | U | N08 | Corroborated by the business notes log: N08 (2025-09-26, Digital/Influence, Account Manager): "NovaTech (US client) roadshow is invoiced in USD. The euro strengthened sharply against the dollar this month, so reported revenue on the contract translates materially lower in EUR. No change in delivered scope or client commitment; delivery costs are EUR-denominated and unaffected." |
+| Digital/Influence | COGS | 2024-12..2025-01 | EUR1,024,041 | EUR1,167,667 | -143,626 | -12.3% | F | - | Analyst input (FP&A Analyst, 2025-02-10): "External development spend paused over the year-end delivery freeze and resumed in February. This recurs every holiday season; budget phasing to be corrected in the next cycle." Written manually after follow-up; not derived from the business notes log. |
+| Digital/Influence | Revenue | 2025-08 | EUR1,465,426 | EUR1,330,085 | +135,341 | +10.2% | F | - | Analyst input (FP&A Analyst, 2025-09-09): "One retainer client commissioned an out-of-cycle campaign microsite in an otherwise quiet August." Written manually after follow-up; not derived from the business notes log. |
+| Corporate Events | COGS | 2024-10 | EUR846,462 | EUR720,897 | +125,565 | +17.4% | U | - | Analyst input (FP&A Analyst, 2024-11-08): "Production costs of the pulled-forward October activation; see the matching revenue variance." Written manually after follow-up; not derived from the business notes log. |
+| Government & Institutions | Revenue | 2024-10 | EUR913,903 | EUR1,029,852 | -115,950 | -11.3% | U | - | Analyst input (FP&A Analyst, 2024-11-08): "Two institutional clients pushed their October milestone invoicing into November after a budget-cycle approval delay on their side. Timing only." Written manually after follow-up; not derived from the business notes log. |
+| Digital/Influence | COGS | 2024-07 | EUR457,359 | EUR541,771 | -84,412 | -15.6% | F | - | Analyst input (FP&A Analyst, 2024-08-09): "Contractor spend deferred during the summer staffing gap on the delivery bench; caught up from September." Written manually after follow-up; not derived from the business notes log. |
+| Digital/Influence | COGS | 2025-06 | EUR710,289 | EUR792,851 | -82,563 | -10.4% | F | - | Analyst input (FP&A Analyst, 2025-07-10): "June delivery mix skewed toward license resale rather than custom build, which carries lower external cost." Written manually after follow-up; not derived from the business notes log. |
+| Corporate Events | Opex - Marketing | 2025-04..2026-02 | EUR414,886 | EUR496,350 | -81,464 | -16.4% | F | N12, N16 | Corroborated by the business notes log: N12 (2025-06-25, Corporate Events, Practice Lead): "Media buying and content creation move in-house from 1 July; both external agency retainers terminated end of June. Marketing spend expected to run 20-30% under budget for the rest of the year." / N16 (2025-09-15, Corporate Events, BU Controller): "In-housing of media buying is tracking ahead of plan - marketing spend well under budget again this month, and the underspend should persist through year-end." |
+| Corporate Events | COGS | 2024-06 | EUR636,525 | EUR711,533 | -75,009 | -10.5% | F | - | Analyst input (FP&A Analyst, 2024-07-09): "The June campaign reused spring creative assets instead of commissioning a new shoot." Written manually after follow-up; not derived from the business notes log. |
+| Corporate Events | COGS | 2025-12 | EUR763,011 | EUR691,762 | +71,249 | +10.3% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period, and the analyst has not yet returned commentary from follow-up. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
+| Digital/Influence | COGS | 2025-03 | EUR655,359 | EUR588,837 | +66,523 | +11.3% | U | - | No clear driver identified: no corroborating note found in the business log for this BU, line item and period, and the analyst has not yet returned commentary from follow-up. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause. |
+| Corporate Events | COGS | 2025-03 | EUR604,783 | EUR549,581 | +55,202 | +10.0% | U | - | Analyst input (FP&A Analyst, 2025-04-10): "Print and media rates increased at the main supplier from March; a rate-card renegotiation is underway." Written manually after follow-up; not derived from the business notes log. |
+| Government & Institutions | Opex - IT | 2024-11 | EUR39,366 | EUR15,250 | +24,116 | +158.1% | U | N06 | Corroborated by the business notes log: N06 (2024-11-08, Government & Institutions, AV & Systems Manager): "On-site registration and AV control systems failed during a ministry summit engagement on 4 November; emergency replacement hardware and expedited vendor licenses procured outside the normal purchasing cycle. One-off cost; insurance claim filed with the provider." |
 
 All other BU/line/month combinations are within materiality tolerance and are not individually commented; the full variance grain is in `output/variance_table.csv`.
 
@@ -98,40 +98,40 @@ Forecast = seasonal base × median year-over-year growth, per BU and line item:
 
 | Business Unit | Line item | Month | Raw actual | Used in history | Reason | Evidence |
 |---|---|---|---|---|---|---|
-| Back-Office | Opex - IT | 2024-11 | EUR39,366 | EUR15,462 | one-off material variance, non-recurring by nature, must not be extrapolated | N06 |
-| Back-Office | Revenue | 2024-10 | EUR913,903 | EUR1,030,442 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Digital | COGS | 2024-07 | EUR457,359 | EUR547,075 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Digital | COGS | 2024-12 | EUR644,909 | EUR719,644 | part of episode 2024-12..2025-01, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | - |
-| Digital | COGS | 2025-01 | EUR379,132 | EUR459,455 | part of episode 2024-12..2025-01, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | - |
-| Digital | COGS | 2025-03 | EUR655,359 | EUR594,602 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Digital | COGS | 2025-06 | EUR710,289 | EUR800,614 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Digital | Revenue | 2025-01 | EUR1,291,857 | EUR1,531,063 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Digital | Revenue | 2025-08 | EUR1,465,426 | EUR1,342,711 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Digital | Revenue | 2025-09 | EUR1,915,910 | EUR2,132,918 | one-off material variance, non-recurring by nature, must not be extrapolated | N08 |
-| Marketing | COGS | 2024-06 | EUR636,525 | EUR707,793 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Marketing | COGS | 2024-10 | EUR846,462 | EUR717,108 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Marketing | COGS | 2025-03 | EUR604,783 | EUR546,692 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Marketing | COGS | 2025-12 | EUR763,011 | EUR688,126 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Marketing | Opex - Marketing | 2025-04 | EUR41,484 | EUR43,949 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2025-05 | EUR40,770 | EUR45,211 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2025-06 | EUR42,865 | EUR44,580 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2025-07 | EUR25,840 | EUR40,164 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2025-08 | EUR32,713 | EUR37,010 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2025-09 | EUR38,268 | EUR41,425 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2025-10 | EUR38,632 | EUR44,580 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2025-11 | EUR39,033 | EUR45,841 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2025-12 | EUR44,568 | EUR43,318 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2026-01 | EUR34,389 | EUR38,271 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Opex - Marketing | 2026-02 | EUR36,324 | EUR39,533 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
-| Marketing | Revenue | 2024-10 | EUR2,275,270 | EUR2,065,108 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Production | COGS | 2024-11 | EUR2,476,055 | EUR2,811,839 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Production | COGS | 2025-04 | EUR3,201,900 | EUR2,528,379 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
-| Production | COGS | 2025-05 | EUR3,352,549 | EUR2,757,235 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
-| Production | COGS | 2025-06 | EUR3,347,006 | EUR2,655,611 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
-| Production | COGS | 2026-04 | EUR2,997,915 | EUR2,629,514 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Production | Revenue | 2025-07 | EUR3,627,996 | EUR3,356,852 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Production | Revenue | 2025-11 | EUR52,243,584 | EUR5,201,569 | suspected data entry error (>4x/<0.25x budget), still uncorrected in the cleaned file | - |
-| Production | Revenue | 2026-04 | EUR5,099,183 | EUR4,677,202 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Brand Events | COGS | 2024-11 | EUR2,476,055 | EUR2,811,839 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Brand Events | COGS | 2025-04 | EUR3,201,900 | EUR2,528,379 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
+| Brand Events | COGS | 2025-05 | EUR3,352,549 | EUR2,757,235 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
+| Brand Events | COGS | 2025-06 | EUR3,347,006 | EUR2,655,611 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
+| Brand Events | COGS | 2026-04 | EUR2,997,915 | EUR2,629,514 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Brand Events | Revenue | 2025-07 | EUR3,627,996 | EUR3,356,852 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Brand Events | Revenue | 2025-11 | EUR52,243,584 | EUR5,201,569 | suspected data entry error (>4x/<0.25x budget), still uncorrected in the cleaned file | - |
+| Brand Events | Revenue | 2026-04 | EUR5,099,183 | EUR4,677,202 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Corporate Events | COGS | 2024-06 | EUR636,525 | EUR707,793 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Corporate Events | COGS | 2024-10 | EUR846,462 | EUR717,108 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Corporate Events | COGS | 2025-03 | EUR604,783 | EUR546,692 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Corporate Events | COGS | 2025-12 | EUR763,011 | EUR688,126 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Corporate Events | Opex - Marketing | 2025-04 | EUR41,484 | EUR43,949 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2025-05 | EUR40,770 | EUR45,211 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2025-06 | EUR42,865 | EUR44,580 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2025-07 | EUR25,840 | EUR40,164 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2025-08 | EUR32,713 | EUR37,010 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2025-09 | EUR38,268 | EUR41,425 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2025-10 | EUR38,632 | EUR44,580 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2025-11 | EUR39,033 | EUR45,841 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2025-12 | EUR44,568 | EUR43,318 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2026-01 | EUR34,389 | EUR38,271 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Opex - Marketing | 2026-02 | EUR36,324 | EUR39,533 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
+| Corporate Events | Revenue | 2024-10 | EUR2,275,270 | EUR2,065,108 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | COGS | 2024-07 | EUR457,359 | EUR547,075 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | COGS | 2024-12 | EUR644,909 | EUR719,644 | part of episode 2024-12..2025-01, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | - |
+| Digital/Influence | COGS | 2025-01 | EUR379,132 | EUR459,455 | part of episode 2024-12..2025-01, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | - |
+| Digital/Influence | COGS | 2025-03 | EUR655,359 | EUR594,602 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | COGS | 2025-06 | EUR710,289 | EUR800,614 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | Revenue | 2025-01 | EUR1,291,857 | EUR1,531,063 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | Revenue | 2025-08 | EUR1,465,426 | EUR1,342,711 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | Revenue | 2025-09 | EUR1,915,910 | EUR2,132,918 | one-off material variance, non-recurring by nature, must not be extrapolated | N08 |
+| Government & Institutions | Opex - IT | 2024-11 | EUR39,366 | EUR15,462 | one-off material variance, non-recurring by nature, must not be extrapolated | N06 |
+| Government & Institutions | Revenue | 2024-10 | EUR913,903 | EUR1,030,442 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
 
 ## Forecast by BU and line item
 
@@ -139,34 +139,34 @@ Prior year (PY) is the normalized actual of the same month last year (the foreca
 
 | Business Unit | Line item | Growth | Jul-26 | Aug-26 | Sep-26 | 3-mo total | PY 3-mo | vs PY |
 |---|---|---|---|---|---|---|---|---|
-| Back-Office | COGS | 1.10x | EUR81,693 | EUR61,333 | EUR106,708 | EUR249,734 | EUR226,577 | +10.2% |
-| Back-Office | Opex - Facilities | 1.02x | EUR9,569 | EUR9,846 | EUR9,077 | EUR28,492 | EUR28,008 | +1.7% |
-| Back-Office | Opex - IT | 1.06x | EUR17,147 | EUR14,670 | EUR16,636 | EUR48,452 | EUR45,877 | +5.6% |
-| Back-Office | Opex - Marketing | 0.94x | EUR503 | EUR389 | EUR461 | EUR1,353 | EUR1,446 | -6.4% |
-| Back-Office | Opex - Travel | 1.02x | EUR1,521 | EUR1,354 | EUR1,706 | EUR4,581 | EUR4,504 | +1.7% |
-| Back-Office | Payroll | 1.03x | EUR178,230 | EUR170,120 | EUR177,750 | EUR526,100 | EUR510,433 | +3.1% |
-| Back-Office | Revenue | 1.06x | EUR762,524 | EUR584,105 | EUR976,963 | EUR2,323,592 | EUR2,183,850 | +6.4% |
-| Digital | COGS | 1.01x | EUR552,934 | EUR443,489 | EUR647,944 | EUR1,644,368 | EUR1,624,371 | +1.2% |
-| Digital | Opex - Facilities | 1.00x | EUR6,196 | EUR5,985 | EUR6,127 | EUR18,307 | EUR18,289 | +0.1% |
-| Digital | Opex - IT | 0.97x | EUR12,557 | EUR10,842 | EUR12,774 | EUR36,172 | EUR37,191 | -2.7% |
-| Digital | Opex - Marketing | 1.01x | EUR4,999 | EUR3,978 | EUR5,412 | EUR14,388 | EUR14,273 | +0.8% |
-| Digital | Opex - Travel | 0.95x | EUR3,871 | EUR3,093 | EUR3,458 | EUR10,422 | EUR10,966 | -5.0% |
-| Digital | Payroll | 1.04x | EUR263,894 | EUR259,255 | EUR261,768 | EUR784,916 | EUR756,759 | +3.7% |
-| Digital | Revenue | 1.05x | EUR1,983,926 | EUR1,404,061 | EUR2,230,375 | EUR5,618,362 | EUR5,372,867 | +4.6% |
-| Marketing | COGS | 1.04x | EUR536,089 | EUR421,627 | EUR648,944 | EUR1,606,659 | EUR1,542,181 | +4.2% |
-| Marketing | Opex - Facilities | 1.02x | EUR4,168 | EUR4,348 | EUR4,198 | EUR12,714 | EUR12,504 | +1.7% |
-| Marketing | Opex - IT | 1.00x | EUR2,641 | EUR2,256 | EUR2,635 | EUR7,531 | EUR7,522 | +0.1% |
-| Marketing | Opex - Marketing | 1.02x | EUR40,869 | EUR37,660 | EUR42,153 | EUR120,682 | EUR118,599 | +1.8% |
-| Marketing | Opex - Travel | 1.01x | EUR6,135 | EUR5,014 | EUR6,450 | EUR17,600 | EUR17,438 | +0.9% |
-| Marketing | Payroll | 1.02x | EUR112,806 | EUR105,970 | EUR109,538 | EUR328,314 | EUR321,642 | +2.1% |
-| Marketing | Revenue | 1.05x | EUR1,526,356 | EUR1,141,635 | EUR1,809,461 | EUR4,477,452 | EUR4,259,601 | +5.1% |
-| Production | COGS | 1.05x | EUR1,989,496 | EUR1,282,924 | EUR2,146,572 | EUR5,418,993 | EUR5,176,626 | +4.7% |
-| Production | Opex - Facilities | 1.00x | EUR8,333 | EUR8,903 | EUR8,047 | EUR25,283 | EUR25,291 | -0.0% |
-| Production | Opex - IT | 0.89x | EUR2,460 | EUR3,212 | EUR2,682 | EUR8,354 | EUR9,336 | -10.5% |
-| Production | Opex - Marketing | 0.99x | EUR1,821 | EUR1,893 | EUR1,796 | EUR5,510 | EUR5,553 | -0.8% |
-| Production | Opex - Travel | 1.02x | EUR8,841 | EUR9,260 | EUR10,319 | EUR28,421 | EUR27,855 | +2.0% |
-| Production | Payroll | 1.03x | EUR281,389 | EUR279,935 | EUR274,229 | EUR835,553 | EUR814,591 | +2.6% |
-| Production | Revenue | 1.06x | EUR3,562,275 | EUR2,512,434 | EUR4,119,513 | EUR10,194,222 | EUR9,606,360 | +6.1% |
+| Brand Events | COGS | 1.05x | EUR1,989,496 | EUR1,282,924 | EUR2,146,572 | EUR5,418,993 | EUR5,176,626 | +4.7% |
+| Brand Events | Opex - Facilities | 1.00x | EUR8,333 | EUR8,903 | EUR8,047 | EUR25,283 | EUR25,291 | -0.0% |
+| Brand Events | Opex - IT | 0.89x | EUR2,460 | EUR3,212 | EUR2,682 | EUR8,354 | EUR9,336 | -10.5% |
+| Brand Events | Opex - Marketing | 0.99x | EUR1,821 | EUR1,893 | EUR1,796 | EUR5,510 | EUR5,553 | -0.8% |
+| Brand Events | Opex - Travel | 1.02x | EUR8,841 | EUR9,260 | EUR10,319 | EUR28,421 | EUR27,855 | +2.0% |
+| Brand Events | Payroll | 1.03x | EUR281,389 | EUR279,935 | EUR274,229 | EUR835,553 | EUR814,591 | +2.6% |
+| Brand Events | Revenue | 1.06x | EUR3,562,275 | EUR2,512,434 | EUR4,119,513 | EUR10,194,222 | EUR9,606,360 | +6.1% |
+| Corporate Events | COGS | 1.04x | EUR536,089 | EUR421,627 | EUR648,944 | EUR1,606,659 | EUR1,542,181 | +4.2% |
+| Corporate Events | Opex - Facilities | 1.02x | EUR4,168 | EUR4,348 | EUR4,198 | EUR12,714 | EUR12,504 | +1.7% |
+| Corporate Events | Opex - IT | 1.00x | EUR2,641 | EUR2,256 | EUR2,635 | EUR7,531 | EUR7,522 | +0.1% |
+| Corporate Events | Opex - Marketing | 1.02x | EUR40,869 | EUR37,660 | EUR42,153 | EUR120,682 | EUR118,599 | +1.8% |
+| Corporate Events | Opex - Travel | 1.01x | EUR6,135 | EUR5,014 | EUR6,450 | EUR17,600 | EUR17,438 | +0.9% |
+| Corporate Events | Payroll | 1.02x | EUR112,806 | EUR105,970 | EUR109,538 | EUR328,314 | EUR321,642 | +2.1% |
+| Corporate Events | Revenue | 1.05x | EUR1,526,356 | EUR1,141,635 | EUR1,809,461 | EUR4,477,452 | EUR4,259,601 | +5.1% |
+| Digital/Influence | COGS | 1.01x | EUR552,934 | EUR443,489 | EUR647,944 | EUR1,644,368 | EUR1,624,371 | +1.2% |
+| Digital/Influence | Opex - Facilities | 1.00x | EUR6,196 | EUR5,985 | EUR6,127 | EUR18,307 | EUR18,289 | +0.1% |
+| Digital/Influence | Opex - IT | 0.97x | EUR12,557 | EUR10,842 | EUR12,774 | EUR36,172 | EUR37,191 | -2.7% |
+| Digital/Influence | Opex - Marketing | 1.01x | EUR4,999 | EUR3,978 | EUR5,412 | EUR14,388 | EUR14,273 | +0.8% |
+| Digital/Influence | Opex - Travel | 0.95x | EUR3,871 | EUR3,093 | EUR3,458 | EUR10,422 | EUR10,966 | -5.0% |
+| Digital/Influence | Payroll | 1.04x | EUR263,894 | EUR259,255 | EUR261,768 | EUR784,916 | EUR756,759 | +3.7% |
+| Digital/Influence | Revenue | 1.05x | EUR1,983,926 | EUR1,404,061 | EUR2,230,375 | EUR5,618,362 | EUR5,372,867 | +4.6% |
+| Government & Institutions | COGS | 1.10x | EUR81,693 | EUR61,333 | EUR106,708 | EUR249,734 | EUR226,577 | +10.2% |
+| Government & Institutions | Opex - Facilities | 1.02x | EUR9,569 | EUR9,846 | EUR9,077 | EUR28,492 | EUR28,008 | +1.7% |
+| Government & Institutions | Opex - IT | 1.06x | EUR17,147 | EUR14,670 | EUR16,636 | EUR48,452 | EUR45,877 | +5.6% |
+| Government & Institutions | Opex - Marketing | 0.94x | EUR503 | EUR389 | EUR461 | EUR1,353 | EUR1,446 | -6.4% |
+| Government & Institutions | Opex - Travel | 1.02x | EUR1,521 | EUR1,354 | EUR1,706 | EUR4,581 | EUR4,504 | +1.7% |
+| Government & Institutions | Payroll | 1.03x | EUR178,230 | EUR170,120 | EUR177,750 | EUR526,100 | EUR510,433 | +3.1% |
+| Government & Institutions | Revenue | 1.06x | EUR762,524 | EUR584,105 | EUR976,963 | EUR2,323,592 | EUR2,183,850 | +6.4% |
 
 ## Group P&L summary (forecast)
 
@@ -186,10 +186,10 @@ No sustained programme was still active at the cutoff, so no episode effect is c
 
 One page per business unit, for that BU's manager: FY2025 bridge, payroll and revenue driver splits, material variances with grounded explanations, follow-ups, and the Q3 2026 outlook. Each exists as Markdown and as a print-ready PDF:
 
-- **Back-Office**: `output/bu_reports/back_office.md` / `output/bu_reports/back_office.pdf`
-- **Digital**: `output/bu_reports/digital.md` / `output/bu_reports/digital.pdf`
-- **Marketing**: `output/bu_reports/marketing.md` / `output/bu_reports/marketing.pdf`
-- **Production**: `output/bu_reports/production.md` / `output/bu_reports/production.pdf`
+- **Brand Events**: `output/bu_reports/brand_events.md` / `output/bu_reports/brand_events.pdf`
+- **Corporate Events**: `output/bu_reports/corporate_events.md` / `output/bu_reports/corporate_events.pdf`
+- **Digital/Influence**: `output/bu_reports/digital_influence.md` / `output/bu_reports/digital_influence.pdf`
+- **Government & Institutions**: `output/bu_reports/government_institutions.md` / `output/bu_reports/government_institutions.pdf`
 
 ---
 
@@ -198,13 +198,15 @@ One page per business unit, for that BU's manager: FY2025 bridge, payroll and re
 <!-- Provenance note: agents/narrative_agent.py is fully built and calls claude-sonnet-5
 via the Anthropic API (see the script and README.md for how to run it). This particular
 file was instead written directly in an interactive Claude Code session (Claude Fable 5,
-2026-07-06; rewritten 2026-07-11 when the analyst-commentary workflow was added), because
-the script's own API/OAuth credentials were not available on the local machine at the
-time. The same strict-grounding system prompt from the script was followed by hand: every
-figure below is sourced from output/variance_report.md and output/forecast_report.md, and
-this file has been checked with tests/validate_narrative.py. Anyone running the pipeline
-end to end should re-run agents/narrative_agent.py once credentials are set up, to get
-the authoritative, reproducible output from the pinned model. -->
+2026-07-06; rewritten 2026-07-11 when the analyst-commentary workflow was added; renamed
+2026-07-20 when the business lines were relabeled from internal functions to the four
+client-facing verticals), because the script's own API/OAuth credentials were not
+available on the local machine at the time. The same strict-grounding system prompt from
+the script was followed by hand: every figure below is sourced from
+output/variance_report.md and output/forecast_report.md, and this file has been checked
+with tests/validate_narrative.py. Anyone running the pipeline end to end should re-run
+agents/narrative_agent.py once credentials are set up, to get the authoritative,
+reproducible output from the pinned model. -->
 
 # Executive Summary: EventCo Budget vs Actual & Rolling Forecast
 
@@ -218,20 +220,21 @@ with the group margin holding at 47.9% over the forecast period.
 
 ## Variance Highlights (documented in the business notes log)
 
-**Production COGS, April to June 2025: EUR2.08 million over budget (+26.6%).** The largest
-variance in the period, tied to the Falcon product-launch event in Riyadh. The client
-requested a major on-site scope expansion during the build week, and the resulting overtime
-crews, additional staging and expedited freight were all booked at premium rates. A change
-order was signed with the client, but it recovered only part of the overrun, and the margin
-impact has been flagged to group controlling.
+**Brand Events COGS, April to June 2025: EUR2.08 million over budget (+26.6%).** The
+largest variance in the period, tied to the Falcon product-launch event in Riyadh. The
+client requested a major on-site scope expansion during the build week, and the resulting
+overtime crews, additional staging and expedited freight were all booked at premium rates.
+A change order was signed with the client, but it recovered only part of the overrun, and
+the margin impact has been flagged to group controlling.
 
-**Digital revenue, September 2025: roughly EUR197,000 under budget (-9.3%).** This is a
-currency effect, not a shortfall in delivery. The NovaTech roadshow contract is invoiced in
-USD, and the euro strengthened sharply against the dollar during the month, translating the
-same contracted revenue into fewer euros. Delivered scope and client commitment were
-unchanged, and the associated delivery costs are euro-denominated and unaffected.
+**Digital/Influence revenue, September 2025: roughly EUR197,000 under budget (-9.3%).**
+This is a currency effect, not a shortfall in delivery. The NovaTech roadshow contract is
+invoiced in USD, and the euro strengthened sharply against the dollar during the month,
+translating the same contracted revenue into fewer euros. Delivered scope and client
+commitment were unchanged, and the associated delivery costs are euro-denominated and
+unaffected.
 
-**Marketing opex, April 2025 to February 2026: EUR81,464 under budget (-16.4%),
+**Corporate Events opex, April 2025 to February 2026: EUR81,464 under budget (-16.4%),
 favorable.** Media buying and content creation moved in-house from July 2025, ending two
 external agency retainers, and the business unit controller confirmed in September that the
 savings were tracking ahead of plan. One caveat on the dates: the reported window is the
@@ -239,10 +242,10 @@ full run of consecutive under-budget months grouped by the episode test, and it 
 three months before the programme did. This is the only favorable variance in the period
 with a documented cause in the notes log.
 
-**Back-Office IT opex, November 2024: EUR24,116 over budget (+158.1%).** An emergency
-storage cluster failure in the Paris server room required expedited replacement hardware
-and vendor licenses outside the normal purchasing cycle. A one-off cost with an insurance
-claim filed against it, not the start of a trend.
+**Government & Institutions IT opex, November 2024: EUR24,116 over budget (+158.1%).** The
+on-site registration and AV control systems failed during a ministry summit engagement,
+requiring expedited replacement hardware and vendor licenses outside the normal purchasing
+cycle. A one-off cost with an insurance claim filed against it, not the start of a trend.
 
 ## Analyst Commentary (manual input after follow-up)
 
@@ -251,47 +254,50 @@ went to the FP&A analyst as follow-up items. The explanations below were entered
 by the analyst after investigating with the business units, and the variance report labels
 each one as analyst input rather than documented evidence. The largest:
 
-**Production, April 2026.** COGS ran roughly EUR407,000 over budget (+15.7%) while revenue
-ran roughly EUR389,000 above budget (+8.3%). Per the analyst's review, both trace to the
-same event: a client project won in late March and delivered inside April, with external
+**Brand Events, April 2026.** COGS ran roughly EUR407,000 over budget (+15.7%) while
+revenue ran roughly EUR389,000 above budget (+8.3%). Per the analyst's review, both trace to
+the same event: a client project won in late March and delivered inside April, with external
 production booked at short-notice premium rates. The net margin impact is slightly
 negative, and change-order discipline has been flagged to the project director.
 
-**Digital revenue, January 2025: roughly EUR225,000 under budget (-14.8%).** The analyst
-attributes this to two platform go-lives slipping into February on client-side content
-delays; revenue is recognized on delivery, and both projects were invoiced in February.
+**Digital/Influence revenue, January 2025: roughly EUR225,000 under budget (-14.8%).** The
+analyst attributes this to two platform go-lives slipping into February on client-side
+content delays; revenue is recognized on delivery, and both projects were invoiced in
+February.
 
-**Marketing, October 2024.** Revenue came in roughly EUR216,000 above budget (+10.5%) with
-costs roughly EUR126,000 over (+17.4%): a brand activation sold for early 2025 was pulled
-into October at the client's request, carrying its production costs with it.
+**Corporate Events, October 2024.** Revenue came in roughly EUR216,000 above budget
+(+10.5%) with costs roughly EUR126,000 over (+17.4%): a brand activation sold for early
+2025 was pulled into October at the client's request, carrying its production costs with
+it.
 
 The remaining analyst-explained items are mostly timing shifts between months and
 delivery-mix effects, each documented row by row in the variance report.
 
 ## Items Still Open
 
-Two material variances have no documented driver and no analyst input yet: Marketing COGS
-in December 2025 (roughly EUR71,000 over budget, +10.3%) and Digital COGS in March 2025
-(EUR66,500 over budget, +11.3%). Both remain unexplained and stay on the follow-up list
-with the relevant BU controllers rather than being assigned a cause here.
+Two material variances have no documented driver and no analyst input yet: Corporate
+Events COGS in December 2025 (roughly EUR71,000 over budget, +10.3%) and Digital/Influence
+COGS in March 2025 (EUR66,500 over budget, +11.3%). Both remain unexplained and stay on the
+follow-up list with the relevant BU controllers rather than being assigned a cause here.
 
-Separately, a data entry issue was identified in Production's November 2025 revenue figure
-and has been excluded from this analysis pending correction at source.
+Separately, a data entry issue was identified in Brand Events' November 2025 revenue
+figure and has been excluded from this analysis pending correction at source.
 
 ## Rolling Forecast
 
 For July to September 2026, the group is forecast to generate roughly EUR22.6 million in
 revenue against roughly EUR11.78 million in costs, for a net result of about EUR10.83
 million, a 47.9% margin. Revenue growth versus the same quarter last year varies by
-business unit: Back-Office +6.4%, Production +6.1%, Marketing +5.1%, and Digital +4.6%.
+business unit: Government & Institutions +6.4%, Brand Events +6.1%, Corporate Events
++5.1%, and Digital/Influence +4.6%.
 
 The forecast is built from each business unit's own results in the same quarter last year,
 adjusted for its typical year-over-year growth rate, rather than from budget. One-off
-events, including the Falcon cost overrun and the Back-Office IT incident above, are
-deliberately excluded from that base so they are not projected forward as if they were
-normal, recurring activity. The Marketing savings programme is treated the same way: it had
-already concluded before the forecast cutoff of June 2026, the last closed month, so its
-effect is not carried into the outlook.
+events, including the Falcon cost overrun and the Government & Institutions IT incident
+above, are deliberately excluded from that base so they are not projected forward as if
+they were normal, recurring activity. The Corporate Events savings programme is treated the
+same way: it had already concluded before the forecast cutoff of June 2026, the last closed
+month, so its effect is not carried into the outlook.
 
 No cost-saving or overrun programme was still running at the June 2026 cutoff, so this
 quarter's outlook reflects normal seasonal business growth with no special adjustment

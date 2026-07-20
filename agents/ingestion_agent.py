@@ -25,7 +25,7 @@ RAW_PATH = "data/eventco_monthly.csv"
 CLEANED_PATH = "data/eventco_monthly_cleaned.csv"
 REPORT_PATH = "output/data_quality_report.md"
 
-CANONICAL_BUS = ["Production", "Marketing", "Digital", "Back-Office"]
+CANONICAL_BUS = ["Brand Events", "Corporate Events", "Digital/Influence", "Government & Institutions"]
 
 FINAL_COLUMNS = [
     "month", "business_unit",
@@ -345,6 +345,11 @@ def main():
     df = df.sort_values(["business_unit", "month"]).reset_index(drop=True)
     df["month"] = df["month"].dt.strftime("%Y-%m-%d")
     df = df[FINAL_COLUMNS]
+    # Round at the serialization boundary only: every check above (typo
+    # matching, imputation, outlier detection) already ran on full
+    # precision, so this only trims float noise from the published file,
+    # the same way a real accounting export is never sub-cent.
+    df[NUMERIC_COLUMNS] = df[NUMERIC_COLUMNS].round(2)
     df.to_csv(CLEANED_PATH, index=False)
 
     report = render_report(notes, row_count_raw, len(df))

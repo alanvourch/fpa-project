@@ -32,9 +32,12 @@ small cost step-up over Haiku for a report generated once a month.
 
 Authenticates via the default Anthropic() client construction, which
 resolves ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN, or an `ant auth login`
-OAuth profile (whichever is available) — no key is ever hardcoded. See
-README.md for setup, including the OAuth option for callers without a
-separate metered API key.
+OAuth profile (whichever is available) — no key is ever hardcoded. This
+project was tested against a personal Claude Pro subscription via OAuth; in
+a company deployment, the same client construction resolves an
+organization's internal model gateway or any other Anthropic-compatible
+endpoint approved by IT, just by setting the corresponding environment
+variables — no code change needed. See README.md for setup.
 
 Output: output/executive_summary.md
 
@@ -142,23 +145,31 @@ def main():
                 {"role": "user", "content": build_user_message(variance_report, forecast_report)},
             ],
         )
-    except anthropic.AuthenticationError:
+    except anthropic.AnthropicError as e:
+        # Covers AuthenticationError (rejected key) as well as errors raised
+        # earlier in the credential-resolution chain, such as an expired
+        # `ant auth login` OAuth session (WorkloadIdentityError) — different
+        # failure shapes for the same underlying problem: no usable
+        # credential was available for this run.
         raise SystemExit(
-            "No Anthropic credentials found (rejected). Either set ANTHROPIC_API_KEY, or run "
-            "`ant auth login` to authenticate via OAuth (uses your Claude subscription "
-            "instead of a separate metered API key). See README.md for setup."
+            "No usable model credentials for this run, so the Narrative step is skipped "
+            "rather than failing the pipeline (see README.md, 'Narrative Agent credentials'). "
+            "Set ANTHROPIC_API_KEY, run `ant auth login`, or point this client at your "
+            "organization's internal model gateway or another approved provider.\n"
+            f"Underlying error: {e}"
         )
     except TypeError as e:
         # When NO credential source exists at all (not even an invalid one),
         # the SDK fails at header-construction time with a plain TypeError
-        # rather than AuthenticationError — a different failure shape for the
-        # same underlying problem, so it needs its own catch here.
+        # rather than an AnthropicError subclass — a different failure shape
+        # for the same underlying problem, so it needs its own catch here.
         if "Could not resolve authentication method" not in str(e):
             raise
         raise SystemExit(
-            "No Anthropic credentials configured. Either set ANTHROPIC_API_KEY, or run "
-            "`ant auth login` to authenticate via OAuth (uses your Claude subscription "
-            "instead of a separate metered API key). See README.md for setup."
+            "No model credentials configured, so the Narrative step is skipped rather than "
+            "failing the pipeline (see README.md, 'Narrative Agent credentials'). Set "
+            "ANTHROPIC_API_KEY, run `ant auth login`, or point this client at your "
+            "organization's internal model gateway or another approved provider."
         )
 
     if response.stop_reason == "refusal":

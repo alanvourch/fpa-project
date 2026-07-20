@@ -12,13 +12,13 @@ and project-ops systems respectively - deliberately CLEAN data, unlike the
 messy finance export:
 
 - **fte_budget / fte_actual**: planned vs actual headcount. Budget is the
-  BU's planned headcount (Production 55, Marketing 20, Digital 40,
-  Back-Office 35; group 150). Actual follows the 3-month smoothed payroll
+  BU's planned headcount (Brand Events 55, Corporate Events 20,
+  Digital/Influence 40, Government & Institutions 35; group 150). Actual follows the 3-month smoothed payroll
   achievement ratio, in whole heads, capped at +/-2 vs plan. Deviation
   distribution across all 120 rows: {-1: 17, 0: 100, 1: 3}.
 - **projects_budget / projects_actual**: planned vs delivered project count.
   Budget = budgeted revenue / budgeted average project value
-  (Production EUR300,000, Marketing EUR100,000, Digital EUR175,000, Back-Office EUR50,000).
+  (Brand Events EUR300,000, Corporate Events EUR100,000, Digital/Influence EUR175,000, Government & Institutions EUR50,000).
   Actual carries ~60% of each month's true revenue variance
   (quantized, small seeded jitter); implied price/mix is the exact residual.
 
@@ -35,16 +35,16 @@ messy finance export:
 
 ## Planted driver stories (only two - drivers are context, not new anomalies)
 
-1. **FX month, Digital / 2025-09**: projects_actual = projects_budget
+1. **FX month, Digital/Influence / 2025-09**: projects_actual = projects_budget
    (12 = 12). The EUR196,953
    revenue miss is 100% price (USD contract translated at a stronger EUR),
    0% volume - independently corroborating note N08 ("no change in
    delivered scope").
-2. **Trap month, Production / 2025-11**: drivers reflect the TRUE revenue of
-   EUR5,224,358 (18 projects vs
+2. **Trap month, Brand Events / 2025-11**: drivers reflect the TRUE revenue of
+   EUR5,224,358 (17 projects vs
    17 budgeted). Dividing the corrupted export figure of
    EUR52,243,584 by that project count implies
-   EUR2,902,421 per project vs a budget value of
+   EUR3,073,152 per project vs a budget value of
    EUR300,000 - roughly 10x. The ops system
    independently confirms the finance figure is a data entry error, not a
    real business event.

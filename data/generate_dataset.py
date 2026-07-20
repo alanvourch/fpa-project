@@ -23,7 +23,9 @@ fake_us = Faker("en_US")
 
 N_MONTHS = 30
 MONTHS = pd.date_range("2024-01-01", periods=N_MONTHS, freq="MS")
-BUS = ["Production", "Marketing", "Digital", "Back-Office"]
+# Client-facing revenue verticals (business lines), not internal functions:
+# each carries its own delivery P&L (revenue, COGS, payroll, opex).
+BUS = ["Brand Events", "Corporate Events", "Digital/Influence", "Government & Institutions"]
 
 # events industry seasonality index by calendar month, averages to 1.0 over the year
 SEASONALITY = {
@@ -35,14 +37,14 @@ ANNUAL_REVENUE_GROWTH = 0.04
 ANNUAL_PAY_INFLATION = 0.03
 
 BU_PARAMS = {
-    "Production":  {"revenue_annual": 45_000_000, "cogs_ratio": 0.55, "fte": 55, "avg_salary": 58_000,
-                     "travel_base": 10_000, "marketing_base": 2_000, "it_base": 3_000, "facilities_base": 8_000},
-    "Marketing":   {"revenue_annual": 20_000_000, "cogs_ratio": 0.35, "fte": 20, "avg_salary": 62_000,
-                     "travel_base": 6_000, "marketing_base": 45_000, "it_base": 2_500, "facilities_base": 4_000},
-    "Digital":     {"revenue_annual": 25_000_000, "cogs_ratio": 0.30, "fte": 40, "avg_salary": 72_000,
-                     "travel_base": 4_000, "marketing_base": 5_000, "it_base": 12_000, "facilities_base": 6_000},
-    "Back-Office": {"revenue_annual": 10_000_000, "cogs_ratio": 0.10, "fte": 35, "avg_salary": 56_000,
-                     "travel_base": 1_500, "marketing_base": 500, "it_base": 15_000, "facilities_base": 9_000},
+    "Brand Events":              {"revenue_annual": 45_000_000, "cogs_ratio": 0.55, "fte": 55, "avg_salary": 58_000,
+                                   "travel_base": 10_000, "marketing_base": 2_000, "it_base": 3_000, "facilities_base": 8_000},
+    "Corporate Events":          {"revenue_annual": 20_000_000, "cogs_ratio": 0.35, "fte": 20, "avg_salary": 62_000,
+                                   "travel_base": 6_000, "marketing_base": 45_000, "it_base": 2_500, "facilities_base": 4_000},
+    "Digital/Influence":         {"revenue_annual": 25_000_000, "cogs_ratio": 0.30, "fte": 40, "avg_salary": 72_000,
+                                   "travel_base": 4_000, "marketing_base": 5_000, "it_base": 12_000, "facilities_base": 6_000},
+    "Government & Institutions": {"revenue_annual": 10_000_000, "cogs_ratio": 0.10, "fte": 35, "avg_salary": 56_000,
+                                   "travel_base": 1_500, "marketing_base": 500, "it_base": 15_000, "facilities_base": 9_000},
 }
 
 FINAL_COLUMNS = [
@@ -118,54 +120,55 @@ def inject_business_anomalies(df):
     notes = []
     idx = {(r.business_unit, r.month): i for i, r in df.iterrows()}
 
-    # 1. client project overrun (unfavorable) -- Production, Q2 2025, subcontractor cost blowout
+    # 1. client project overrun (unfavorable) -- Brand Events, Q2 2025, subcontractor cost blowout
     client_name = fake_fr.company()
     q2_2025 = pd.date_range("2025-04-01", periods=3, freq="MS")
     for m in q2_2025:
-        i = idx[("Production", m)]
+        i = idx[("Brand Events", m)]
         before = df.at[i, "cogs_actual"]
         after = before * 1.35
         df.at[i, "cogs_actual"] = after
         notes.append(
-            f"- **Production / {m:%Y-%m}** — COGS actual jumped from EUR{before:,.0f} to "
+            f"- **Brand Events / {m:%Y-%m}** — COGS actual jumped from EUR{before:,.0f} to "
             f"EUR{after:,.0f} (+35%). Root cause: subcontractor scope creep on the "
             f"'{client_name}' activation contract ran well over budget across Q2 2025. Unfavorable."
         )
 
-    # 2. FX-driven variance (unfavorable) -- Digital, one international USD-invoiced contract
+    # 2. FX-driven variance (unfavorable) -- Digital/Influence, one international USD-invoiced contract
     intl_client = fake_us.company()
     m = pd.Timestamp("2025-09-01")
-    i = idx[("Digital", m)]
+    i = idx[("Digital/Influence", m)]
     before = df.at[i, "revenue_actual"]
     after = before * 0.91
     df.at[i, "revenue_actual"] = after
     notes.append(
-        f"- **Digital / {m:%Y-%m}** — Revenue actual came in at EUR{after:,.0f} vs an "
+        f"- **Digital/Influence / {m:%Y-%m}** — Revenue actual came in at EUR{after:,.0f} vs an "
         f"unimpacted run-rate of ~EUR{before:,.0f} (-9%). Root cause: the '{intl_client}' "
         f"contract is invoiced in USD; EUR strengthened against USD that month. Unfavorable, FX-driven, not volume-driven."
     )
 
-    # 3. one-off cost spike (unfavorable) -- Back-Office, emergency IT infrastructure replacement
+    # 3. one-off cost spike (unfavorable) -- Government & Institutions, emergency on-site IT failure
     m = pd.Timestamp("2024-11-01")
-    i = idx[("Back-Office", m)]
+    i = idx[("Government & Institutions", m)]
     before = df.at[i, "opex_it_actual"]
     after = before * 2.8
     df.at[i, "opex_it_actual"] = after
     notes.append(
-        f"- **Back-Office / {m:%Y-%m}** — IT opex actual spiked from EUR{before:,.0f} to "
-        f"EUR{after:,.0f} (+180%). Root cause: emergency server infrastructure replacement "
-        f"after a failed storage migration. One-time, non-recurring. Unfavorable."
+        f"- **Government & Institutions / {m:%Y-%m}** — IT opex actual spiked from EUR{before:,.0f} to "
+        f"EUR{after:,.0f} (+180%). Root cause: on-site registration and AV control systems failed during "
+        f"a ministry summit engagement; emergency replacement hardware was procured outside the normal "
+        f"purchasing cycle. One-time, non-recurring. Unfavorable."
     )
 
-    # 4. favorable variance -- Marketing, renegotiated agency/media-buying contracts
+    # 4. favorable variance -- Corporate Events, renegotiated agency/media-buying contracts
     h2_2025 = pd.date_range("2025-07-01", periods=6, freq="MS")
     for m in h2_2025:
-        i = idx[("Marketing", m)]
+        i = idx[("Corporate Events", m)]
         before = df.at[i, "opex_marketing_actual"]
         after = before * 0.78
         df.at[i, "opex_marketing_actual"] = after
         notes.append(
-            f"- **Marketing / {m:%Y-%m}** — Marketing opex actual came in at EUR{after:,.0f} vs "
+            f"- **Corporate Events / {m:%Y-%m}** — Marketing opex actual came in at EUR{after:,.0f} vs "
             f"a pre-savings run-rate of ~EUR{before:,.0f} (-22%). Root cause: renegotiated media-buying "
             f"and agency contracts effective July 2025. Favorable, sustained cost savings (not a data error)."
         )
@@ -196,10 +199,10 @@ def inject_data_quality_issues(df):
 
     # a) typos / inconsistent casing in business_unit
     typo_map = {
-        "Production": ["Producton", "PRODUCTION"],
-        "Marketing": ["Marketting", "marketing"],
-        "Digital": ["Digitial", "DIGITAL "],
-        "Back-Office": ["Back Office", "BackOffice"],
+        "Brand Events": ["Brand Evnets", "BRAND EVENTS"],
+        "Corporate Events": ["Corportae Events", "corporate events"],
+        "Digital/Influence": ["Digital/Inlfuence", "DIGITAL/INFLUENCE "],
+        "Government & Institutions": ["Government and Institutions", "Government&Institutions"],
     }
     typo_idx = rng.choice(n, size=7, replace=False)
     typo_details = []
@@ -249,12 +252,12 @@ def inject_data_quality_issues(df):
 
     # d) the trap: fat-fingered extra digit that looks like a business anomaly but isn't
     trap_month = pd.Timestamp("2025-11-01")
-    trap_i = df.index[(df["business_unit"] == "Production") & (df["month"] == trap_month)][0]
+    trap_i = df.index[(df["business_unit"] == "Brand Events") & (df["month"] == trap_month)][0]
     true_value = df.at[trap_i, "revenue_actual"]
     fat_fingered = true_value * 10
     df.at[trap_i, "revenue_actual"] = fat_fingered
     notes.append(
-        f"- **DATA ENTRY TRAP — Production / {trap_month:%Y-%m} / revenue_actual**: recorded as "
+        f"- **DATA ENTRY TRAP — Brand Events / {trap_month:%Y-%m} / revenue_actual**: recorded as "
         f"EUR{fat_fingered:,.0f}, an extra trailing zero fat-fingered during manual entry. True value is "
         f"EUR{true_value:,.0f}. This is NOT a real business anomaly — at ~10x the normal monthly run-rate "
         f"for a single BU (more than half the company's typical *annual* revenue), it fails a basic magnitude "
@@ -335,10 +338,10 @@ must never read this file; `tests/validate_variance.py` uses this map after the 
 
 Signal notes (each maps to one real business anomaly documented in section 1):
 
-- **Production / cogs_actual** (client project overrun, Falcon launch) — signal notes: N11, N13
-- **Digital / revenue_actual** (FX on USD contract; revenue-only, delivery costs are EUR-denominated) — signal notes: N08
-- **Back-Office / opex_it_actual** (one-off IT infrastructure failure) — signal notes: N06
-- **Marketing / opex_marketing_actual** (favorable in-housing savings) — signal notes: N12, N16
+- **Brand Events / cogs_actual** (client project overrun, Falcon launch) — signal notes: N11, N13
+- **Digital/Influence / revenue_actual** (FX on USD contract; revenue-only, delivery costs are EUR-denominated) — signal notes: N08
+- **Government & Institutions / opex_it_actual** (one-off IT infrastructure failure) — signal notes: N06
+- **Corporate Events / opex_marketing_actual** (favorable in-housing savings) — signal notes: N12, N16
 
 Noise notes (must never be cited as a variance explanation): N01, N02, N03, N04, N05, N07, N09, N10, N14, N15, N17, N18, N19, N20, N21
 """
