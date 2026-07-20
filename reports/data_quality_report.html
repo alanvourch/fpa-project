@@ -20,6 +20,8 @@
     font-size: 13px; color: #85837d; border: 1px solid #e5e4dd; background: #fff;
     border-radius: 8px; padding: 10px 14px; margin-bottom: 30px;
   }
+  .doc-note .dl { display: block; margin-top: 6px; font-weight: 600; color: #1d5aa6; text-decoration: none; }
+  .doc-note .dl:hover { text-decoration: underline; }
   h1 { font-size: 27px; line-height: 1.2; margin: 18px 0 12px; letter-spacing: -0.01em; }
   h2 { font-size: 20px; margin: 30px 0 10px; }
   h3 { font-size: 16.5px; margin: 22px 0 8px; }
@@ -35,6 +37,19 @@
   tr:last-child td { border-bottom: none; }
   hr { border: none; border-top: 1px solid #e5e4dd; margin: 26px 0; }
   a { color: #1d5aa6; }
+  .report-chart { margin: 18px 0 24px; }
+  .report-chart img { width: 100%; height: auto; border: 1px solid #e5e4dd; border-radius: 10px; }
+
+  /* card list: replaces wide tables whose last column is long free text */
+  .vcards { display: flex; flex-direction: column; gap: 10px; margin: 14px 0 20px; }
+  .vcard { border: 1px solid #e5e4dd; background: #fff; border-radius: 10px; padding: 14px 16px; }
+  .vcard-meta { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: 12.5px; color: #85837d; margin-bottom: 8px; }
+  .vcard-meta b { color: #171715; font-size: 13.5px; }
+  .vc-badge { display: inline-block; font-weight: 700; font-size: 11px; letter-spacing: .02em; border-radius: 5px; padding: 1px 7px; }
+  .vc-badge.f { background: #e6f4e6; color: #0a7d0a; }
+  .vc-badge.u { background: #fbeaea; color: #a12626; }
+  .vcard-text { color: #4f4e4a; margin-bottom: 0; }
+  .vcard-evidence { margin-top: 6px; font-size: 12.5px; color: #85837d; margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -61,45 +76,45 @@
 <tbody>
 <tr>
 <td>2024-12</td>
-<td>"Producton"</td>
-<td>Production</td>
-<td>0.95</td>
+<td>"Brand Evnets"</td>
+<td>Brand Events</td>
+<td>0.92</td>
 </tr>
 <tr>
 <td>2025-07</td>
-<td>"marketing"</td>
-<td>Marketing</td>
+<td>"corporate events"</td>
+<td>Corporate Events</td>
 <td>1.00</td>
 </tr>
 <tr>
 <td>2025-02</td>
-<td>"DIGITAL"</td>
-<td>Digital</td>
+<td>"DIGITAL/INFLUENCE"</td>
+<td>Digital/Influence</td>
 <td>1.00</td>
 </tr>
 <tr>
 <td>2026-04</td>
-<td>"Digitial"</td>
-<td>Digital</td>
-<td>0.93</td>
+<td>"Digital/Inlfuence"</td>
+<td>Digital/Influence</td>
+<td>0.94</td>
 </tr>
 <tr>
 <td>2024-05</td>
-<td>"Back Office"</td>
-<td>Back-Office</td>
-<td>1.00</td>
+<td>"Government and Institutions"</td>
+<td>Government &amp; Institutions</td>
+<td>0.92</td>
 </tr>
 <tr>
 <td>2024-09</td>
-<td>"BackOffice"</td>
-<td>Back-Office</td>
-<td>0.95</td>
+<td>"Government&amp;Institutions"</td>
+<td>Government &amp; Institutions</td>
+<td>0.96</td>
 </tr>
 <tr>
 <td>2026-06</td>
-<td>"BackOffice"</td>
-<td>Back-Office</td>
-<td>0.95</td>
+<td>"Government&amp;Institutions"</td>
+<td>Government &amp; Institutions</td>
+<td>0.96</td>
 </tr>
 </tbody>
 </table></div>
@@ -115,22 +130,22 @@
 <tbody>
 <tr>
 <td>2025-01</td>
-<td>Marketing</td>
+<td>Corporate Events</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td>2025-06</td>
-<td>Marketing</td>
+<td>Corporate Events</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td>2026-04</td>
-<td>Digital</td>
+<td>Digital/Influence</td>
 <td>Yes</td>
 </tr>
 <tr>
 <td>2026-03</td>
-<td>Digital</td>
+<td>Digital/Influence</td>
 <td>Yes</td>
 </tr>
 </tbody>
@@ -149,55 +164,55 @@
 <tbody>
 <tr>
 <td>2024-01</td>
-<td>Back-Office</td>
+<td>Government &amp; Institutions</td>
 <td>opex_travel_budget</td>
 <td>EUR1,410</td>
 </tr>
 <tr>
-<td>2025-01</td>
-<td>Marketing</td>
-<td>opex_travel_actual</td>
-<td>EUR5,815</td>
-</tr>
-<tr>
 <td>2025-02</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>opex_travel_actual</td>
 <td>EUR10,036</td>
 </tr>
 <tr>
+<td>2025-01</td>
+<td>Corporate Events</td>
+<td>opex_travel_actual</td>
+<td>EUR5,815</td>
+</tr>
+<tr>
 <td>2026-02</td>
-<td>Back-Office</td>
+<td>Government &amp; Institutions</td>
 <td>opex_marketing_budget</td>
 <td>EUR470</td>
 </tr>
 <tr>
 <td>2024-04</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>opex_marketing_actual</td>
 <td>EUR2,075</td>
 </tr>
 <tr>
 <td>2025-11</td>
-<td>Digital</td>
+<td>Digital/Influence</td>
 <td>opex_it_budget</td>
 <td>EUR12,440</td>
 </tr>
 <tr>
 <td>2024-07</td>
-<td>Back-Office</td>
+<td>Government &amp; Institutions</td>
 <td>opex_it_actual</td>
 <td>EUR15,361</td>
 </tr>
 <tr>
 <td>2024-04</td>
-<td>Marketing</td>
+<td>Corporate Events</td>
 <td>opex_facilities_budget</td>
 <td>EUR4,015</td>
 </tr>
 <tr>
 <td>2025-06</td>
-<td>Marketing</td>
+<td>Corporate Events</td>
 <td>opex_facilities_actual</td>
 <td>EUR4,018</td>
 </tr>
@@ -216,61 +231,61 @@
 <tbody>
 <tr>
 <td>2025-10</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>revenue_budget</td>
 <td>"EUR4,819,709"</td>
 </tr>
 <tr>
 <td>2026-06</td>
-<td>Back-Office</td>
+<td>Government &amp; Institutions</td>
 <td>revenue_budget</td>
 <td>"EUR1,099,421"</td>
 </tr>
 <tr>
 <td>2025-11</td>
-<td>Marketing</td>
+<td>Corporate Events</td>
 <td>revenue_prior_year</td>
 <td>"EUR2,292,396"</td>
 </tr>
 <tr>
 <td>2024-12</td>
-<td>Digital</td>
+<td>Digital/Influence</td>
 <td>cogs_budget</td>
 <td>"712,667 EUR"</td>
 </tr>
 <tr>
 <td>2025-05</td>
-<td>Marketing</td>
+<td>Corporate Events</td>
 <td>cogs_actual</td>
 <td>"EUR837,734"</td>
 </tr>
 <tr>
 <td>2025-05</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>payroll_budget</td>
 <td>"276,519 EUR"</td>
 </tr>
 <tr>
 <td>2026-05</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>payroll_budget</td>
 <td>"EUR284,815"</td>
 </tr>
 <tr>
 <td>2025-12</td>
-<td>Digital</td>
+<td>Digital/Influence</td>
 <td>opex_it_budget</td>
 <td>"12,460 EUR"</td>
 </tr>
 <tr>
 <td>2024-08</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>opex_facilities_budget</td>
 <td>"8,070 EUR"</td>
 </tr>
 <tr>
 <td>2025-01</td>
-<td>Back-Office</td>
+<td>Government &amp; Institutions</td>
 <td>opex_facilities_actual</td>
 <td>"EUR9,109"</td>
 </tr>
@@ -294,7 +309,7 @@
 <tbody>
 <tr>
 <td>2025-11</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>revenue_actual</td>
 <td>EUR52,243,584</td>
 <td>EUR5,238,445</td>
@@ -318,170 +333,8 @@
 </thead>
 <tbody>
 <tr>
-<td>2024-01</td>
-<td>Back-Office</td>
-<td>cogs_actual</td>
-<td>EUR69,459</td>
-<td>EUR58,333</td>
-<td>1.19x</td>
-<td>[0.81, 1.19]</td>
-</tr>
-<tr>
-<td>2024-06</td>
-<td>Back-Office</td>
-<td>opex_marketing_actual</td>
-<td>EUR394</td>
-<td>EUR530</td>
-<td>0.74x</td>
-<td>[0.77, 1.25]</td>
-</tr>
-<tr>
-<td>2024-11</td>
-<td>Back-Office</td>
-<td>opex_it_actual</td>
-<td>EUR39,366</td>
-<td>EUR15,250</td>
-<td>2.58x</td>
-<td>[0.81, 1.23]</td>
-</tr>
-<tr>
-<td>2024-07</td>
-<td>Digital</td>
-<td>cogs_actual</td>
-<td>EUR457,359</td>
-<td>EUR541,771</td>
-<td>0.84x</td>
-<td>[0.86, 1.14]</td>
-</tr>
-<tr>
-<td>2025-01</td>
-<td>Digital</td>
-<td>revenue_actual</td>
-<td>EUR1,291,857</td>
-<td>EUR1,516,667</td>
-<td>0.85x</td>
-<td>[0.86, 1.15]</td>
-</tr>
-<tr>
-<td>2025-01</td>
-<td>Digital</td>
-<td>cogs_actual</td>
-<td>EUR379,132</td>
-<td>EUR455,000</td>
-<td>0.83x</td>
-<td>[0.86, 1.14]</td>
-</tr>
-<tr>
-<td>2025-01</td>
-<td>Digital</td>
-<td>payroll_actual</td>
-<td>EUR259,167</td>
-<td>EUR247,200</td>
-<td>1.05x</td>
-<td>[0.96, 1.03]</td>
-</tr>
-<tr>
-<td>2024-03</td>
-<td>Marketing</td>
-<td>payroll_actual</td>
-<td>EUR109,072</td>
-<td>EUR103,844</td>
-<td>1.05x</td>
-<td>[0.96, 1.05]</td>
-</tr>
-<tr>
-<td>2024-04</td>
-<td>Marketing</td>
-<td>opex_it_actual</td>
-<td>EUR2,081</td>
-<td>EUR2,512</td>
-<td>0.83x</td>
-<td>[0.87, 1.14]</td>
-</tr>
-<tr>
-<td>2024-06</td>
-<td>Marketing</td>
-<td>opex_travel_actual</td>
-<td>EUR8,208</td>
-<td>EUR6,360</td>
-<td>1.29x</td>
-<td>[0.82, 1.23]</td>
-</tr>
-<tr>
-<td>2024-10</td>
-<td>Marketing</td>
-<td>cogs_actual</td>
-<td>EUR846,462</td>
-<td>EUR720,897</td>
-<td>1.17x</td>
-<td>[0.87, 1.16]</td>
-</tr>
-<tr>
-<td>2024-12</td>
-<td>Marketing</td>
-<td>opex_facilities_actual</td>
-<td>EUR3,743</td>
-<td>EUR4,055</td>
-<td>0.92x</td>
-<td>[0.93, 1.07]</td>
-</tr>
-<tr>
-<td>2025-03</td>
-<td>Marketing</td>
-<td>opex_marketing_actual</td>
-<td>EUR51,262</td>
-<td>EUR43,650</td>
-<td>1.17x</td>
-<td>[0.67, 1.14]</td>
-</tr>
-<tr>
-<td>2025-07</td>
-<td>Marketing</td>
-<td>opex_marketing_actual</td>
-<td>EUR25,840</td>
-<td>EUR42,975</td>
-<td>0.60x</td>
-<td>[0.67, 1.14]</td>
-</tr>
-<tr>
-<td>2025-08</td>
-<td>Marketing</td>
-<td>payroll_actual</td>
-<td>EUR103,816</td>
-<td>EUR108,284</td>
-<td>0.96x</td>
-<td>[0.96, 1.05]</td>
-</tr>
-<tr>
-<td>2026-02</td>
-<td>Marketing</td>
-<td>opex_it_actual</td>
-<td>EUR2,123</td>
-<td>EUR2,604</td>
-<td>0.82x</td>
-<td>[0.87, 1.14]</td>
-</tr>
-<tr>
-<td>2026-05</td>
-<td>Marketing</td>
-<td>payroll_actual</td>
-<td>EUR106,299</td>
-<td>EUR110,712</td>
-<td>0.96x</td>
-<td>[0.96, 1.05]</td>
-</tr>
-<tr>
-<td>2026-05</td>
-<td>Marketing</td>
-<td>opex_it_actual</td>
-<td>EUR2,128</td>
-<td>EUR2,617</td>
-<td>0.81x</td>
-<td>[0.87, 1.14]</td>
-</tr>
-<tr>
 <td>2024-05</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>payroll_actual</td>
 <td>EUR279,965</td>
 <td>EUR268,466</td>
@@ -490,7 +343,7 @@
 </tr>
 <tr>
 <td>2025-04</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>cogs_actual</td>
 <td>EUR3,201,900</td>
 <td>EUR2,491,056</td>
@@ -499,7 +352,7 @@
 </tr>
 <tr>
 <td>2025-05</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>cogs_actual</td>
 <td>EUR3,352,549</td>
 <td>EUR2,716,534</td>
@@ -508,7 +361,7 @@
 </tr>
 <tr>
 <td>2025-06</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>cogs_actual</td>
 <td>EUR3,347,006</td>
 <td>EUR2,616,410</td>
@@ -517,7 +370,7 @@
 </tr>
 <tr>
 <td>2025-08</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>opex_facilities_actual</td>
 <td>EUR8,906</td>
 <td>EUR8,190</td>
@@ -526,7 +379,7 @@
 </tr>
 <tr>
 <td>2025-09</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>payroll_actual</td>
 <td>EUR267,350</td>
 <td>EUR279,257</td>
@@ -535,7 +388,7 @@
 </tr>
 <tr>
 <td>2026-04</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>revenue_actual</td>
 <td>EUR5,099,183</td>
 <td>EUR4,710,360</td>
@@ -544,12 +397,174 @@
 </tr>
 <tr>
 <td>2026-04</td>
-<td>Production</td>
+<td>Brand Events</td>
 <td>cogs_actual</td>
 <td>EUR2,997,915</td>
 <td>EUR2,590,698</td>
 <td>1.16x</td>
 <td>[0.88, 1.15]</td>
+</tr>
+<tr>
+<td>2024-03</td>
+<td>Corporate Events</td>
+<td>payroll_actual</td>
+<td>EUR109,072</td>
+<td>EUR103,844</td>
+<td>1.05x</td>
+<td>[0.96, 1.05]</td>
+</tr>
+<tr>
+<td>2024-04</td>
+<td>Corporate Events</td>
+<td>opex_it_actual</td>
+<td>EUR2,081</td>
+<td>EUR2,512</td>
+<td>0.83x</td>
+<td>[0.87, 1.14]</td>
+</tr>
+<tr>
+<td>2024-06</td>
+<td>Corporate Events</td>
+<td>opex_travel_actual</td>
+<td>EUR8,208</td>
+<td>EUR6,360</td>
+<td>1.29x</td>
+<td>[0.82, 1.23]</td>
+</tr>
+<tr>
+<td>2024-10</td>
+<td>Corporate Events</td>
+<td>cogs_actual</td>
+<td>EUR846,462</td>
+<td>EUR720,897</td>
+<td>1.17x</td>
+<td>[0.87, 1.16]</td>
+</tr>
+<tr>
+<td>2024-12</td>
+<td>Corporate Events</td>
+<td>opex_facilities_actual</td>
+<td>EUR3,743</td>
+<td>EUR4,055</td>
+<td>0.92x</td>
+<td>[0.93, 1.07]</td>
+</tr>
+<tr>
+<td>2025-03</td>
+<td>Corporate Events</td>
+<td>opex_marketing_actual</td>
+<td>EUR51,262</td>
+<td>EUR43,650</td>
+<td>1.17x</td>
+<td>[0.67, 1.14]</td>
+</tr>
+<tr>
+<td>2025-07</td>
+<td>Corporate Events</td>
+<td>opex_marketing_actual</td>
+<td>EUR25,840</td>
+<td>EUR42,975</td>
+<td>0.60x</td>
+<td>[0.67, 1.14]</td>
+</tr>
+<tr>
+<td>2025-08</td>
+<td>Corporate Events</td>
+<td>payroll_actual</td>
+<td>EUR103,816</td>
+<td>EUR108,284</td>
+<td>0.96x</td>
+<td>[0.96, 1.05]</td>
+</tr>
+<tr>
+<td>2026-02</td>
+<td>Corporate Events</td>
+<td>opex_it_actual</td>
+<td>EUR2,123</td>
+<td>EUR2,604</td>
+<td>0.82x</td>
+<td>[0.87, 1.14]</td>
+</tr>
+<tr>
+<td>2026-05</td>
+<td>Corporate Events</td>
+<td>payroll_actual</td>
+<td>EUR106,299</td>
+<td>EUR110,712</td>
+<td>0.96x</td>
+<td>[0.96, 1.05]</td>
+</tr>
+<tr>
+<td>2026-05</td>
+<td>Corporate Events</td>
+<td>opex_it_actual</td>
+<td>EUR2,128</td>
+<td>EUR2,617</td>
+<td>0.81x</td>
+<td>[0.87, 1.14]</td>
+</tr>
+<tr>
+<td>2024-07</td>
+<td>Digital/Influence</td>
+<td>cogs_actual</td>
+<td>EUR457,359</td>
+<td>EUR541,771</td>
+<td>0.84x</td>
+<td>[0.86, 1.14]</td>
+</tr>
+<tr>
+<td>2025-01</td>
+<td>Digital/Influence</td>
+<td>revenue_actual</td>
+<td>EUR1,291,857</td>
+<td>EUR1,516,667</td>
+<td>0.85x</td>
+<td>[0.86, 1.15]</td>
+</tr>
+<tr>
+<td>2025-01</td>
+<td>Digital/Influence</td>
+<td>cogs_actual</td>
+<td>EUR379,132</td>
+<td>EUR455,000</td>
+<td>0.83x</td>
+<td>[0.86, 1.14]</td>
+</tr>
+<tr>
+<td>2025-01</td>
+<td>Digital/Influence</td>
+<td>payroll_actual</td>
+<td>EUR259,167</td>
+<td>EUR247,200</td>
+<td>1.05x</td>
+<td>[0.96, 1.03]</td>
+</tr>
+<tr>
+<td>2024-01</td>
+<td>Government &amp; Institutions</td>
+<td>cogs_actual</td>
+<td>EUR69,459</td>
+<td>EUR58,333</td>
+<td>1.19x</td>
+<td>[0.81, 1.19]</td>
+</tr>
+<tr>
+<td>2024-06</td>
+<td>Government &amp; Institutions</td>
+<td>opex_marketing_actual</td>
+<td>EUR394</td>
+<td>EUR530</td>
+<td>0.74x</td>
+<td>[0.77, 1.25]</td>
+</tr>
+<tr>
+<td>2024-11</td>
+<td>Government &amp; Institutions</td>
+<td>opex_it_actual</td>
+<td>EUR39,366</td>
+<td>EUR15,250</td>
+<td>2.58x</td>
+<td>[0.81, 1.23]</td>
 </tr>
 </tbody>
 </table></div>
