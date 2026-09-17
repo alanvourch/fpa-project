@@ -1,13 +1,14 @@
 # EventCo: a monthly budget-versus-actual pack with a human sign-off
 
-FY2025 net result came in at EUR48.9M against a EUR52.0M budget. This repository
-produces the pack that explains that gap for a fictional EUR100M events agency: a
-EUR2.08M cost overrun on one client project, a EUR197k currency effect on a
-USD-invoiced contract, EUR69k of in-housing savings on marketing spend, and 16 further
-material variances that are either explained by the analyst or left open and labeled as
-such. It also catches a revenue entry ten times too large before it reaches any figure
-or sentence, refreshes next quarter's forecast, builds a one-page review per business
-line, and assembles a draft board pack that stops at a sign-off block.
+FY2025 operating result came in at EUR1.7M against a EUR4.8M budget, a 1.6% margin where
+4.5% was planned. This repository produces the pack that explains that EUR3.0M gap for a
+fictional EUR100M events agency: a EUR2.13M external-production overrun on one client
+project, a EUR197k currency effect on a USD-invoiced contract, EUR69k of in-housing
+savings on marketing spend, and 23 further material variances that are either explained
+by the analyst or left open and labeled as such. It also catches a revenue entry ten times
+too large before it reaches any figure or sentence, refreshes next quarter's forecast,
+builds a one-page review per business line, and assembles a draft board pack that stops
+at a sign-off block.
 
 EventCo is fictional. The monthly cycle is the one I ran as Head of FP&A at a EUR100M
 events agency, including stepping in to close the books when the finance director was
@@ -21,45 +22,51 @@ shows the generated reports themselves.
 
 On the synthetic 30-month dataset (4 business lines, about EUR100M annual revenue):
 
-- **The FY2025 walk from budget to actual reconciles to the euro.** Budgeted net result
-  EUR52.0M, actual EUR48.9M. The three named drivers: a EUR2.08M client project overrun
-  (a change order recovered only part of it), a EUR197k unfavorable FX translation on a
-  USD-invoiced contract, and EUR69k of in-housing savings on marketing spend in 2025.
-  Material items with no documented note net out to +EUR123k and are shown as their own
-  hatched block, labeled as routed to the analyst, rather than absorbed into a story.
-  Everything below materiality nets to EUR1.03M unfavorable across the remaining
-  line-months, none of them individually large enough to comment on.
+- **The FY2025 walk from budget to actual reconciles to the euro.** Budgeted operating
+  result EUR4.8M, actual EUR1.7M. The three named drivers: a EUR2.13M client project
+  overrun (a change order recovered only part of it), a EUR197k unfavorable FX translation
+  on a USD-invoiced contract, and EUR69k of in-housing savings on marketing spend in 2025.
+  Material items with no documented note net out to +EUR333k across 9 items and are shown
+  as their own hatched block, labeled as routed to the analyst, rather than absorbed into
+  a story. Everything below materiality is shown in two more blocks instead of one
+  residual: revenue landing a little under plan in ordinary months (EUR818k on EUR106M of
+  budgeted revenue) and cost lines drifting (EUR300k). On a business that budgets a 4.5%
+  margin, a few percent of monthly revenue noise across four business lines adds up to a
+  visible share of the year's profit, so the walk shows it rather than folding it into a
+  story. Brand Events on its own ends the year at an operating loss of EUR1.4M against a
+  EUR1.1M budgeted profit: the overrun alone is twice the line's planned margin.
 
-![FY2025 net result waterfall from budget to actual, with named variance drivers and a hatched block for items routed to the analyst](docs/variance_bridge_2025.png)
+![FY2025 operating result waterfall from budget to actual, with named variance drivers and a hatched block for items routed to the analyst](docs/variance_bridge_2025.png)
 
 - **The one planted data trap was caught.** Brand Events' November 2025 revenue came in at
   10x budget, the signature of an extra digit, not a business event. It was flagged at
   ingestion, excluded from variance analysis, normalized out of the forecast history, and
   mentioned in the executive summary only as a data issue pending correction. Every
   downstream step handled it; none narrated it.
-- **Every material variance carries its provenance.** Of the 20 variances that met the
+- **Every material variance carries its provenance.** Of the 27 variances that met the
   materiality tests, 4 are corroborated by a dated business note and are the only ones
-  the system explains itself. The other 16 went to the FP&A analyst as follow-ups: 14 now
-  carry a written explanation labeled "Analyst input" with author and date, and 2 remain
-  open and say so. The pack never mixes the three kinds. In this demo the 14 analyst
+  the system explains itself. The other 23 went to the FP&A analyst as follow-ups: 20 now
+  carry a written explanation labeled "Analyst input" with author and date, and 3 remain
+  open and say so. The pack never mixes the three kinds. In this demo the 20 analyst
   explanations are written for illustration over seeded noise (see Known limitations);
   what the demo shows is the workflow and the labeling, not real investigative findings.
 
-![All 20 material variances as P&L impact, hatched where no documented note exists and the item went to the analyst](docs/variance_highlights.png)
+![All 27 material variances as P&L impact, hatched where no documented note exists and the item went to the analyst](docs/variance_highlights.png)
 
 - **Every business line gets a one-page review with driver-based commentary.** Brand
-  Events' FY2025 page splits its payroll variance into a headcount effect (average 54.6
-  FTE vs 55 planned) and a rate effect, and its revenue variance into projects volume (146
+  Events' FY2025 page splits its payroll variance into a headcount effect (average 51.6
+  FTE vs 52 planned) and a rate effect, and its revenue variance into projects volume (146
   delivered vs 141 planned) and price/mix. Both splits reconcile exactly to the reported
   variances (asserted in code, re-checked by a validator), and the commentary cites the
   same evidence notes as the variance report. See
   [`output/bu_reports/brand_events.pdf`](output/bu_reports/brand_events.pdf) and its three
   siblings, each also available as Markdown.
 
-- **The Q3 2026 rolling forecast projects EUR22.6M revenue at a 47.9% margin**, built
-  from each line's own seasonal base and median year-over-year growth, with 34 distorted
+- **The Q3 2026 rolling forecast projects EUR22.6M revenue at a 1.2% margin**, built
+  from each line's own seasonal base and median year-over-year growth, with 40 distorted
   month-values normalized out of the history first (each one logged with its reason and
-  evidence).
+  evidence). The quarter is the seasonal trough of an events year: August is forecast at
+  an operating loss of EUR421k, which the pack states rather than smooths.
 
 ![Q3 2026 forecast: revenue and total costs by month with prior-year reference](docs/forecast_outlook.png)
 
@@ -72,13 +79,25 @@ Full generated reports: [`output/variance_report.md`](output/variance_report.md)
 ## What goes in
 
 The input is a monthly management reporting export, not a ledger: one row per business
-line per month with budget and actual for seven P&L lines (revenue, direct costs,
-payroll and four overhead lines), for four business lines over 30 months. That is 120
-rows once cleaned, and 840 budget-versus-actual tests (120 rows times 7 lines). Alongside
-it: a log of dated business notes from the operating teams, a file of analyst commentary,
-and monthly headcount and projects delivered per business line from the HR and operations
-systems. There are no journal entries, accruals or reconciliations in scope; this is the
-reporting pack that follows a close, not the close itself.
+line per month with budget and actual for ten P&L lines, for four business lines over 30
+months. That is 120 rows once cleaned, and 1,200 budget-versus-actual tests (120 rows
+times 10 lines). Alongside it: a log of dated business notes from the operating teams, a
+file of analyst commentary, and monthly headcount and projects delivered per business
+line from the HR and operations systems. There are no journal entries, accruals or
+reconciliations in scope; this is the reporting pack that follows a close, not the close
+itself.
+
+The P&L has the shape of a French events agency of this size. In the base year, on
+EUR102.6M of revenue: external production bought for client projects (venues, technical
+suppliers, staging, catering, freight, content, media) 62.6%; freelance and project staff
+11.3%; permanent payroll, fully loaded with employer social charges, 11.6% for the 130
+FTE in the business lines; overheads 10.1%, made of non-billable travel (0.7%), the
+agency's own marketing and new business (1.1%), IT (0.8%), allocated office rent and
+facilities (2.0%, about EUR2.0M for a Paris office and warehouse), allocated central G&A
+(4.7%, covering the 20 central FTE in finance, HR, IT and management, professional fees,
+insurance and other admin) and depreciation (0.8%). Operating result: 4.5% of revenue.
+Business-line margins range from about 3% (Brand Events, large activations) to about 8%
+(Government & Institutions).
 
 The export arrives with the problems a real one has, planted on purpose: typos in
 business-line names, duplicate rows, amounts typed as text with currency formatting, four
@@ -101,7 +120,7 @@ calls inside one program:
 1. **Ingestion** cleans the export (typos, duplicates, currency-formatted text, mixed
    date formats, missing values) and flags the 10x revenue row as a probable data-entry
    error, without correcting it. That decision stays with a human.
-2. **Variance and root cause** computes all 840 variances, applies a three-rule
+2. **Variance and root cause** computes all 1,200 variances, applies a three-rule
    materiality test, and explains a variance only when a dated internal business note
    corroborates it. Anything unexplained goes to the FP&A analyst as a follow-up; the
    analyst's findings come back through `data/analyst_commentary.csv` and are rendered
@@ -221,16 +240,16 @@ The known gaps are listed here rather than left for a close reading of the logs:
   is never paired with business-event framing, but it could not catch a narrative that
   invents a business story while avoiding data-quality words entirely. The figure-tracing
   check is the harder net behind it.
-- **The committed executive summary was written by hand.** No API credentials were
-  configured on the machine at the time, so the file was drafted in an interactive
-  session following the narrative step's exact system prompt, then passed through the
-  same validator. Its header discloses this. Running `agents/narrative_agent.py` with
-  credentials produces the authoritative version from the pinned model.
+- **The committed executive summary was not produced by a model call.** No API
+  credentials were configured on the machine at the time, so the file was written to the
+  narrative step's exact system prompt and then passed through the same validator the
+  pipeline applies to a generated summary. Its header discloses this. Running
+  `agents/narrative_agent.py` with credentials produces the model-generated version.
 - **The dataset is synthetic and seeded.** The anomalies and errors were planted, so task
   difficulty is calibrated by construction. The scripts never read the answer key
   (`data/ground_truth.md`); separate validation scripts in `tests/` check their outputs
   against it after the fact, and all six pass.
-- **The analyst commentary is written for illustration.** The 14 "Analyst input" rows
+- **The analyst commentary is written for illustration.** The 20 "Analyst input" rows
   were written for this demo the way a real analyst would write them after follow-up,
   but the underlying variances are seeded generator noise, so those explanations are
   plausible fiction, documented as such here and on the case study page. What the demo
@@ -241,6 +260,11 @@ The known gaps are listed here rather than left for a close reading of the logs:
   revenue = volume x price tie out to the cent on every one-pager. Real HR and CRM
   extracts never reconcile this cleanly; on real data the one-pagers would need a
   reconciliation tolerance and an explicit unallocated line.
+- **Overheads are allocated to the business lines.** Facilities are allocated by
+  headcount and central G&A and depreciation by revenue share, so the business-line
+  P&Ls are fully loaded and their overhead lines vary only with central spend. A real
+  pack would also carry the central cost centre itself; here its cost sits in the
+  allocated lines.
 
 ## Run it yourself
 

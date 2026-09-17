@@ -1,6 +1,6 @@
 # Pipeline Run Log
 
-Run at 2026-07-20 19:14 by `orchestrator.py`.
+Run at 2026-09-17 16:40 by `orchestrator.py`.
 
 | Step | Script | Exit code | Result |
 |---|---|---|---|
@@ -22,19 +22,19 @@ Duplicates removed: 4
 Opex values imputed: 9
 Currency-formatted cells parsed: 10
 Flagged as likely data errors: 1
-Flagged as notable variances (informational): 26
+Flagged as notable variances (informational): 27
 Wrote data/eventco_monthly_cleaned.csv and output/data_quality_report.md
 ```
 
 ### Variance & Root-Cause
 
 ```
-Variance rows computed: 840
+Variance rows computed: 1200
 Excluded as suspected data errors: 1
-Material items: 20 (3 episodes, 17 single months)
+Material items: 27 (2 episodes, 25 single months)
   corroborated by business notes: 4
-  explained by analyst input (manual, labeled): 14
-  still open, no clear driver identified: 2
+  explained by analyst input (manual, labeled): 20
+  still open, no clear driver identified: 3
 Wrote output/variance_table.csv and output/variance_report.md
 ```
 
@@ -42,19 +42,19 @@ Wrote output/variance_table.csv and output/variance_report.md
 
 ```
 Forecast horizon: 2026-07, 2026-08, 2026-09 (cutoff 2026-06)
-Forecast rows: 84 (28 series)
-History adjustments: 34 normalized, 0 kept (active episodes)
-Growth factors range: 0.89x .. 1.10x
+Forecast rows: 120 (40 series)
+History adjustments: 40 normalized, 0 kept (active episodes)
+Growth factors range: 0.89x .. 1.06x
 Wrote output/forecast.csv and output/forecast_report.md
 ```
 
 ### BU One-Pagers
 
 ```
-Brand Events: net -2,482k vs budget, 5 material item(s) -> output/bu_reports/brand_events.md + .pdf
-Corporate Events: net -82k vs budget, 6 material item(s) -> output/bu_reports/corporate_events.md + .pdf
-Digital/Influence: net -480k vs budget, 7 material item(s) -> output/bu_reports/digital_influence.md + .pdf
-Government & Institutions: net -71k vs budget, 2 material item(s) -> output/bu_reports/government_institutions.md + .pdf
+Brand Events: net -2,545k vs budget, 8 material item(s) -> output/bu_reports/brand_events.md + .pdf
+Corporate Events: net -197k vs budget, 4 material item(s) -> output/bu_reports/corporate_events.md + .pdf
+Digital/Influence: net -297k vs budget, 8 material item(s) -> output/bu_reports/digital_influence.md + .pdf
+Government & Institutions: net -7.1k vs budget, 7 material item(s) -> output/bu_reports/government_institutions.md + .pdf
 Wrote 4 BU one-pagers to output/bu_reports/
 ```
 
@@ -67,7 +67,7 @@ Wrote 4 BU one-pagers to output/bu_reports/
 stderr:
 ```
 No usable model credentials for this run, so the Narrative step is skipped rather than failing the pipeline (see README.md, 'Narrative Agent credentials'). Set ANTHROPIC_API_KEY, run `ant auth login`, or point this client at your organization's internal model gateway or another approved provider.
-Underlying error: user_oauth refresh failed (HTTP 400): {'error': 'invalid_grant', 'error_description': 'Refresh token not found or invalid'} [request_id=req_011CdEA9s2ZBJAM1W9QrjXgR]
+Underlying error: credentials file for profile 'default' (authentication.type 'user_oauth' with client_id) must include 'refresh_token': C:\Users\snip1\AppData\Roaming\Anthropic\credentials\default.json
 ```
 
 ### QA/Reviewer

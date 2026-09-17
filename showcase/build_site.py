@@ -74,13 +74,13 @@ REPORTS = [
 REPORT_CHARTS = {
     "executive_summary.md": (
         "variance_bridge_2025.png",
-        "FY2025 net result waterfall from budget to actual, with named "
+        "FY2025 operating result waterfall from budget to actual, with named "
         "variance drivers and a hatched block for items routed to the analyst",
         None,
     ),
     "variance_report.md": (
         "variance_highlights.png",
-        "All 20 material variances as P&L impact, hatched where no "
+        "All material variances as P&L impact, hatched where no "
         "documented note exists and the item went to the analyst",
         "Material variances",
     ),
@@ -94,8 +94,8 @@ REPORT_CHARTS = {
 # Reports that also link a raw data export next to the doc-note, so a reader
 # can pull the full table into Excel/Sheets instead of scrolling a webpage.
 REPORT_DOWNLOADS = {
-    "variance_report.md": ("variance_table.csv", "the full 840-row variance grain"),
-    "forecast_report.md": ("forecast.csv", "the full 84-row forecast grain"),
+    "variance_report.md": ("variance_table.csv", "the full 1,200-row variance grain"),
+    "forecast_report.md": ("forecast.csv", "the full 120-row forecast grain"),
 }
 
 PAGE_TEMPLATE = """<!DOCTYPE html>

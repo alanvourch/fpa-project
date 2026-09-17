@@ -64,11 +64,14 @@ TABLE_PATH = "output/variance_table.csv"
 LINE_ITEMS = [
     ("Revenue", "revenue_actual", "revenue_budget", False),
     ("COGS", "cogs_actual", "cogs_budget", True),
+    ("Freelance", "freelance_actual", "freelance_budget", True),
     ("Payroll", "payroll_actual", "payroll_budget", True),
     ("Opex - Travel", "opex_travel_actual", "opex_travel_budget", True),
     ("Opex - Marketing", "opex_marketing_actual", "opex_marketing_budget", True),
     ("Opex - IT", "opex_it_actual", "opex_it_budget", True),
     ("Opex - Facilities", "opex_facilities_actual", "opex_facilities_budget", True),
+    ("Opex - G&A", "opex_ga_actual", "opex_ga_budget", True),
+    ("Depreciation", "depreciation_actual", "depreciation_budget", True),
 ]
 
 MATERIALITY_PCT = 0.10
@@ -105,6 +108,8 @@ LEXICON = {
              "supplier", "subcontract", "venue", "pass-through",
              "production cost", "external production", "scope expansion",
              "overtime"],
+    "Freelance": ["freelance", "freelancer", "intermittent", "temporary staff",
+                  "temp staff", "event staff", "hostess", "crew", "day rate"],
     "Payroll": ["payroll", "headcount", "hiring", "recruit", "salary",
                 "bonus", "severance", "overtime", "parental leave",
                 "temporary cover"],
@@ -115,6 +120,11 @@ LEXICON = {
                   "cyber", "helpdesk", "infrastructure", "laptop"],
     "Opex - Facilities": ["office", "lease", "rent", "facilities",
                           "utilities", "landlord"],
+    "Opex - G&A": ["insurance", "audit fee", "legal fee", "professional fees",
+                   "recruitment fee", "bad debt", "subscription", "bank charges",
+                   "central cost", "allocation key"],
+    "Depreciation": ["depreciation", "amortisation", "amortization", "fit-out",
+                     "capex", "write-off", "impairment"],
 }
 
 
@@ -254,7 +264,7 @@ def attach_evidence(items, notes):
 
 
 def fmt_money(v):
-    return f"EUR{v:,.0f}"
+    return f"-EUR{-v:,.0f}" if v < 0 else f"EUR{v:,.0f}"
 
 
 def fmt_period(months):

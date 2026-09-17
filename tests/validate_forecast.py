@@ -18,7 +18,7 @@ agent's outputs (output/forecast.csv, output/forecast_report.md) against it:
   6. The concluded savings programme is not extrapolated: the Corporate
      Events marketing-opex forecast must sit above the raw deep-savings
      prior-year actuals.
-  7. Structural sanity: 84 rows (28 series x 3 months), correct horizon,
+  7. Structural sanity: 3 forecast rows per BU/line series, correct horizon,
      positive values, growth factors in a plausible band.
 
 Run: .venv/Scripts/python.exe tests/validate_forecast.py
@@ -202,8 +202,9 @@ def main():
 
     # 7. Structural sanity
     problems = []
-    if len(fc) != 84:
-        problems.append(f"expected 84 forecast rows, got {len(fc)}")
+    n_series = var.groupby(["business_unit", "line_item"]).ngroups
+    if len(fc) != 3 * n_series:
+        problems.append(f"expected {3 * n_series} forecast rows (3 x {n_series} series), got {len(fc)}")
     if sorted(fc["month"].unique()) != ["2026-07", "2026-08", "2026-09"]:
         problems.append(f"unexpected horizon months: {sorted(fc['month'].unique())}")
     if (fc["forecast"] <= 0).any() or fc["forecast"].isna().any():
@@ -217,7 +218,7 @@ def main():
     if problems:
         failures.extend(f"STRUCTURAL: {p}" for p in problems)
     else:
-        passes.append(f"Structural checks pass (84 rows, horizon 2026-07..09, positive values, growth within [{lo}, {hi}])")
+        passes.append(f"Structural checks pass ({len(fc)} rows = 3 x {n_series} series, horizon 2026-07..09, positive values, growth within [{lo}, {hi}])")
 
     print("=== Forecast Agent Validation ===\n")
     print(f"Ground truth: {len(singles)} one-off month(s), {len(episode_months)} episode month(s) + 1 data entry trap")

@@ -31,11 +31,14 @@ FINAL_COLUMNS = [
     "month", "business_unit",
     "revenue_budget", "revenue_actual", "revenue_prior_year",
     "cogs_budget", "cogs_actual",
+    "freelance_budget", "freelance_actual",
     "payroll_budget", "payroll_actual",
     "opex_travel_budget", "opex_travel_actual",
     "opex_marketing_budget", "opex_marketing_actual",
     "opex_it_budget", "opex_it_actual",
     "opex_facilities_budget", "opex_facilities_actual",
+    "opex_ga_budget", "opex_ga_actual",
+    "depreciation_budget", "depreciation_actual",
 ]
 NUMERIC_COLUMNS = [c for c in FINAL_COLUMNS if c not in ("month", "business_unit")]
 OPEX_COLUMNS = [c for c in NUMERIC_COLUMNS if c.startswith("opex_")]
@@ -44,11 +47,14 @@ OPEX_COLUMNS = [c for c in NUMERIC_COLUMNS if c.startswith("opex_")]
 ACTUAL_BUDGET_PAIRS = [
     ("revenue_actual", "revenue_budget"),
     ("cogs_actual", "cogs_budget"),
+    ("freelance_actual", "freelance_budget"),
     ("payroll_actual", "payroll_budget"),
     ("opex_travel_actual", "opex_travel_budget"),
     ("opex_marketing_actual", "opex_marketing_budget"),
     ("opex_it_actual", "opex_it_budget"),
     ("opex_facilities_actual", "opex_facilities_budget"),
+    ("opex_ga_actual", "opex_ga_budget"),
+    ("depreciation_actual", "depreciation_budget"),
 ]
 
 # A single line item coming in at >4x or <0.25x its budget is not a plausible

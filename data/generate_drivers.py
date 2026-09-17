@@ -174,8 +174,9 @@ and project-ops systems respectively - deliberately CLEAN data, unlike the
 messy finance export:
 
 - **fte_budget / fte_actual**: planned vs actual headcount. Budget is the
-  BU's planned headcount (Brand Events 55, Corporate Events 20,
-  Digital/Influence 40, Government & Institutions 35; group 150). Actual follows the 3-month smoothed payroll
+  BU's planned headcount ({", ".join(f"{bu} {gd.BU_PARAMS[bu]['fte']}" for bu in gd.BUS)};
+  business lines {sum(p['fte'] for p in gd.BU_PARAMS.values())}, plus central functions carried
+  in the allocated G&A line). Actual follows the 3-month smoothed payroll
   achievement ratio, in whole heads, capped at +/-2 vs plan. Deviation
   distribution across all 120 rows: {dev_counts}.
 - **projects_budget / projects_actual**: planned vs delivered project count.
@@ -234,7 +235,7 @@ def main():
     total_fte = drivers.groupby("month")["fte_actual"].sum()
     print(f"Wrote {DRIVERS_PATH}: {len(out)} rows "
           f"({drivers['business_unit'].nunique()} BUs x {drivers['month'].nunique()} months)")
-    print(f"Group actual FTE range: {total_fte.min():.0f}..{total_fte.max():.0f} (plan 150)")
+    print(f"Group actual FTE range: {total_fte.min():.0f}..{total_fte.max():.0f} (business-line plan {sum(p['fte'] for p in gd.BU_PARAMS.values())})")
     print(f"Project counts (budget): {drivers['projects_budget'].min()}..{drivers['projects_budget'].max()} per BU/month")
     print(f"Wrote {GROUND_TRUTH_PATH}")
 

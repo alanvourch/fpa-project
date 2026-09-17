@@ -32,15 +32,15 @@ Strategy: linear interpolation across each BU's own monthly time series for that
 
 | Month | Business Unit | Column | Imputed value |
 |---|---|---|---|
-| 2024-01 | Government & Institutions | opex_travel_budget | EUR1,410 |
-| 2025-02 | Brand Events | opex_travel_actual | EUR10,036 |
-| 2025-01 | Corporate Events | opex_travel_actual | EUR5,815 |
-| 2026-02 | Government & Institutions | opex_marketing_budget | EUR470 |
-| 2024-04 | Brand Events | opex_marketing_actual | EUR2,075 |
-| 2025-11 | Digital/Influence | opex_it_budget | EUR12,440 |
-| 2024-07 | Government & Institutions | opex_it_actual | EUR15,361 |
-| 2024-04 | Corporate Events | opex_facilities_budget | EUR4,015 |
-| 2025-06 | Corporate Events | opex_facilities_actual | EUR4,018 |
+| 2025-02 | Brand Events | opex_travel_actual | EUR25,090 |
+| 2025-01 | Corporate Events | opex_travel_actual | EUR14,537 |
+| 2024-01 | Government & Institutions | opex_travel_actual | EUR4,797 |
+| 2026-02 | Government & Institutions | opex_marketing_budget | EUR4,700 |
+| 2024-04 | Brand Events | opex_marketing_actual | EUR31,127 |
+| 2025-11 | Digital/Influence | opex_facilities_budget | EUR47,470 |
+| 2024-07 | Government & Institutions | opex_facilities_actual | EUR20,622 |
+| 2024-04 | Corporate Events | opex_ga_budget | EUR80,400 |
+| 2025-06 | Corporate Events | opex_ga_budget | EUR82,267 |
 
 ## 4. Currency-formatted text amounts parsed to numeric
 
@@ -49,13 +49,13 @@ Strategy: linear interpolation across each BU's own monthly time series for that
 | 2025-10 | Brand Events | revenue_budget | "EUR4,819,709" |
 | 2026-06 | Government & Institutions | revenue_budget | "EUR1,099,421" |
 | 2025-11 | Corporate Events | revenue_prior_year | "EUR2,292,396" |
-| 2024-12 | Digital/Influence | cogs_budget | "712,667 EUR" |
-| 2025-05 | Corporate Events | cogs_actual | "EUR837,734" |
-| 2025-05 | Brand Events | payroll_budget | "276,519 EUR" |
-| 2026-05 | Brand Events | payroll_budget | "EUR284,815" |
-| 2025-12 | Digital/Influence | opex_it_budget | "12,460 EUR" |
-| 2024-08 | Brand Events | opex_facilities_budget | "8,070 EUR" |
-| 2025-01 | Government & Institutions | opex_facilities_actual | "EUR9,109" |
+| 2024-12 | Digital/Influence | cogs_actual | "1,295,756 EUR" |
+| 2025-05 | Corporate Events | freelance_budget | "EUR241,470" |
+| 2025-05 | Brand Events | freelance_actual | "589,487 EUR" |
+| 2026-05 | Brand Events | payroll_budget | "EUR389,991" |
+| 2025-12 | Digital/Influence | opex_facilities_actual | "46,931 EUR" |
+| 2024-08 | Brand Events | opex_ga_actual | "170,679 EUR" |
+| 2025-01 | Government & Institutions | depreciation_budget | "EUR6,901" |
 
 ## 5. Date formats standardized
 
@@ -75,29 +75,30 @@ Rule: IQR outlier (1.5x IQR fence) on that BU/column's own historical actual-vs-
 
 | Month | Business Unit | Column | Actual | Budget | Ratio to budget | Historical normal range |
 |---|---|---|---|---|---|---|
-| 2024-05 | Brand Events | payroll_actual | EUR279,965 | EUR268,466 | 1.04x | [0.96, 1.03] |
-| 2025-04 | Brand Events | cogs_actual | EUR3,201,900 | EUR2,491,056 | 1.29x | [0.88, 1.15] |
-| 2025-05 | Brand Events | cogs_actual | EUR3,352,549 | EUR2,716,534 | 1.23x | [0.88, 1.15] |
-| 2025-06 | Brand Events | cogs_actual | EUR3,347,006 | EUR2,616,410 | 1.28x | [0.88, 1.15] |
-| 2025-08 | Brand Events | opex_facilities_actual | EUR8,906 | EUR8,190 | 1.09x | [0.93, 1.06] |
-| 2025-09 | Brand Events | payroll_actual | EUR267,350 | EUR279,257 | 0.96x | [0.96, 1.03] |
+| 2024-05 | Brand Events | payroll_actual | EUR383,350 | EUR367,604 | 1.04x | [0.96, 1.03] |
+| 2025-01 | Brand Events | freelance_actual | EUR285,699 | EUR327,600 | 0.87x | [0.88, 1.14] |
+| 2025-04 | Brand Events | cogs_actual | EUR3,763,949 | EUR3,034,559 | 1.24x | [0.89, 1.14] |
+| 2025-05 | Brand Events | cogs_actual | EUR3,962,399 | EUR3,309,232 | 1.20x | [0.89, 1.14] |
+| 2025-06 | Brand Events | cogs_actual | EUR3,937,628 | EUR3,187,263 | 1.24x | [0.89, 1.14] |
+| 2025-08 | Brand Events | opex_facilities_actual | EUR71,269 | EUR68,284 | 1.04x | [0.97, 1.03] |
+| 2025-09 | Brand Events | payroll_actual | EUR366,076 | EUR382,381 | 0.96x | [0.96, 1.03] |
+| 2026-03 | Brand Events | freelance_actual | EUR383,961 | EUR440,921 | 0.87x | [0.88, 1.14] |
 | 2026-04 | Brand Events | revenue_actual | EUR5,099,183 | EUR4,710,360 | 1.08x | [0.93, 1.08] |
-| 2026-04 | Brand Events | cogs_actual | EUR2,997,915 | EUR2,590,698 | 1.16x | [0.88, 1.15] |
-| 2024-03 | Corporate Events | payroll_actual | EUR109,072 | EUR103,844 | 1.05x | [0.96, 1.05] |
-| 2024-04 | Corporate Events | opex_it_actual | EUR2,081 | EUR2,512 | 0.83x | [0.87, 1.14] |
-| 2024-06 | Corporate Events | opex_travel_actual | EUR8,208 | EUR6,360 | 1.29x | [0.82, 1.23] |
-| 2024-10 | Corporate Events | cogs_actual | EUR846,462 | EUR720,897 | 1.17x | [0.87, 1.16] |
-| 2024-12 | Corporate Events | opex_facilities_actual | EUR3,743 | EUR4,055 | 0.92x | [0.93, 1.07] |
+| 2026-04 | Brand Events | cogs_actual | EUR3,593,118 | EUR3,155,941 | 1.14x | [0.89, 1.14] |
+| 2026-06 | Brand Events | opex_ga_actual | EUR167,854 | EUR188,700 | 0.89x | [0.89, 1.08] |
+| 2024-03 | Corporate Events | payroll_actual | EUR205,830 | EUR195,963 | 1.05x | [0.96, 1.05] |
+| 2024-04 | Corporate Events | opex_it_actual | EUR8,324 | EUR10,050 | 0.83x | [0.87, 1.14] |
+| 2024-06 | Corporate Events | opex_travel_actual | EUR20,519 | EUR15,900 | 1.29x | [0.82, 1.23] |
 | 2025-03 | Corporate Events | opex_marketing_actual | EUR51,262 | EUR43,650 | 1.17x | [0.67, 1.14] |
 | 2025-07 | Corporate Events | opex_marketing_actual | EUR25,840 | EUR42,975 | 0.60x | [0.67, 1.14] |
-| 2025-08 | Corporate Events | payroll_actual | EUR103,816 | EUR108,284 | 0.96x | [0.96, 1.05] |
-| 2026-02 | Corporate Events | opex_it_actual | EUR2,123 | EUR2,604 | 0.82x | [0.87, 1.14] |
-| 2026-05 | Corporate Events | payroll_actual | EUR106,299 | EUR110,712 | 0.96x | [0.96, 1.05] |
-| 2026-05 | Corporate Events | opex_it_actual | EUR2,128 | EUR2,617 | 0.81x | [0.87, 1.14] |
-| 2024-07 | Digital/Influence | cogs_actual | EUR457,359 | EUR541,771 | 0.84x | [0.86, 1.14] |
+| 2025-08 | Corporate Events | payroll_actual | EUR195,911 | EUR204,343 | 0.96x | [0.96, 1.05] |
+| 2025-12 | Corporate Events | freelance_actual | EUR259,120 | EUR217,411 | 1.19x | [0.87, 1.13] |
+| 2026-02 | Corporate Events | opex_it_actual | EUR8,492 | EUR10,417 | 0.82x | [0.87, 1.14] |
+| 2026-05 | Corporate Events | payroll_actual | EUR200,596 | EUR208,924 | 0.96x | [0.96, 1.05] |
+| 2026-05 | Corporate Events | opex_it_actual | EUR8,513 | EUR10,467 | 0.81x | [0.87, 1.14] |
 | 2025-01 | Digital/Influence | revenue_actual | EUR1,291,857 | EUR1,516,667 | 0.85x | [0.86, 1.15] |
-| 2025-01 | Digital/Influence | cogs_actual | EUR379,132 | EUR455,000 | 0.83x | [0.86, 1.14] |
-| 2025-01 | Digital/Influence | payroll_actual | EUR259,167 | EUR247,200 | 1.05x | [0.96, 1.03] |
-| 2024-01 | Government & Institutions | cogs_actual | EUR69,459 | EUR58,333 | 1.19x | [0.81, 1.19] |
-| 2024-06 | Government & Institutions | opex_marketing_actual | EUR394 | EUR530 | 0.74x | [0.77, 1.25] |
+| 2025-01 | Digital/Influence | cogs_actual | EUR749,768 | EUR894,833 | 0.84x | [0.86, 1.15] |
+| 2025-01 | Digital/Influence | freelance_actual | EUR123,474 | EUR151,667 | 0.81x | [0.84, 1.17] |
+| 2025-01 | Digital/Influence | payroll_actual | EUR336,916 | EUR321,360 | 1.05x | [0.96, 1.03] |
+| 2024-06 | Government & Institutions | opex_marketing_actual | EUR3,941 | EUR5,300 | 0.74x | [0.77, 1.25] |
 | 2024-11 | Government & Institutions | opex_it_actual | EUR39,366 | EUR15,250 | 2.58x | [0.81, 1.23] |

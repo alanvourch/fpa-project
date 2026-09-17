@@ -51,13 +51,15 @@ NOTES_PATH = "data/business_notes.csv"
 OUT_DIR = "output/bu_reports"
 
 YEAR = "2025"
-COST_LINES = ["COGS", "Payroll", "Opex - Travel", "Opex - Marketing",
-              "Opex - IT", "Opex - Facilities"]
+COST_LINES = ["COGS", "Freelance", "Payroll", "Opex - Travel", "Opex - Marketing",
+              "Opex - IT", "Opex - Facilities", "Opex - G&A", "Depreciation"]
 BRIDGE_GROUPS = [
     ("Revenue", ["Revenue"]),
-    ("COGS", ["COGS"]),
+    ("External production (COGS)", ["COGS"]),
+    ("Freelance", ["Freelance"]),
     ("Payroll", ["Payroll"]),
-    ("Opex", ["Opex - Travel", "Opex - Marketing", "Opex - IT", "Opex - Facilities"]),
+    ("Overheads", ["Opex - Travel", "Opex - Marketing", "Opex - IT", "Opex - Facilities",
+                   "Opex - G&A", "Depreciation"]),
 ]
 
 # Palette: mirrors make_charts.py (validated for CVD separation and contrast).
@@ -84,7 +86,13 @@ plt.rcParams.update({
 
 
 def fmt_money(v):
-    return f"EUR{v:,.0f}"
+    # A business line can post a loss for the year, so the sign goes in
+    # front of the currency the way a finance reader expects (-EUR1,411,587).
+    return f"-EUR{-v:,.0f}" if v < 0 else f"EUR{v:,.0f}"
+
+
+def fmt_millions(v):
+    return f"-EUR{-v / 1e6:,.1f}M" if v < 0 else f"EUR{v / 1e6:,.1f}M"
 
 
 def fmt_signed_k(v):
@@ -285,7 +293,9 @@ def outlook(fc, bu):
 
 
 def bridge_chart(bu, card, blocks, png_path):
-    labels = [f"FY{YEAR} budget\nnet result"] + [b[0] for b in blocks] + [f"FY{YEAR} actual\nnet result"]
+    labels = ([f"FY{YEAR} budget\noperating result"]
+              + ["\n".join(textwrap.wrap(b[0], 14)) for b in blocks]
+              + [f"FY{YEAR} actual\noperating result"])
     n = len(labels)
 
     fig, ax = plt.subplots(figsize=(8.6, 3.6), dpi=150)
@@ -313,9 +323,11 @@ def bridge_chart(bu, card, blocks, png_path):
     for i, level in enumerate(levels):
         ax.plot([i + 0.3, i + 1 - 0.3], [level, level], color=BASELINE, linewidth=1, zorder=2)
 
-    ax.text(0, card["net_budget"] + (y1 - y0) * 0.04, f"EUR{card['net_budget'] / 1e6:,.1f}M",
+    # Anchor labels sit above the bar's top edge, which is zero when the
+    # result is a loss (the bar then hangs below the axis).
+    ax.text(0, max(card["net_budget"], 0) + (y1 - y0) * 0.04, fmt_millions(card["net_budget"]),
             ha="center", fontsize=9.5, fontweight="bold", color=INK)
-    ax.text(n - 1, card["net_actual"] + (y1 - y0) * 0.04, f"EUR{card['net_actual'] / 1e6:,.1f}M",
+    ax.text(n - 1, max(card["net_actual"], 0) + (y1 - y0) * 0.04, fmt_millions(card["net_actual"]),
             ha="center", fontsize=9.5, fontweight="bold", color=INK)
     for i, (_, value) in enumerate(blocks, start=1):
         top = max(levels[i - 1], levels[i])
@@ -334,7 +346,7 @@ def bridge_chart(bu, card, blocks, png_path):
     if card["held_rows"]:
         note = ("  Nov-2025 revenue held at budget pending correction of a "
                 "suspected data entry error.")
-    fig.text(0.02, 0.985, f"{bu}: FY{YEAR} net result, budget to actual",
+    fig.text(0.02, 0.985, f"{bu}: FY{YEAR} operating result, budget to actual",
              fontsize=12, fontweight="bold", color=INK, ha="left", va="top")
     fig.text(0.02, 0.985 - 0.055,
              "EUR. Green favorable, red unfavorable; every bar value-labeled, "
@@ -387,10 +399,10 @@ def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
         f"| {fmt_signed_k(card['revenue_actual'] - card['revenue_budget'])} |",
         f"| Total costs | {fmt_money(card['costs_actual'])} | {fmt_money(card['costs_budget'])} "
         f"| {fmt_signed_k(card['costs_actual'] - card['costs_budget'])} |",
-        f"| Net result | {fmt_money(card['net_actual'])} | {fmt_money(card['net_budget'])} "
+        f"| Operating result | {fmt_money(card['net_actual'])} | {fmt_money(card['net_budget'])} "
         f"| {fmt_signed_k(card['net_variance'])} |",
         "",
-        f"Net margin {card['margin_actual']:.1%}."
+        f"Operating margin {card['margin_actual']:.1%}."
         + (" Nov-2025 revenue held at budget pending correction of a suspected data entry error."
            if card["held_rows"] else ""),
         "",
@@ -438,7 +450,7 @@ def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
         "",
         f"Revenue {fmt_money(out['revenue'])} ({out['revenue_vs_py']:+.1%} vs the same "
         f"quarter last year), total costs {fmt_money(out['costs'])} "
-        f"({out['costs_vs_py']:+.1%}), net result {fmt_money(out['net'])} at a "
+        f"({out['costs_vs_py']:+.1%}), operating result {fmt_money(out['net'])} at a "
         f"{out['margin']:.1%} margin. One-off events and concluded programmes are "
         "excluded from the forecast base; see the forecast report's audit trail.",
         "",
@@ -495,7 +507,7 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
 
     # Scorecard strip
     pdf.ln(2)
-    # (label, value, delta, favorable): revenue and net result are favorable
+    # (label, value, delta, favorable): revenue and operating result are favorable
     # when above budget, costs when below.
     cols = [
         ("Revenue", card["revenue_actual"],
@@ -504,7 +516,7 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
         ("Total costs", card["costs_actual"],
          card["costs_actual"] - card["costs_budget"],
          card["costs_actual"] <= card["costs_budget"]),
-        ("Net result", card["net_actual"], card["net_variance"],
+        ("Operating result", card["net_actual"], card["net_variance"],
          card["net_variance"] >= 0),
     ]
     w = pdf.width / 3
@@ -518,7 +530,7 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
         pdf.set_xy(x, y_top + 3.8)
         pdf.set_font("Helvetica", "B", 12.5)
         pdf.set_text_color(11, 11, 11)
-        pdf.cell(w, 5.6, f"EUR{value / 1e6:,.1f}M")
+        pdf.cell(w, 5.6, fmt_millions(value))
         pdf.set_xy(x, y_top + 9.6)
         pdf.set_font("Helvetica", "", 7.6)
         if favorable:
@@ -585,7 +597,7 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
     pdf.body(
         f"Revenue {fmt_money(out['revenue'])} ({out['revenue_vs_py']:+.1%} vs the same "
         f"quarter last year), total costs {fmt_money(out['costs'])} "
-        f"({out['costs_vs_py']:+.1%}), net result {fmt_money(out['net'])} at a "
+        f"({out['costs_vs_py']:+.1%}), operating result {fmt_money(out['net'])} at a "
         f"{out['margin']:.1%} margin. One-offs and concluded programmes are excluded "
         "from the forecast base (full audit trail in the forecast report).")
 

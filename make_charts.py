@@ -6,7 +6,7 @@ same way every report in this repo is: re-run the pipeline, re-run this script,
 same images. Never reads data/ground_truth.md.
 
 Charts:
-  1. docs/variance_bridge_2025.png  - FY2025 group net result, budget-to-actual
+  1. docs/variance_bridge_2025.png  - FY2025 group operating result, budget-to-actual
      waterfall. The conventional FP&A variance walk: anchors at budget and
      actual, one block per named driver, one honest block for material items
      with no documented driver, a residual block for everything below
@@ -103,7 +103,7 @@ def fig_titles(fig, title, subtitle, top):
 
 
 def bridge_components(v):
-    """FY2025 group walk from budgeted to actual net result, as (label, value,
+    """FY2025 group walk from budgeted to actual operating result, as (label, value,
     hatched) blocks that reconcile exactly. Shared by the bridge chart and
     the link-preview card so both quote the same figures."""
     y = v[v["month"].str.startswith("2025")].copy()
@@ -121,7 +121,12 @@ def bridge_components(v):
     savings = y.loc[y["evidence_notes"].str.contains("N12"), "impact"].sum()
     unexplained_mask = (y["materiality"] != "") & (y["evidence_notes"] == "") & (~err)
     unexplained = y.loc[unexplained_mask, "impact"].sum()
-    other = y.loc[(y["materiality"] == "") & (~err), "impact"].sum()
+    # Everything below materiality, split so the reader can see whether the
+    # residual is revenue landing a little under plan month after month or
+    # cost lines drifting: the two read very differently to a CFO.
+    quiet = (y["materiality"] == "") & (~err)
+    other_revenue = y.loc[quiet & ~y["is_cost"], "impact"].sum()
+    other_costs = y.loc[quiet & y["is_cost"], "impact"].sum()
     actual_net = budget_net + y["impact"].sum()
 
     deltas = [
@@ -129,7 +134,8 @@ def bridge_components(v):
         ("FX on USD contract (revenue)", fx, False),
         ("Corporate Events savings programme (opex)", savings, False),
         (f"Routed to analyst, no documented note, net of {unexplained_mask.sum()} items", unexplained, True),
-        ("All other, below materiality", other, False),
+        ("Revenue, months within tolerance, net", other_revenue, False),
+        ("Costs, months within tolerance, net", other_costs, False),
     ]
     recon = budget_net + sum(d[1] for d in deltas)
     assert abs(recon - actual_net) < 1e-6, "bridge does not reconcile"
@@ -139,15 +145,15 @@ def bridge_components(v):
 def bridge_chart(v):
     budget_net, actual_net, deltas = bridge_components(v)
 
-    fig, ax = plt.subplots(figsize=(11.5, 6.4), dpi=150)
+    fig, ax = plt.subplots(figsize=(12.5, 6.4), dpi=150)
 
     # Labels are wrapped at a fixed width so none can run into its neighbour:
-    # seven slots across the axis leave about 1.4 inches each at this size.
+    # eight slots across the axis leave about 1.4 inches each at this size.
     def wrap(text):
         return "\n".join(textwrap.wrap(text, 16))
 
-    labels = (["FY2025 budget\nnet result"] + [wrap(d[0]) for d in deltas]
-              + ["FY2025 actual\nnet result"])
+    labels = (["FY2025 budget\noperating result"] + [wrap(d[0]) for d in deltas]
+              + ["FY2025 actual\noperating result"])
     n = len(labels)
 
     running = budget_net
@@ -205,7 +211,7 @@ def bridge_chart(v):
 
     fig_titles(
         fig,
-        "FY2025 net result: budget to actual",
+        "FY2025 operating result: budget to actual",
         "EventCo group, EUR. Green favorable, red unfavorable; the hatched block groups "
         "material variances with no documented note, routed to the analyst.\n"
         "Y-axis zoomed to the variance range; every bar is value-labeled. Brand Events "
@@ -345,7 +351,7 @@ def forecast_chart():
         fig,
         "Rolling forecast: Q3 2026",
         f"Seasonal base x median year-over-year growth, one-offs excluded from the base. "
-        f"Quarter net result EUR{net / 1e6:,.1f}M, a {margin:.1%} margin.",
+        f"Quarter operating result EUR{net / 1e6:,.1f}M, a {margin:.1%} margin.",
         top=0.86,
     )
     fig.savefig(FORECAST_PNG, bbox_inches="tight")
@@ -375,7 +381,7 @@ def og_image(v):
              "This pack explains why, and says plainly what it cannot explain.",
              fontsize=20, color=INK_2, va="top")
     fig.text(0.06, 0.43,
-             f"Net result EUR{actual_net / 1e6:,.1f}M against a EUR{budget_net / 1e6:,.1f}M budget. "
+             f"Operating result EUR{actual_net / 1e6:,.1f}M against a EUR{budget_net / 1e6:,.1f}M budget. "
              f"Largest named driver: {largest[0]}, "
              f"EUR{abs(largest[1]) / 1e6:,.2f}M.\n"
              "A revenue entry ten times too large was caught before it reached the pack.",

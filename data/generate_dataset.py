@@ -1,6 +1,18 @@
 """Generate a synthetic 30-month Budget/Actual/N-1 dataset for the fictional
 events agency "EventCo" (4 BUs, ~150 FTE, ~EUR100M/year revenue).
 
+Cost structure, as a share of group revenue in the base year: external
+production bought for client projects (venues, technical suppliers, staging,
+catering, freight, content, media) about 63%; freelance and project staff
+(intermittents, freelance producers, event staff) about 11%; permanent
+payroll, fully loaded with employer social charges, about 12% for the 130
+FTE in the business lines; overheads about 10%, made of allocated office
+rent and facilities, the agency's own marketing and new business, IT,
+non-billable travel, allocated central G&A (the 20 central FTE in finance,
+HR, IT and management, professional fees, insurance, other admin) and
+depreciation. The operating result lands around 4% of revenue, the low
+single digits a French events agency of this size earns.
+
 Two distinct kinds of "problems" are planted on purpose:
   - business anomalies: real economic events the Variance Agent should explain
   - data quality issues: recording/transcription errors the Ingestion/QA Agent
@@ -17,6 +29,10 @@ from faker import Faker
 
 SEED = 42
 rng = np.random.default_rng(SEED)
+# The freelance, G&A and depreciation lines draw from their own stream so the
+# main stream's draw order (and with it the position of every planted
+# anomaly and data-quality issue) is unchanged by their addition.
+rng_overhead = np.random.default_rng(SEED + 1)
 Faker.seed(SEED)
 fake_fr = Faker("fr_FR")
 fake_us = Faker("en_US")
@@ -36,26 +52,53 @@ SEASONALITY = {
 ANNUAL_REVENUE_GROWTH = 0.04
 ANNUAL_PAY_INFLATION = 0.03
 
+# Month-to-month noise (standard deviation of actual / budget) per line.
+# Revenue carries the business's own volatility; external production and
+# freelance are built on actual revenue, so their own noise is the rate
+# and mix wobble on top of the volume effect they inherit from revenue.
+NOISE = {
+    "revenue": 0.05, "cogs": 0.03, "freelance": 0.04, "payroll": 0.02,
+    "travel": 0.10, "marketing": 0.10, "it": 0.08, "facilities": 0.015,
+    "ga": 0.04, "depreciation": 0.005, "prior_year": 0.03,
+}
+
+# Per business line: annual revenue; external production (cogs) and freelance
+# as shares of revenue; permanent FTE and their fully loaded annual cost
+# (gross salary plus employer social charges); monthly overhead bases.
+# Facilities are allocated by headcount (about EUR2.0M a year of Paris office
+# and warehouse for 130 desks), G&A and depreciation by revenue share
+# (EUR4.8M and EUR0.8M a year at group level).
 BU_PARAMS = {
-    "Brand Events":              {"revenue_annual": 45_000_000, "cogs_ratio": 0.55, "fte": 55, "avg_salary": 58_000,
-                                   "travel_base": 10_000, "marketing_base": 2_000, "it_base": 3_000, "facilities_base": 8_000},
-    "Corporate Events":          {"revenue_annual": 20_000_000, "cogs_ratio": 0.35, "fte": 20, "avg_salary": 62_000,
-                                   "travel_base": 6_000, "marketing_base": 45_000, "it_base": 2_500, "facilities_base": 4_000},
-    "Digital/Influence":         {"revenue_annual": 25_000_000, "cogs_ratio": 0.30, "fte": 40, "avg_salary": 72_000,
-                                   "travel_base": 4_000, "marketing_base": 5_000, "it_base": 12_000, "facilities_base": 6_000},
-    "Government & Institutions": {"revenue_annual": 10_000_000, "cogs_ratio": 0.10, "fte": 35, "avg_salary": 56_000,
-                                   "travel_base": 1_500, "marketing_base": 500, "it_base": 15_000, "facilities_base": 9_000},
+    "Brand Events":              {"revenue_annual": 45_000_000, "cogs_ratio": 0.67, "freelance_ratio": 0.12,
+                                   "fte": 52, "avg_cost": 84_000,
+                                   "travel_base": 25_000, "marketing_base": 30_000, "it_base": 20_000,
+                                   "facilities_base": 66_700, "ga_base": 180_000, "da_base": 30_000},
+    "Corporate Events":          {"revenue_annual": 20_000_000, "cogs_ratio": 0.61, "freelance_ratio": 0.11,
+                                   "fte": 26, "avg_cost": 90_000,
+                                   "travel_base": 15_000, "marketing_base": 45_000, "it_base": 10_000,
+                                   "facilities_base": 33_300, "ga_base": 80_000, "da_base": 13_300},
+    "Digital/Influence":         {"revenue_annual": 25_000_000, "cogs_ratio": 0.59, "freelance_ratio": 0.10,
+                                   "fte": 36, "avg_cost": 104_000,
+                                   "travel_base": 12_000, "marketing_base": 20_000, "it_base": 20_000,
+                                   "facilities_base": 46_200, "ga_base": 100_000, "da_base": 16_700},
+    "Government & Institutions": {"revenue_annual": 10_000_000, "cogs_ratio": 0.56, "freelance_ratio": 0.12,
+                                   "fte": 16, "avg_cost": 81_000,
+                                   "travel_base": 6_000, "marketing_base": 5_000, "it_base": 15_000,
+                                   "facilities_base": 20_500, "ga_base": 40_000, "da_base": 6_700},
 }
 
 FINAL_COLUMNS = [
     "month", "business_unit",
     "revenue_budget", "revenue_actual", "revenue_prior_year",
     "cogs_budget", "cogs_actual",
+    "freelance_budget", "freelance_actual",
     "payroll_budget", "payroll_actual",
     "opex_travel_budget", "opex_travel_actual",
     "opex_marketing_budget", "opex_marketing_actual",
     "opex_it_budget", "opex_it_actual",
     "opex_facilities_budget", "opex_facilities_actual",
+    "opex_ga_budget", "opex_ga_actual",
+    "depreciation_budget", "depreciation_actual",
 ]
 
 
@@ -69,35 +112,52 @@ def generate_clean_data():
             pay_growth = (1 + ANNUAL_PAY_INFLATION) ** (i / 12)
 
             revenue_budget = p["revenue_annual"] / 12 * season * rev_growth
-            revenue_actual = revenue_budget * rng.normal(1.0, 0.05)
+            revenue_actual = revenue_budget * rng.normal(1.0, NOISE["revenue"])
 
             cogs_budget = revenue_budget * p["cogs_ratio"]
-            cogs_actual = revenue_actual * p["cogs_ratio"] * rng.normal(1.0, 0.04)
+            cogs_actual = revenue_actual * p["cogs_ratio"] * rng.normal(1.0, NOISE["cogs"])
 
-            payroll_budget = p["fte"] * p["avg_salary"] / 12 * pay_growth
-            payroll_actual = payroll_budget * rng.normal(1.0, 0.02)
+            payroll_budget = p["fte"] * p["avg_cost"] / 12 * pay_growth
+            payroll_actual = payroll_budget * rng.normal(1.0, NOISE["payroll"])
 
             travel_budget = p["travel_base"] * (0.7 + 0.3 * season)
-            travel_actual = travel_budget * rng.normal(1.0, 0.10)
+            travel_actual = travel_budget * rng.normal(1.0, NOISE["travel"])
 
             mktg_budget = p["marketing_base"] * (0.7 + 0.3 * season)
-            mktg_actual = mktg_budget * rng.normal(1.0, 0.10)
+            mktg_actual = mktg_budget * rng.normal(1.0, NOISE["marketing"])
 
             it_budget = p["it_base"] * (1 + 0.02 * i / 12)
-            it_actual = it_budget * rng.normal(1.0, 0.08)
+            it_actual = it_budget * rng.normal(1.0, NOISE["it"])
 
+            # Rent is contractual: the small wobble is utilities and services.
             fac_budget = p["facilities_base"] * (1 + 0.015 * i / 12)
-            fac_actual = fac_budget * rng.normal(1.0, 0.03)
+            fac_actual = fac_budget * rng.normal(1.0, NOISE["facilities"])
+
+            # Freelance follows activity like external production, with its
+            # own rate noise on top (day rates, last-minute crews).
+            freelance_budget = revenue_budget * p["freelance_ratio"]
+            freelance_actual = revenue_actual * p["freelance_ratio"] * rng_overhead.normal(1.0, NOISE["freelance"])
+
+            # Allocated central costs and depreciation are budgeted flat with
+            # slow growth; their actuals move with central spend, not activity.
+            ga_budget = p["ga_base"] * (1 + 0.02 * i / 12)
+            ga_actual = ga_budget * rng_overhead.normal(1.0, NOISE["ga"])
+
+            da_budget = p["da_base"] * (1 + 0.03 * i / 12)
+            da_actual = da_budget * rng_overhead.normal(1.0, NOISE["depreciation"])
 
             rows.append({
                 "month": date, "business_unit": bu,
                 "revenue_budget": revenue_budget, "revenue_actual": revenue_actual,
                 "cogs_budget": cogs_budget, "cogs_actual": cogs_actual,
+                "freelance_budget": freelance_budget, "freelance_actual": freelance_actual,
                 "payroll_budget": payroll_budget, "payroll_actual": payroll_actual,
                 "opex_travel_budget": travel_budget, "opex_travel_actual": travel_actual,
                 "opex_marketing_budget": mktg_budget, "opex_marketing_actual": mktg_actual,
                 "opex_it_budget": it_budget, "opex_it_actual": it_actual,
                 "opex_facilities_budget": fac_budget, "opex_facilities_actual": fac_actual,
+                "opex_ga_budget": ga_budget, "opex_ga_actual": ga_actual,
+                "depreciation_budget": da_budget, "depreciation_actual": da_actual,
             })
 
     df = pd.DataFrame(rows)
@@ -110,10 +170,17 @@ def generate_clean_data():
         actual = df.loc[mask, "revenue_actual"].to_numpy()
         prior = np.empty(N_MONTHS)
         prior[12:] = actual[:-12]
-        prior[:12] = actual[:12] / (1 + ANNUAL_REVENUE_GROWTH) * rng.normal(1.0, 0.03, size=12)
+        prior[:12] = actual[:12] / (1 + ANNUAL_REVENUE_GROWTH) * rng.normal(1.0, NOISE["prior_year"], size=12)
         df.loc[mask, "revenue_prior_year"] = prior
 
     return df[FINAL_COLUMNS[:1] + FINAL_COLUMNS[1:2] + [c for c in FINAL_COLUMNS if c not in ("month", "business_unit")]]
+
+
+# Q2 2025 external-production overrun on one Brand Events project: about
+# EUR2.0M over three months, consistent with the BU controller's note N13.
+# (The three months run a few percent under budget before the injection,
+# so the factor is set above the +21% the variance report ends up showing.)
+OVERRUN_FACTOR = 1.29
 
 
 def inject_business_anomalies(df):
@@ -126,11 +193,11 @@ def inject_business_anomalies(df):
     for m in q2_2025:
         i = idx[("Brand Events", m)]
         before = df.at[i, "cogs_actual"]
-        after = before * 1.35
+        after = before * OVERRUN_FACTOR
         df.at[i, "cogs_actual"] = after
         notes.append(
             f"- **Brand Events / {m:%Y-%m}**: COGS actual jumped from EUR{before:,.0f} to "
-            f"EUR{after:,.0f} (+35%). Root cause: subcontractor scope creep on the "
+            f"EUR{after:,.0f} (+{OVERRUN_FACTOR - 1:.0%}). Root cause: subcontractor scope creep on the "
             f"'{client_name}' activation contract ran well over budget across Q2 2025. Unfavorable."
         )
 
@@ -218,7 +285,8 @@ def inject_data_quality_issues(df):
 
     # b) missing values in Opex categories
     opex_cols = ["opex_travel_budget", "opex_travel_actual", "opex_marketing_budget", "opex_marketing_actual",
-                 "opex_it_budget", "opex_it_actual", "opex_facilities_budget", "opex_facilities_actual"]
+                 "opex_it_budget", "opex_it_actual", "opex_facilities_budget", "opex_facilities_actual",
+                 "opex_ga_budget", "opex_ga_actual"]
     missing_rows = rng.choice(n, size=9, replace=False)
     missing_cols = rng.choice(opex_cols, size=9, replace=True)
     missing_details = []
@@ -367,6 +435,21 @@ def main():
     for bu, total in totals.items():
         print(f"  {bu:<14} {total:>15,.0f}")
     print(f"  {'TOTAL':<14} {totals.sum():>15,.0f}")
+
+    # Base-year (first 12 months) group P&L on true actuals, so the cost
+    # structure behind the parameters above is visible at a glance.
+    base = clean_df[clean_df["month"] < MONTHS[12]]
+    revenue = base["revenue_actual"].sum()
+    print(f"\nBase-year group P&L (true actuals, {MONTHS[0]:%Y}), EUR and % of revenue:")
+    print(f"  {'Revenue':<24} {revenue:>14,.0f}  100.0%")
+    cost_lines = [c for c in FINAL_COLUMNS if c.endswith("_actual") and c != "revenue_actual"]
+    total_costs = 0.0
+    for col in cost_lines:
+        value = base[col].sum()
+        total_costs += value
+        print(f"  {col[:-7]:<24} {value:>14,.0f}  {value / revenue:>5.1%}")
+    result = revenue - total_costs
+    print(f"  {'Operating result':<24} {result:>14,.0f}  {result / revenue:>5.1%}")
     print(f"\nWrote data/ground_truth.md ({len(business_notes)} business anomalies, "
           f"{len(dq_notes)} data quality issue categories)")
 

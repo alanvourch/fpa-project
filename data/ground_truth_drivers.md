@@ -12,10 +12,11 @@ and project-ops systems respectively - deliberately CLEAN data, unlike the
 messy finance export:
 
 - **fte_budget / fte_actual**: planned vs actual headcount. Budget is the
-  BU's planned headcount (Brand Events 55, Corporate Events 20,
-  Digital/Influence 40, Government & Institutions 35; group 150). Actual follows the 3-month smoothed payroll
+  BU's planned headcount (Brand Events 52, Corporate Events 26, Digital/Influence 36, Government & Institutions 16;
+  business lines 130, plus central functions carried
+  in the allocated G&A line). Actual follows the 3-month smoothed payroll
   achievement ratio, in whole heads, capped at +/-2 vs plan. Deviation
-  distribution across all 120 rows: {-1: 17, 0: 100, 1: 3}.
+  distribution across all 120 rows: {-1: 9, 0: 107, 1: 4}.
 - **projects_budget / projects_actual**: planned vs delivered project count.
   Budget = budgeted revenue / budgeted average project value
   (Brand Events EUR300,000, Corporate Events EUR100,000, Digital/Influence EUR175,000, Government & Institutions EUR50,000).

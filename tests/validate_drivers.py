@@ -4,7 +4,7 @@ Checks, in order:
   1. Determinism: regenerating the drivers in memory reproduces the committed
      CSV exactly (same seeds, same replayed true world).
   2. Structure: 120 rows (4 BUs x 30 months), integer columns, no gaps, no
-     duplicates, budget FTE sums to the 150-head plan every month.
+     duplicates, budget FTE sums to the business-line headcount plan every month.
   3. Replay fidelity: the replayed true world matches the cleaned CSV on
      payroll (never corrupted beyond formatting) for every row, and on
      revenue for every row except the trap row, where cleaned = 10x true.
@@ -70,8 +70,10 @@ def main():
     check(committed[["fte_budget", "fte_actual", "projects_budget", "projects_actual"]]
           .notna().all().all(), "no missing driver values")
     fte_plan = committed.groupby("month")["fte_budget"].sum()
-    check((fte_plan == 150).all(),
-          f"budget FTE sums to the 150-head plan every month (found {fte_plan.min()}..{fte_plan.max()})")
+    plan_total = sum(p["fte"] for p in gd.BU_PARAMS.values())
+    check((fte_plan == plan_total).all(),
+          f"budget FTE sums to the {plan_total}-head business-line plan every month "
+          f"(found {fte_plan.min()}..{fte_plan.max()})")
 
     # 3. Replay fidelity vs the cleaned CSV
     m = true_df.merge(cleaned, on=["month", "business_unit"], suffixes=("_true", "_clean"))

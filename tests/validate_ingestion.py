@@ -20,11 +20,15 @@ CLEANED_PATH = "data/eventco_monthly_cleaned.csv"
 CANONICAL_BUS = {"Brand Events", "Corporate Events", "Digital/Influence", "Government & Institutions"}
 NUMERIC_COLUMNS = [
     "revenue_budget", "revenue_actual", "revenue_prior_year",
-    "cogs_budget", "cogs_actual", "payroll_budget", "payroll_actual",
+    "cogs_budget", "cogs_actual",
+    "freelance_budget", "freelance_actual",
+    "payroll_budget", "payroll_actual",
     "opex_travel_budget", "opex_travel_actual",
     "opex_marketing_budget", "opex_marketing_actual",
     "opex_it_budget", "opex_it_actual",
     "opex_facilities_budget", "opex_facilities_actual",
+    "opex_ga_budget", "opex_ga_actual",
+    "depreciation_budget", "depreciation_actual",
 ]
 
 COLUMN_PHRASE_MAP = [

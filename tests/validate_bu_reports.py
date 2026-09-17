@@ -113,7 +113,8 @@ def main():
           "Brand Events: the trap month never appears as a material variance row")
     check("data entry error" in prod_md,
           "Brand Events: the page discloses the Nov-2025 data note")
-    check("17 projects" in prod_md,
+    trap = drivers[(drivers["business_unit"] == "Brand Events") & (drivers["month"] == "2025-11")].iloc[0]
+    check(f"{int(trap['projects_actual'])} projects delivered vs {int(trap['projects_budget'])} planned" in prod_md,
           "Brand Events: the ops-system corroboration (normal project count) is shown")
 
     n_fail = sum(1 for ok, _ in results if not ok)

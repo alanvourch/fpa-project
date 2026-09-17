@@ -17,22 +17,23 @@ Forecast = seasonal base × median year-over-year growth, per BU and line item:
 
 ## History adjustments (full audit trail)
 
-34 month-values normalized, 0 episode month-values deliberately kept.
+40 month-values normalized, 0 episode month-values deliberately kept.
 
 | Business Unit | Line item | Month | Raw actual | Used in history | Reason | Evidence |
 |---|---|---|---|---|---|---|
-| Brand Events | COGS | 2024-11 | EUR2,476,055 | EUR2,811,839 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Brand Events | COGS | 2025-04 | EUR3,201,900 | EUR2,528,379 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
-| Brand Events | COGS | 2025-05 | EUR3,352,549 | EUR2,757,235 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
-| Brand Events | COGS | 2025-06 | EUR3,347,006 | EUR2,655,611 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
-| Brand Events | COGS | 2026-04 | EUR2,997,915 | EUR2,629,514 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Brand Events | COGS | 2024-11 | EUR3,052,091 | EUR3,415,131 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Brand Events | COGS | 2025-04 | EUR3,763,949 | EUR3,070,854 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
+| Brand Events | COGS | 2025-05 | EUR3,962,399 | EUR3,348,812 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
+| Brand Events | COGS | 2025-06 | EUR3,937,628 | EUR3,225,384 | part of episode 2025-04..2025-06, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N11, N13 |
+| Brand Events | COGS | 2026-04 | EUR3,593,118 | EUR3,193,688 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Brand Events | Freelance | 2025-01 | EUR285,699 | EUR331,972 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Brand Events | Freelance | 2026-03 | EUR383,961 | EUR446,805 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Brand Events | Opex - G&A | 2026-06 | EUR167,854 | EUR186,154 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
 | Brand Events | Revenue | 2025-07 | EUR3,627,996 | EUR3,356,852 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
 | Brand Events | Revenue | 2025-11 | EUR52,243,584 | EUR5,201,569 | suspected data entry error (>4x/<0.25x budget), still uncorrected in the cleaned file | - |
 | Brand Events | Revenue | 2026-04 | EUR5,099,183 | EUR4,677,202 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Corporate Events | COGS | 2024-06 | EUR636,525 | EUR707,793 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Corporate Events | COGS | 2024-10 | EUR846,462 | EUR717,108 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Corporate Events | COGS | 2025-03 | EUR604,783 | EUR546,692 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Corporate Events | COGS | 2025-12 | EUR763,011 | EUR688,126 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Corporate Events | COGS | 2024-10 | EUR1,453,425 | EUR1,261,673 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Corporate Events | Freelance | 2025-12 | EUR259,120 | EUR218,342 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
 | Corporate Events | Opex - Marketing | 2025-04 | EUR41,484 | EUR43,949 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
 | Corporate Events | Opex - Marketing | 2025-05 | EUR40,770 | EUR45,211 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
 | Corporate Events | Opex - Marketing | 2025-06 | EUR42,865 | EUR44,580 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
@@ -45,15 +46,20 @@ Forecast = seasonal base × median year-over-year growth, per BU and line item:
 | Corporate Events | Opex - Marketing | 2026-01 | EUR34,389 | EUR38,271 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
 | Corporate Events | Opex - Marketing | 2026-02 | EUR36,324 | EUR39,533 | part of episode 2025-04..2026-02, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | N12, N16 |
 | Corporate Events | Revenue | 2024-10 | EUR2,275,270 | EUR2,065,108 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Digital/Influence | COGS | 2024-07 | EUR457,359 | EUR547,075 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Digital/Influence | COGS | 2024-12 | EUR644,909 | EUR719,644 | part of episode 2024-12..2025-01, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | - |
-| Digital/Influence | COGS | 2025-01 | EUR379,132 | EUR459,455 | part of episode 2024-12..2025-01, concluded before the forecast cutoff. Its effect is over and must not be extrapolated | - |
-| Digital/Influence | COGS | 2025-03 | EUR655,359 | EUR594,602 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
-| Digital/Influence | COGS | 2025-06 | EUR710,289 | EUR800,614 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | COGS | 2024-07 | EUR919,804 | EUR1,078,040 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | COGS | 2025-01 | EUR749,768 | EUR905,380 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | Freelance | 2024-07 | EUR156,916 | EUR179,940 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | Freelance | 2024-11 | EUR310,478 | EUR278,824 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Digital/Influence | Freelance | 2025-01 | EUR123,474 | EUR151,121 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
 | Digital/Influence | Revenue | 2025-01 | EUR1,291,857 | EUR1,531,063 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
 | Digital/Influence | Revenue | 2025-08 | EUR1,465,426 | EUR1,342,711 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
 | Digital/Influence | Revenue | 2025-09 | EUR1,915,910 | EUR2,132,918 | one-off material variance, non-recurring by nature, must not be extrapolated | N08 |
-| Government & Institutions | Opex - IT | 2024-11 | EUR39,366 | EUR15,462 | one-off material variance, non-recurring by nature, must not be extrapolated | N06 |
+| Government & Institutions | COGS | 2024-01 | EUR379,974 | EUR326,017 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Government & Institutions | COGS | 2024-06 | EUR495,444 | EUR568,095 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Government & Institutions | COGS | 2024-10 | EUR499,093 | EUR575,571 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Government & Institutions | COGS | 2025-05 | EUR550,739 | EUR613,428 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Government & Institutions | COGS | 2025-09 | EUR535,163 | EUR472,340 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
+| Government & Institutions | Opex - IT | 2024-11 | EUR39,366 | EUR15,497 | one-off material variance, non-recurring by nature, must not be extrapolated | N06 |
 | Government & Institutions | Revenue | 2024-10 | EUR913,903 | EUR1,030,442 | one-off material variance, non-recurring by nature, must not be extrapolated | - |
 
 ## Forecast by BU and line item
@@ -62,33 +68,45 @@ Prior year (PY) is the normalized actual of the same month last year (the foreca
 
 | Business Unit | Line item | Growth | Jul-26 | Aug-26 | Sep-26 | 3-mo total | PY 3-mo | vs PY |
 |---|---|---|---|---|---|---|---|---|
-| Brand Events | COGS | 1.05x | EUR1,989,496 | EUR1,282,924 | EUR2,146,572 | EUR5,418,993 | EUR5,176,626 | +4.7% |
-| Brand Events | Opex - Facilities | 1.00x | EUR8,333 | EUR8,903 | EUR8,047 | EUR25,283 | EUR25,291 | -0.0% |
-| Brand Events | Opex - IT | 0.89x | EUR2,460 | EUR3,212 | EUR2,682 | EUR8,354 | EUR9,336 | -10.5% |
-| Brand Events | Opex - Marketing | 0.99x | EUR1,821 | EUR1,893 | EUR1,796 | EUR5,510 | EUR5,553 | -0.8% |
-| Brand Events | Opex - Travel | 1.02x | EUR8,841 | EUR9,260 | EUR10,319 | EUR28,421 | EUR27,855 | +2.0% |
-| Brand Events | Payroll | 1.03x | EUR281,389 | EUR279,935 | EUR274,229 | EUR835,553 | EUR814,591 | +2.6% |
+| Brand Events | COGS | 1.04x | EUR2,447,452 | EUR1,583,141 | EUR2,635,005 | EUR6,665,598 | EUR6,384,036 | +4.4% |
+| Brand Events | Depreciation | 1.04x | EUR32,644 | EUR32,575 | EUR32,553 | EUR97,772 | EUR94,351 | +3.6% |
+| Brand Events | Freelance | 1.04x | EUR449,256 | EUR279,053 | EUR506,873 | EUR1,235,182 | EUR1,192,691 | +3.6% |
+| Brand Events | Opex - Facilities | 1.01x | EUR69,353 | EUR71,789 | EUR68,235 | EUR209,377 | EUR207,859 | +0.7% |
+| Brand Events | Opex - G&A | 1.02x | EUR180,846 | EUR191,998 | EUR182,000 | EUR554,844 | EUR541,644 | +2.4% |
+| Brand Events | Opex - IT | 0.89x | EUR16,402 | EUR21,411 | EUR17,878 | EUR55,691 | EUR62,240 | -10.5% |
+| Brand Events | Opex - Marketing | 0.99x | EUR27,319 | EUR28,390 | EUR26,937 | EUR82,646 | EUR83,294 | -0.8% |
+| Brand Events | Opex - Travel | 1.02x | EUR22,103 | EUR23,151 | EUR25,798 | EUR71,051 | EUR69,637 | +2.0% |
+| Brand Events | Payroll | 1.03x | EUR385,300 | EUR383,309 | EUR375,496 | EUR1,144,105 | EUR1,115,403 | +2.6% |
 | Brand Events | Revenue | 1.06x | EUR3,562,275 | EUR2,512,434 | EUR4,119,513 | EUR10,194,222 | EUR9,606,360 | +6.1% |
-| Corporate Events | COGS | 1.04x | EUR536,089 | EUR421,627 | EUR648,944 | EUR1,606,659 | EUR1,542,181 | +4.2% |
-| Corporate Events | Opex - Facilities | 1.02x | EUR4,168 | EUR4,348 | EUR4,198 | EUR12,714 | EUR12,504 | +1.7% |
-| Corporate Events | Opex - IT | 1.00x | EUR2,641 | EUR2,256 | EUR2,635 | EUR7,531 | EUR7,522 | +0.1% |
+| Corporate Events | COGS | 1.06x | EUR946,371 | EUR735,274 | EUR1,139,727 | EUR2,821,373 | EUR2,665,440 | +5.9% |
+| Corporate Events | Depreciation | 1.03x | EUR14,319 | EUR14,292 | EUR14,433 | EUR43,043 | EUR41,837 | +2.9% |
+| Corporate Events | Freelance | 1.04x | EUR177,350 | EUR117,774 | EUR187,273 | EUR482,398 | EUR463,834 | +4.0% |
+| Corporate Events | Opex - Facilities | 1.02x | EUR34,625 | EUR35,396 | EUR34,794 | EUR104,815 | EUR103,184 | +1.6% |
+| Corporate Events | Opex - G&A | 1.03x | EUR82,102 | EUR83,318 | EUR84,812 | EUR250,231 | EUR242,333 | +3.3% |
+| Corporate Events | Opex - IT | 1.00x | EUR10,564 | EUR9,022 | EUR10,539 | EUR30,125 | EUR30,088 | +0.1% |
 | Corporate Events | Opex - Marketing | 1.02x | EUR40,869 | EUR37,660 | EUR42,153 | EUR120,682 | EUR118,599 | +1.8% |
-| Corporate Events | Opex - Travel | 1.01x | EUR6,135 | EUR5,014 | EUR6,450 | EUR17,600 | EUR17,438 | +0.9% |
-| Corporate Events | Payroll | 1.02x | EUR112,806 | EUR105,970 | EUR109,538 | EUR328,314 | EUR321,642 | +2.1% |
+| Corporate Events | Opex - Travel | 1.01x | EUR15,338 | EUR12,535 | EUR16,126 | EUR43,999 | EUR43,594 | +0.9% |
+| Corporate Events | Payroll | 1.02x | EUR212,876 | EUR199,975 | EUR206,709 | EUR619,560 | EUR606,970 | +2.1% |
 | Corporate Events | Revenue | 1.05x | EUR1,526,356 | EUR1,141,635 | EUR1,809,461 | EUR4,477,452 | EUR4,259,601 | +5.1% |
-| Digital/Influence | COGS | 1.01x | EUR552,934 | EUR443,489 | EUR647,944 | EUR1,644,368 | EUR1,624,371 | +1.2% |
-| Digital/Influence | Opex - Facilities | 1.00x | EUR6,196 | EUR5,985 | EUR6,127 | EUR18,307 | EUR18,289 | +0.1% |
-| Digital/Influence | Opex - IT | 0.97x | EUR12,557 | EUR10,842 | EUR12,774 | EUR36,172 | EUR37,191 | -2.7% |
-| Digital/Influence | Opex - Marketing | 1.01x | EUR4,999 | EUR3,978 | EUR5,412 | EUR14,388 | EUR14,273 | +0.8% |
-| Digital/Influence | Opex - Travel | 0.95x | EUR3,871 | EUR3,093 | EUR3,458 | EUR10,422 | EUR10,966 | -5.0% |
-| Digital/Influence | Payroll | 1.04x | EUR263,894 | EUR259,255 | EUR261,768 | EUR784,916 | EUR756,759 | +3.7% |
+| Digital/Influence | COGS | 1.02x | EUR1,108,991 | EUR881,002 | EUR1,281,790 | EUR3,271,783 | EUR3,202,487 | +2.2% |
+| Digital/Influence | Depreciation | 1.03x | EUR18,105 | EUR18,129 | EUR17,998 | EUR54,232 | EUR52,550 | +3.2% |
+| Digital/Influence | Freelance | 1.05x | EUR196,734 | EUR155,980 | EUR208,202 | EUR560,916 | EUR533,557 | +5.1% |
+| Digital/Influence | Opex - Facilities | 1.01x | EUR47,827 | EUR47,038 | EUR47,617 | EUR142,483 | EUR141,358 | +0.8% |
+| Digital/Influence | Opex - G&A | 1.02x | EUR102,104 | EUR115,625 | EUR108,599 | EUR326,328 | EUR320,474 | +1.8% |
+| Digital/Influence | Opex - IT | 0.97x | EUR20,928 | EUR18,070 | EUR21,290 | EUR60,287 | EUR61,985 | -2.7% |
+| Digital/Influence | Opex - Marketing | 1.01x | EUR19,996 | EUR15,911 | EUR21,647 | EUR57,553 | EUR57,092 | +0.8% |
+| Digital/Influence | Opex - Travel | 0.95x | EUR11,613 | EUR9,280 | EUR10,374 | EUR31,267 | EUR32,899 | -5.0% |
+| Digital/Influence | Payroll | 1.04x | EUR343,062 | EUR337,031 | EUR340,298 | EUR1,020,391 | EUR983,787 | +3.7% |
 | Digital/Influence | Revenue | 1.05x | EUR1,983,926 | EUR1,404,061 | EUR2,230,375 | EUR5,618,362 | EUR5,372,867 | +4.6% |
-| Government & Institutions | COGS | 1.10x | EUR81,693 | EUR61,333 | EUR106,708 | EUR249,734 | EUR226,577 | +10.2% |
-| Government & Institutions | Opex - Facilities | 1.02x | EUR9,569 | EUR9,846 | EUR9,077 | EUR28,492 | EUR28,008 | +1.7% |
-| Government & Institutions | Opex - IT | 1.06x | EUR17,147 | EUR14,670 | EUR16,636 | EUR48,452 | EUR45,877 | +5.6% |
-| Government & Institutions | Opex - Marketing | 0.94x | EUR503 | EUR389 | EUR461 | EUR1,353 | EUR1,446 | -6.4% |
-| Government & Institutions | Opex - Travel | 1.02x | EUR1,521 | EUR1,354 | EUR1,706 | EUR4,581 | EUR4,504 | +1.7% |
-| Government & Institutions | Payroll | 1.03x | EUR178,230 | EUR170,120 | EUR177,750 | EUR526,100 | EUR510,433 | +3.1% |
+| Government & Institutions | COGS | 1.05x | EUR433,884 | EUR327,363 | EUR497,880 | EUR1,259,128 | EUR1,194,538 | +5.4% |
+| Government & Institutions | Depreciation | 1.03x | EUR7,235 | EUR7,221 | EUR7,316 | EUR21,771 | EUR21,072 | +3.3% |
+| Government & Institutions | Freelance | 1.05x | EUR94,730 | EUR68,034 | EUR118,441 | EUR281,205 | EUR266,615 | +5.5% |
+| Government & Institutions | Opex - Facilities | 1.02x | EUR21,533 | EUR21,861 | EUR20,999 | EUR64,393 | EUR63,378 | +1.6% |
+| Government & Institutions | Opex - G&A | 1.03x | EUR44,187 | EUR44,494 | EUR42,844 | EUR131,525 | EUR128,270 | +2.5% |
+| Government & Institutions | Opex - IT | 1.05x | EUR16,983 | EUR14,530 | EUR16,477 | EUR47,990 | EUR45,877 | +4.6% |
+| Government & Institutions | Opex - Marketing | 0.94x | EUR5,026 | EUR3,888 | EUR4,614 | EUR13,528 | EUR14,458 | -6.4% |
+| Government & Institutions | Opex - Travel | 1.02x | EUR6,086 | EUR5,415 | EUR6,823 | EUR18,324 | EUR18,016 | +1.7% |
+| Government & Institutions | Payroll | 1.03x | EUR117,850 | EUR112,487 | EUR117,533 | EUR347,870 | EUR337,511 | +3.1% |
 | Government & Institutions | Revenue | 1.06x | EUR762,524 | EUR584,105 | EUR976,963 | EUR2,323,592 | EUR2,183,850 | +6.4% |
 
 ## Group P&L summary (forecast)
@@ -96,9 +114,9 @@ Prior year (PY) is the normalized actual of the same month last year (the foreca
 | | Jul-26 | Aug-26 | Sep-26 | 3-mo total |
 |---|---|---|---|---|
 | Revenue | EUR7,835,082 | EUR5,642,235 | EUR9,136,311 | EUR22,613,628 |
-| Total costs | EUR4,128,163 | EUR3,147,354 | EUR4,507,382 | EUR11,782,899 |
-| Net result | EUR3,706,919 | EUR2,494,882 | EUR4,628,929 | EUR10,830,729 |
+| Total costs | EUR7,781,965 | EUR6,063,425 | EUR8,498,080 | EUR22,343,471 |
+| Operating result | EUR53,117 | -EUR421,190 | EUR638,231 | EUR270,158 |
 
-Margin: 47.9% of revenue over the horizon.
+Margin: 1.2% of revenue over the horizon.
 
 No sustained programme was still active at the cutoff, so no episode effect is carried forward in this run. Had one been active (see the adjustment rules above), its months would appear as KEPT in the audit trail and flow into the base.

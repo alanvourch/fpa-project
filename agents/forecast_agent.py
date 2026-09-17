@@ -55,8 +55,9 @@ GROWTH_WINDOW_MONTHS = 12
 # still-running programme shouldn't flip it to "concluded".
 EPISODE_ACTIVE_GRACE_MONTHS = 2
 
-LINE_ORDER = ["Revenue", "COGS", "Payroll", "Opex - Travel",
-              "Opex - Marketing", "Opex - IT", "Opex - Facilities"]
+LINE_ORDER = ["Revenue", "COGS", "Freelance", "Payroll", "Opex - Travel",
+              "Opex - Marketing", "Opex - IT", "Opex - Facilities",
+              "Opex - G&A", "Depreciation"]
 COST_LINES = [l for l in LINE_ORDER if l != "Revenue"]
 
 
@@ -171,7 +172,7 @@ def build_forecast(df):
 
 
 def fmt_money(v):
-    return f"EUR{v:,.0f}"
+    return f"-EUR{-v:,.0f}" if v < 0 else f"EUR{v:,.0f}"
 
 
 def render_report(fc, adjustments, cutoff, horizon):
@@ -255,7 +256,7 @@ def render_report(fc, adjustments, cutoff, horizon):
     rev = fc[fc["line_item"] == "Revenue"].groupby("month")["forecast"].sum()
     costs = fc[fc["line_item"].isin(COST_LINES)].groupby("month")["forecast"].sum()
     net = rev - costs
-    for label, s in [("Revenue", rev), ("Total costs", costs), ("Net result", net)]:
+    for label, s in [("Revenue", rev), ("Total costs", costs), ("Operating result", net)]:
         cells = " | ".join(fmt_money(s[m]) for m in horizon)
         lines.append(f"| {label} | {cells} | {fmt_money(s.sum())} |")
     lines += [
