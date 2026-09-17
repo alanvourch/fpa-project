@@ -1,6 +1,6 @@
 # Pipeline Run Log
 
-Run at 2026-09-17 17:59 by `orchestrator.py`.
+Run at 2026-09-17 19:04 by `orchestrator.py`.
 
 | Step | Script | Exit code | Result |
 |---|---|---|---|
@@ -8,7 +8,7 @@ Run at 2026-09-17 17:59 by `orchestrator.py`.
 | Variance & Root-Cause | `agents/variance_agent.py` | 0 | OK |
 | Rolling Forecast | `agents/forecast_agent.py` | 0 | OK |
 | BU One-Pagers | `agents/bu_report_agent.py` | 0 | OK |
-| Narrative (LLM) | `agents/narrative_agent.py` | 1 | FAILED |
+| Narrative (LLM) | `agents/narrative_agent.py` | 0 | OK |
 | QA/Reviewer | `agents/qa_agent.py` | 0 | OK |
 
 ## Step output
@@ -61,13 +61,8 @@ Wrote 4 BU one-pagers to output/bu_reports/
 ### Narrative (LLM)
 
 ```
-(no output)
-```
-
-stderr:
-```
-No usable model credentials for this run, so the Narrative step is skipped rather than failing the pipeline (see README.md, 'Narrative Agent credentials'). Set ANTHROPIC_API_KEY, run `ant auth login`, or point this client at your organization's internal model gateway or another approved provider.
-Underlying error: credentials file for profile 'default' (authentication.type 'user_oauth' with client_id) must include 'refresh_token': C:\Users\snip1\AppData\Roaming\Anthropic\credentials\default.json
+Input tokens: 12628, output tokens: 1702
+Wrote output/executive_summary.md
 ```
 
 ### QA/Reviewer

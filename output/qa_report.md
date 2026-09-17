@@ -22,7 +22,7 @@ Confirms the project's core control principle: only the Narrative Agent may call
 
 ## Narrative grounding checks
 
-- **PASS**: All 23 monetary figure(s) in the narrative trace back to a source figure within 0.5%/EUR15,000
-- **PASS**: All 22 percentage(s) in the narrative trace back to a source figure within 1.0 pp
+- **PASS**: All 21 monetary figure(s) in the narrative trace back to a source figure within 0.5%/EUR15,000
+- **PASS**: All 8 percentage(s) in the narrative trace back to a source figure within 1.0 pp
 - **PASS**: narrative preserves the honesty language (3 source rows had no driver)
 - **PASS**: excluded data-error row is mentioned without being framed as a business event

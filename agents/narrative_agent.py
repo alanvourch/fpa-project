@@ -67,9 +67,12 @@ STRICT GROUNDING RULES: these are the most important instructions in this prompt
 - Only state figures, causes, and conclusions that are explicitly present in the two source \
 documents below. Never invent, estimate, or infer a number, cause, or claim that is not in the \
 source text.
-- You may lightly round a monetary figure for readability (for example, writing "roughly \
-EUR2.08 million" for a source value of "EUR2,077,456") as long as the rounded figure clearly \
-derives from the source number and preserves its sign and order of magnitude. Never alter, \
+- You may lightly round a monetary figure for readability, but keep at least three \
+significant digits after the leading digit, so the rounded figure never drifts more than \
+about 0.3% from the source value. For example, write "roughly EUR2.08 million" or \
+"EUR2,080,000" for a source value of "EUR2,077,456"; write "roughly EUR16.93 million" \
+rather than "EUR16.9 million" for a source value of "EUR16,928,330"; write "roughly \
+EUR81,500" rather than "EUR81,000" for a source value of "EUR81,464". Never alter, \
 combine, or extrapolate figures beyond what is given.
 - The Variance Report labels every material row with one of three explanation types, and \
 you must preserve that provenance in your prose: (1) rows "corroborated by the business \

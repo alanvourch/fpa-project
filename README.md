@@ -242,16 +242,11 @@ The known gaps are listed here rather than left for a close reading of the logs:
   is never paired with business-event framing, but it could not catch a narrative that
   invents a business story while avoiding data-quality words entirely. The figure-tracing
   check is the harder net behind it.
-- **The committed executive summary was not produced by a model call.** No API
-  credentials were configured on the machine at the time, so the file was written to the
-  narrative step's exact system prompt and then passed through the same validator the
-  pipeline applies to a generated summary. Its header discloses this. Running
-  `agents/narrative_agent.py` with credentials produces the model-generated version.
 - **The dataset is synthetic and seeded.** The anomalies and errors were planted, so task
   difficulty is calibrated by construction. The scripts never read the answer key
   (`data/ground_truth.md`); separate validation scripts in `tests/` check their outputs
   against it after the fact, and all six pass.
-- **The analyst commentary is written for illustration.** The 20 "Analyst input" rows
+- **The analyst commentary is written for illustration.** The 13 "Analyst input" rows
   were written for this demo the way a real analyst would write them after follow-up,
   but the underlying variances are seeded generator noise, so those explanations are
   plausible fiction, documented as such here and on the case study page. What the demo
