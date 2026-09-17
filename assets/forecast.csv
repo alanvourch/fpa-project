@@ -1,85 +1,133 @@
 month,business_unit,line_item,forecast,base_month,base_value,base_was_normalized,growth_factor
-2026-07,Brand Events,COGS,1989496.3,2025-07,1900515.42,False,1.046819
-2026-08,Brand Events,COGS,1282923.98,2025-08,1225544.78,False,1.046819
-2026-09,Brand Events,COGS,2146572.35,2025-09,2050566.19,False,1.046819
-2026-07,Brand Events,Opex - Facilities,8333.2,2025-07,8335.87,False,0.99968
-2026-08,Brand Events,Opex - Facilities,8903.09,2025-08,8905.94,False,0.99968
-2026-09,Brand Events,Opex - Facilities,8046.84,2025-09,8049.42,False,0.99968
-2026-07,Brand Events,Opex - IT,2460.34,2025-07,2749.68,False,0.894774
-2026-08,Brand Events,Opex - IT,3211.69,2025-08,3589.39,False,0.894774
-2026-09,Brand Events,Opex - IT,2681.63,2025-09,2996.99,False,0.894774
-2026-07,Brand Events,Opex - Marketing,1821.27,2025-07,1835.55,False,0.992222
-2026-08,Brand Events,Opex - Marketing,1892.67,2025-08,1907.51,False,0.992222
-2026-09,Brand Events,Opex - Marketing,1795.77,2025-09,1809.85,False,0.992222
-2026-07,Brand Events,Opex - Travel,8841.15,2025-07,8665.12,False,1.020315
-2026-08,Brand Events,Opex - Travel,9260.26,2025-08,9075.89,False,1.020315
-2026-09,Brand Events,Opex - Travel,10319.16,2025-09,10113.7,False,1.020315
-2026-07,Brand Events,Payroll,281388.74,2025-07,274329.56,False,1.025732
-2026-08,Brand Events,Payroll,279934.95,2025-08,272912.24,False,1.025732
-2026-09,Brand Events,Payroll,274229.25,2025-09,267349.68,False,1.025732
-2026-07,Brand Events,Revenue,3562274.97,2025-07,3356852.02,True,1.061195
-2026-08,Brand Events,Revenue,2512434.23,2025-08,2367551.63,False,1.061195
-2026-09,Brand Events,Revenue,4119512.65,2025-09,3881955.9,False,1.061195
-2026-07,Corporate Events,COGS,536089.18,2025-07,514574.88,False,1.04181
-2026-08,Corporate Events,COGS,421626.54,2025-08,404705.85,False,1.04181
-2026-09,Corporate Events,COGS,648943.51,2025-09,622900.15,False,1.04181
-2026-07,Corporate Events,Opex - Facilities,4167.71,2025-07,4098.84,False,1.016802
-2026-08,Corporate Events,Opex - Facilities,4348.17,2025-08,4276.32,False,1.016802
-2026-09,Corporate Events,Opex - Facilities,4198.2,2025-09,4128.83,False,1.016802
-2026-07,Corporate Events,Opex - IT,2640.97,2025-07,2637.7,False,1.001239
-2026-08,Corporate Events,Opex - IT,2255.62,2025-08,2252.83,False,1.001239
-2026-09,Corporate Events,Opex - IT,2634.72,2025-09,2631.46,False,1.001239
+2026-07,Brand Events,Bonuses and profit sharing,50067.62,2025-07,50489.1,False,0.991652
+2026-08,Brand Events,Bonuses and profit sharing,52142.25,2025-08,52581.2,False,0.991652
+2026-09,Brand Events,Bonuses and profit sharing,48620.43,2025-09,49029.73,False,0.991652
+2026-07,Brand Events,Cost of sales,2982976.66,2025-07,2868808.7,False,1.039796
+2026-08,Brand Events,Cost of sales,1935378.06,2025-08,1861305.02,False,1.039796
+2026-09,Brand Events,Cost of sales,3204812.84,2025-09,3082154.51,False,1.039796
+2026-07,Brand Events,Depreciation,11778.15,2025-07,11475.79,False,1.026347
+2026-08,Brand Events,Depreciation,11797.95,2025-08,11495.09,False,1.026347
+2026-09,Brand Events,Depreciation,11797.9,2025-09,11495.04,False,1.026347
+2026-07,Brand Events,Net billings,3562274.97,2025-07,3356852.02,True,1.061195
+2026-08,Brand Events,Net billings,2512434.23,2025-08,2367551.63,False,1.061195
+2026-09,Brand Events,Net billings,4119512.65,2025-09,3881955.9,False,1.061195
+2026-07,Brand Events,Opex - Facilities,46270.27,2025-07,45934.75,False,1.007304
+2026-08,Brand Events,Opex - Facilities,47895.37,2025-08,47548.07,False,1.007304
+2026-09,Brand Events,Opex - Facilities,45523.82,2025-09,45193.71,False,1.007304
+2026-07,Brand Events,Opex - G&A,42012.74,2025-07,40296.96,False,1.042578
+2026-08,Brand Events,Opex - G&A,35382.84,2025-08,33937.82,False,1.042578
+2026-09,Brand Events,Opex - G&A,40431.68,2025-09,38780.47,False,1.042578
+2026-07,Brand Events,Opex - IT,29524.18,2025-07,32996.2,False,0.894775
+2026-08,Brand Events,Opex - IT,38540.37,2025-08,43072.69,False,0.894775
+2026-09,Brand Events,Opex - IT,32179.6,2025-09,35963.9,False,0.894775
+2026-07,Brand Events,Opex - Marketing,18212.69,2025-07,18355.46,False,0.992222
+2026-08,Brand Events,Opex - Marketing,18926.73,2025-08,19075.1,False,0.992222
+2026-09,Brand Events,Opex - Marketing,17957.73,2025-09,18098.51,False,0.992222
+2026-07,Brand Events,Opex - Travel,7957.03,2025-07,7798.61,False,1.020314
+2026-08,Brand Events,Opex - Travel,8334.23,2025-08,8168.3,False,1.020314
+2026-09,Brand Events,Opex - Travel,9287.23,2025-09,9102.33,False,1.020314
+2026-07,Brand Events,Payroll,286240.27,2025-07,279059.38,False,1.025732
+2026-08,Brand Events,Payroll,284761.42,2025-08,277617.63,False,1.025732
+2026-09,Brand Events,Payroll,278957.35,2025-09,271959.16,False,1.025732
+2026-07,Brand Events,Social charges,132622.21,2025-07,129342.44,False,1.025357
+2026-08,Brand Events,Social charges,129614.57,2025-08,126409.18,False,1.025357
+2026-09,Brand Events,Social charges,131308.5,2025-09,128061.21,False,1.025357
+2026-07,Corporate Events,Bonuses and profit sharing,30515.44,2025-07,29333.66,False,1.040287
+2026-08,Corporate Events,Bonuses and profit sharing,29275.17,2025-08,28141.43,False,1.040287
+2026-09,Corporate Events,Bonuses and profit sharing,33252.8,2025-09,31965.01,False,1.040287
+2026-07,Corporate Events,Cost of sales,1151732.98,2025-07,1081252.94,False,1.065184
+2026-08,Corporate Events,Cost of sales,883766.55,2025-08,829684.66,False,1.065184
+2026-09,Corporate Events,Cost of sales,1379860.7,2025-09,1295420.44,False,1.065184
+2026-07,Corporate Events,Depreciation,6448.37,2025-07,6291.24,False,1.024975
+2026-08,Corporate Events,Depreciation,6427.14,2025-08,6270.53,False,1.024975
+2026-09,Corporate Events,Depreciation,6445.83,2025-09,6288.77,False,1.024975
+2026-07,Corporate Events,Net billings,1526356.16,2025-07,1452091.3,False,1.051143
+2026-08,Corporate Events,Net billings,1141634.79,2025-08,1086088.55,False,1.051143
+2026-09,Corporate Events,Net billings,1809460.92,2025-09,1721421.6,False,1.051143
+2026-07,Corporate Events,Opex - Facilities,25266.66,2025-07,24873.6,False,1.015802
+2026-08,Corporate Events,Opex - Facilities,25829.71,2025-08,25427.89,False,1.015802
+2026-09,Corporate Events,Opex - Facilities,25390.06,2025-09,24995.08,False,1.015802
+2026-07,Corporate Events,Opex - G&A,22926.4,2025-07,22335.26,False,1.026467
+2026-08,Corporate Events,Opex - G&A,20991.51,2025-08,20450.26,False,1.026467
+2026-09,Corporate Events,Opex - G&A,20388.59,2025-09,19862.88,False,1.026467
+2026-07,Corporate Events,Opex - IT,21127.76,2025-07,21101.6,False,1.00124
+2026-08,Corporate Events,Opex - IT,18044.99,2025-08,18022.65,False,1.00124
+2026-09,Corporate Events,Opex - IT,21077.78,2025-09,21051.69,False,1.00124
 2026-07,Corporate Events,Opex - Marketing,40869.26,2025-07,40163.81,True,1.017564
 2026-08,Corporate Events,Opex - Marketing,37659.63,2025-08,37009.58,True,1.017564
 2026-09,Corporate Events,Opex - Marketing,42153.11,2025-09,41425.5,True,1.017564
-2026-07,Corporate Events,Opex - Travel,6135.31,2025-07,6078.82,False,1.009293
-2026-08,Corporate Events,Opex - Travel,5014.07,2025-08,4967.9,False,1.009293
-2026-09,Corporate Events,Opex - Travel,6450.32,2025-09,6390.93,False,1.009293
-2026-07,Corporate Events,Payroll,112806.34,2025-07,110513.93,False,1.020743
-2026-08,Corporate Events,Payroll,105969.58,2025-08,103816.11,False,1.020743
-2026-09,Corporate Events,Payroll,109537.95,2025-09,107311.96,False,1.020743
-2026-07,Corporate Events,Revenue,1526356.16,2025-07,1452091.3,False,1.051143
-2026-08,Corporate Events,Revenue,1141634.79,2025-08,1086088.55,False,1.051143
-2026-09,Corporate Events,Revenue,1809460.92,2025-09,1721421.6,False,1.051143
-2026-07,Digital/Influence,COGS,552934.34,2025-07,546210.33,False,1.01231
-2026-08,Digital/Influence,COGS,443489.42,2025-08,438096.32,False,1.01231
-2026-09,Digital/Influence,COGS,647944.0,2025-09,640064.61,False,1.01231
-2026-07,Digital/Influence,Opex - Facilities,6195.73,2025-07,6189.56,False,1.000996
-2026-08,Digital/Influence,Opex - Facilities,5984.68,2025-08,5978.72,False,1.000996
-2026-09,Digital/Influence,Opex - Facilities,6126.64,2025-09,6120.54,False,1.000996
-2026-07,Digital/Influence,Opex - IT,12556.65,2025-07,12910.3,False,0.972607
-2026-08,Digital/Influence,Opex - IT,10842.12,2025-08,11147.48,False,0.972607
-2026-09,Digital/Influence,Opex - IT,12773.73,2025-09,13133.5,False,0.972607
-2026-07,Digital/Influence,Opex - Marketing,4998.94,2025-07,4958.86,False,1.008083
-2026-08,Digital/Influence,Opex - Marketing,3977.69,2025-08,3945.8,False,1.008083
-2026-09,Digital/Influence,Opex - Marketing,5411.73,2025-09,5368.34,False,1.008083
-2026-07,Digital/Influence,Opex - Travel,3871.16,2025-07,4073.14,False,0.950411
-2026-08,Digital/Influence,Opex - Travel,3093.36,2025-08,3254.76,False,0.950411
-2026-09,Digital/Influence,Opex - Travel,3457.96,2025-09,3638.38,False,0.950411
-2026-07,Digital/Influence,Payroll,263893.86,2025-07,254427.3,False,1.037207
-2026-08,Digital/Influence,Payroll,259254.85,2025-08,249954.71,False,1.037207
-2026-09,Digital/Influence,Payroll,261767.77,2025-09,252377.48,False,1.037207
-2026-07,Digital/Influence,Revenue,1983926.32,2025-07,1897238.42,False,1.045692
-2026-08,Digital/Influence,Revenue,1404061.24,2025-08,1342710.61,True,1.045692
-2026-09,Digital/Influence,Revenue,2230374.8,2025-09,2132918.3,True,1.045692
-2026-07,Government & Institutions,COGS,81692.85,2025-07,74117.64,False,1.102205
-2026-08,Government & Institutions,COGS,61333.34,2025-08,55646.03,False,1.102205
-2026-09,Government & Institutions,COGS,106707.73,2025-09,96812.95,False,1.102205
-2026-07,Government & Institutions,Opex - Facilities,9569.33,2025-07,9406.8,False,1.017278
-2026-08,Government & Institutions,Opex - Facilities,9845.86,2025-08,9678.63,False,1.017278
-2026-09,Government & Institutions,Opex - Facilities,9076.54,2025-09,8922.38,False,1.017278
-2026-07,Government & Institutions,Opex - IT,17146.51,2025-07,16235.32,False,1.056124
-2026-08,Government & Institutions,Opex - IT,14670.15,2025-08,13890.56,False,1.056124
-2026-09,Government & Institutions,Opex - IT,16635.5,2025-09,15751.47,False,1.056124
-2026-07,Government & Institutions,Opex - Marketing,502.63,2025-07,537.17,False,0.935704
-2026-08,Government & Institutions,Opex - Marketing,388.81,2025-08,415.53,False,0.935704
-2026-09,Government & Institutions,Opex - Marketing,461.39,2025-09,493.09,False,0.935704
-2026-07,Government & Institutions,Opex - Travel,1521.45,2025-07,1495.89,False,1.017089
-2026-08,Government & Institutions,Opex - Travel,1353.79,2025-08,1331.04,False,1.017089
-2026-09,Government & Institutions,Opex - Travel,1705.71,2025-09,1677.05,False,1.017089
-2026-07,Government & Institutions,Payroll,178229.84,2025-07,172922.36,False,1.030693
-2026-08,Government & Institutions,Payroll,170119.61,2025-08,165053.64,False,1.030693
-2026-09,Government & Institutions,Payroll,177750.39,2025-09,172457.19,False,1.030693
-2026-07,Government & Institutions,Revenue,762524.39,2025-07,716665.84,False,1.063989
-2026-08,Government & Institutions,Revenue,584105.22,2025-08,548976.88,False,1.063989
-2026-09,Government & Institutions,Revenue,976962.62,2025-09,918207.66,False,1.063989
+2026-07,Corporate Events,Opex - Travel,4090.21,2025-07,4052.55,False,1.009292
+2026-08,Corporate Events,Opex - Travel,3342.71,2025-08,3311.93,False,1.009292
+2026-09,Corporate Events,Opex - Travel,4300.21,2025-09,4260.62,False,1.009292
+2026-07,Corporate Events,Payroll,169209.49,2025-07,165770.89,False,1.020743
+2026-08,Corporate Events,Payroll,158954.36,2025-08,155724.16,False,1.020743
+2026-09,Corporate Events,Payroll,164306.91,2025-09,160967.94,False,1.020743
+2026-07,Corporate Events,Social charges,78476.74,2025-07,76672.11,False,1.023537
+2026-08,Corporate Events,Social charges,72182.6,2025-08,70522.71,False,1.023537
+2026-09,Corporate Events,Social charges,75811.98,2025-09,74068.63,False,1.023537
+2026-07,Digital/Influence,Bonuses and profit sharing,52193.3,2025-07,49531.37,False,1.053742
+2026-08,Digital/Influence,Bonuses and profit sharing,45817.72,2025-08,43480.95,False,1.053742
+2026-09,Digital/Influence,Bonuses and profit sharing,48799.94,2025-09,46311.07,False,1.053742
+2026-07,Digital/Influence,Cost of sales,1298907.58,2025-07,1264099.43,False,1.027536
+2026-08,Digital/Influence,Cost of sales,1022145.56,2025-08,994754.09,False,1.027536
+2026-09,Digital/Influence,Cost of sales,1480927.02,2025-09,1441241.11,False,1.027536
+2026-07,Digital/Influence,Depreciation,9743.0,2025-07,9471.73,False,1.02864
+2026-08,Digital/Influence,Depreciation,9671.44,2025-08,9402.16,False,1.02864
+2026-09,Digital/Influence,Depreciation,9689.98,2025-09,9420.18,False,1.02864
+2026-07,Digital/Influence,Net billings,1983926.32,2025-07,1897238.42,False,1.045692
+2026-08,Digital/Influence,Net billings,1404061.24,2025-08,1342710.61,True,1.045692
+2026-09,Digital/Influence,Net billings,2230374.8,2025-09,2132918.3,True,1.045692
+2026-07,Digital/Influence,Opex - Facilities,37785.45,2025-07,37487.19,False,1.007956
+2026-08,Digital/Influence,Opex - Facilities,37162.04,2025-08,36868.7,False,1.007956
+2026-09,Digital/Influence,Opex - Facilities,37619.86,2025-09,37322.91,False,1.007956
+2026-07,Digital/Influence,Opex - G&A,33072.31,2025-07,32470.81,False,1.018524
+2026-08,Digital/Influence,Opex - G&A,30691.22,2025-08,30133.03,False,1.018524
+2026-09,Digital/Influence,Opex - G&A,33995.36,2025-09,33377.07,False,1.018524
+2026-07,Digital/Influence,Opex - IT,33484.38,2025-07,34427.47,False,0.972607
+2026-08,Digital/Influence,Opex - IT,28912.28,2025-08,29726.6,False,0.972607
+2026-09,Digital/Influence,Opex - IT,34063.27,2025-09,35022.66,False,0.972607
+2026-07,Digital/Influence,Opex - Marketing,11997.44,2025-07,11901.25,False,1.008082
+2026-08,Digital/Influence,Opex - Marketing,9546.47,2025-08,9469.93,False,1.008082
+2026-09,Digital/Influence,Opex - Marketing,12988.15,2025-09,12884.02,False,1.008082
+2026-07,Digital/Influence,Opex - Travel,4838.94,2025-07,5091.42,False,0.95041
+2026-08,Digital/Influence,Opex - Travel,3866.7,2025-08,4068.45,False,0.95041
+2026-09,Digital/Influence,Opex - Travel,4322.44,2025-09,4547.97,False,0.95041
+2026-07,Digital/Influence,Payroll,276263.89,2025-07,266353.58,False,1.037207
+2026-08,Digital/Influence,Payroll,271407.44,2025-08,261671.34,False,1.037207
+2026-09,Digital/Influence,Payroll,274038.15,2025-09,264207.68,False,1.037207
+2026-07,Digital/Influence,Social charges,128642.43,2025-07,122980.6,False,1.046038
+2026-08,Digital/Influence,Social charges,126756.49,2025-08,121177.66,False,1.046038
+2026-09,Digital/Influence,Social charges,126462.6,2025-09,120896.71,False,1.046038
+2026-07,Government & Institutions,Bonuses and profit sharing,19803.2,2025-07,19039.31,False,1.040122
+2026-08,Government & Institutions,Bonuses and profit sharing,20281.45,2025-08,19499.11,False,1.040122
+2026-09,Government & Institutions,Bonuses and profit sharing,18998.85,2025-09,18265.98,False,1.040122
+2026-07,Government & Institutions,Cost of sales,543337.92,2025-07,510244.77,False,1.064857
+2026-08,Government & Institutions,Cost of sales,411996.55,2025-08,386903.03,False,1.064857
+2026-09,Government & Institutions,Cost of sales,632487.54,2025-09,593964.55,True,1.064857
+2026-07,Government & Institutions,Depreciation,4320.89,2025-07,4182.06,False,1.033198
+2026-08,Government & Institutions,Depreciation,4299.73,2025-08,4161.58,False,1.033198
+2026-09,Government & Institutions,Depreciation,4329.17,2025-09,4190.07,False,1.033198
+2026-07,Government & Institutions,Net billings,762524.39,2025-07,716665.84,False,1.063989
+2026-08,Government & Institutions,Net billings,584105.22,2025-08,548976.88,False,1.063989
+2026-09,Government & Institutions,Net billings,976962.62,2025-09,918207.66,False,1.063989
+2026-07,Government & Institutions,Opex - Facilities,17016.52,2025-07,16748.37,False,1.01601
+2026-08,Government & Institutions,Opex - Facilities,17275.37,2025-08,17003.14,False,1.01601
+2026-09,Government & Institutions,Opex - Facilities,16594.13,2025-09,16332.64,False,1.01601
+2026-07,Government & Institutions,Opex - G&A,12082.67,2025-07,11774.65,False,1.026159
+2026-08,Government & Institutions,Opex - G&A,11213.58,2025-08,10927.72,False,1.026159
+2026-09,Government & Institutions,Opex - G&A,12293.89,2025-09,11980.49,False,1.026159
+2026-07,Government & Institutions,Opex - IT,16982.83,2025-07,16235.32,False,1.046042
+2026-08,Government & Institutions,Opex - IT,14530.11,2025-08,13890.56,False,1.046042
+2026-09,Government & Institutions,Opex - IT,16476.7,2025-09,15751.47,False,1.046042
+2026-07,Government & Institutions,Opex - Marketing,4021.06,2025-07,4297.37,False,0.935702
+2026-08,Government & Institutions,Opex - Marketing,3110.48,2025-08,3324.22,False,0.935702
+2026-09,Government & Institutions,Opex - Marketing,3691.11,2025-09,3944.75,False,0.935702
+2026-07,Government & Institutions,Opex - Travel,2028.61,2025-07,1994.53,False,1.017086
+2026-08,Government & Institutions,Opex - Travel,1805.04,2025-08,1774.72,False,1.017086
+2026-09,Government & Institutions,Opex - Travel,2274.28,2025-09,2236.07,False,1.017086
+2026-07,Government & Institutions,Payroll,103664.29,2025-07,100577.29,False,1.030693
+2026-08,Government & Institutions,Payroll,98947.12,2025-08,96000.59,False,1.030693
+2026-09,Government & Institutions,Payroll,103385.44,2025-09,100306.74,False,1.030693
+2026-07,Government & Institutions,Social charges,48087.43,2025-07,46389.73,False,1.036596
+2026-08,Government & Institutions,Social charges,45591.51,2025-08,43981.93,False,1.036596
+2026-09,Government & Institutions,Social charges,47608.89,2025-09,45928.08,False,1.036596
