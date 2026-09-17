@@ -94,8 +94,8 @@ REPORT_CHARTS = {
 # Reports that also link a raw data export next to the doc-note, so a reader
 # can pull the full table into Excel/Sheets instead of scrolling a webpage.
 REPORT_DOWNLOADS = {
-    "variance_report.md": ("variance_table.csv", "the full 1,200-row variance grain"),
-    "forecast_report.md": ("forecast.csv", "the full 120-row forecast grain"),
+    "variance_report.md": ("variance_table.csv", "the full 1,320-row variance grain"),
+    "forecast_report.md": ("forecast.csv", "the full 132-row forecast grain"),
 }
 
 PAGE_TEMPLATE = """<!DOCTYPE html>
