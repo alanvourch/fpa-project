@@ -55,10 +55,10 @@ GROWTH_WINDOW_MONTHS = 12
 # still-running programme shouldn't flip it to "concluded".
 EPISODE_ACTIVE_GRACE_MONTHS = 2
 
-LINE_ORDER = ["Revenue", "COGS", "Freelance", "Payroll", "Opex - Travel",
-              "Opex - Marketing", "Opex - IT", "Opex - Facilities",
-              "Opex - G&A", "Depreciation"]
-COST_LINES = [l for l in LINE_ORDER if l != "Revenue"]
+LINE_ORDER = ["Net billings", "Cost of sales", "Payroll", "Social charges",
+              "Bonuses and profit sharing", "Opex - Travel", "Opex - Marketing",
+              "Opex - IT", "Opex - Facilities", "Opex - G&A", "Depreciation"]
+COST_LINES = [l for l in LINE_ORDER if l != "Net billings"]
 
 
 def load_variance_table():
@@ -253,15 +253,20 @@ def render_report(fc, adjustments, cutoff, horizon):
               "| | " + " | ".join(f"{m:%b-%y}" for m in horizon)
               + " | 3-mo total |",
               "|---|" + "---|" * (HORIZON_MONTHS + 1)]
-    rev = fc[fc["line_item"] == "Revenue"].groupby("month")["forecast"].sum()
-    costs = fc[fc["line_item"].isin(COST_LINES)].groupby("month")["forecast"].sum()
-    net = rev - costs
-    for label, s in [("Revenue", rev), ("Total costs", costs), ("Operating result", net)]:
+    rev = fc[fc["line_item"] == "Net billings"].groupby("month")["forecast"].sum()
+    cos = fc[fc["line_item"] == "Cost of sales"].groupby("month")["forecast"].sum()
+    gm = rev - cos
+    opex = fc[fc["line_item"].isin(COST_LINES) & (fc["line_item"] != "Cost of sales")
+              ].groupby("month")["forecast"].sum()
+    net = gm - opex
+    for label, s in [("Net billings", rev), ("Cost of sales", cos), ("Gross margin", gm),
+                     ("Staff costs and overheads", opex), ("Operating result", net)]:
         cells = " | ".join(fmt_money(s[m]) for m in horizon)
         lines.append(f"| {label} | {cells} | {fmt_money(s.sum())} |")
     lines += [
         "",
-        f"Margin: {net.sum() / rev.sum():.1%} of revenue over the horizon.",
+        f"Operating margin over the horizon: {net.sum() / gm.sum():.1%} of gross margin, "
+        f"{net.sum() / rev.sum():.1%} of net billings.",
         "",
         "No sustained programme was still active at the cutoff, so no episode "
         "effect is carried forward in this run. Had one been active (see the "

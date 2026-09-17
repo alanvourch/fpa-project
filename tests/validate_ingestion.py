@@ -21,8 +21,9 @@ CANONICAL_BUS = {"Brand Events", "Corporate Events", "Digital/Influence", "Gover
 NUMERIC_COLUMNS = [
     "revenue_budget", "revenue_actual", "revenue_prior_year",
     "cogs_budget", "cogs_actual",
-    "freelance_budget", "freelance_actual",
     "payroll_budget", "payroll_actual",
+    "social_charges_budget", "social_charges_actual",
+    "bonus_budget", "bonus_actual",
     "opex_travel_budget", "opex_travel_actual",
     "opex_marketing_budget", "opex_marketing_actual",
     "opex_it_budget", "opex_it_actual",

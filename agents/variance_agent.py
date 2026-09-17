@@ -62,10 +62,11 @@ TABLE_PATH = "output/variance_table.csv"
 # (line item, actual column, budget column, is_cost). For revenue, actual >
 # budget is favorable; for cost lines the reverse.
 LINE_ITEMS = [
-    ("Revenue", "revenue_actual", "revenue_budget", False),
-    ("COGS", "cogs_actual", "cogs_budget", True),
-    ("Freelance", "freelance_actual", "freelance_budget", True),
+    ("Net billings", "revenue_actual", "revenue_budget", False),
+    ("Cost of sales", "cogs_actual", "cogs_budget", True),
     ("Payroll", "payroll_actual", "payroll_budget", True),
+    ("Social charges", "social_charges_actual", "social_charges_budget", True),
+    ("Bonuses and profit sharing", "bonus_actual", "bonus_budget", True),
     ("Opex - Travel", "opex_travel_actual", "opex_travel_budget", True),
     ("Opex - Marketing", "opex_marketing_actual", "opex_marketing_budget", True),
     ("Opex - IT", "opex_it_actual", "opex_it_budget", True),
@@ -101,15 +102,15 @@ EVIDENCE_LOOKAHEAD_DAYS = 20
 # if it actually talks about that kind of cost/revenue. Matching is
 # whole-word/phrase, case-insensitive.
 LEXICON = {
-    "Revenue": ["revenue", "contract", "invoice", "invoiced", "billing",
+    "Net billings": ["revenue", "contract", "invoice", "invoiced", "billing",
                 "pricing", "fx", "currency", "usd", "dollar", "exchange rate",
                 "cancellation", "postponed"],
-    "COGS": ["cogs", "cost overrun", "overrun", "freight", "staging",
+    "Cost of sales": ["cogs", "cost overrun", "overrun", "freight", "staging",
              "supplier", "subcontract", "venue", "pass-through",
              "production cost", "external production", "scope expansion",
              "overtime"],
-    "Freelance": ["freelance", "freelancer", "intermittent", "temporary staff",
-                  "temp staff", "event staff", "hostess", "crew", "day rate"],
+    "Social charges": ["social charges", "urssaf", "employer contributions"],
+    "Bonuses and profit sharing": ["bonus", "profit sharing", "participation", "incentive"],
     "Payroll": ["payroll", "headcount", "hiring", "recruit", "salary",
                 "bonus", "severance", "overtime", "parental leave",
                 "temporary cover"],

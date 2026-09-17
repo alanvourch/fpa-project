@@ -61,7 +61,7 @@ def main():
         y = agent.fy_slice(vt, bu)
         card = agent.scorecard(y)
         for label, value in [("revenue", card["revenue_actual"]),
-                             ("costs", card["costs_actual"]),
+                             ("gross margin", card["gm_actual"]),
                              ("net", card["net_actual"])]:
             check(agent.fmt_money(value) in md,
                   f"{bu}: FY2025 {label} figure {agent.fmt_money(value)} appears on the page")
@@ -108,7 +108,7 @@ def main():
     # 5. Trap handling on the Brand Events page
     prod_md = (OUT_DIR / "brand_events.md").read_text(encoding="utf-8")
     trap_rows = [l for l in prod_md.splitlines()
-                 if l.startswith("|") and "2025-11" in l and "Revenue" in l]
+                 if l.startswith("|") and "2025-11" in l and "Net billings" in l]
     check(not trap_rows,
           "Brand Events: the trap month never appears as a material variance row")
     check("data entry error" in prod_md,

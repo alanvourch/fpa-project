@@ -41,8 +41,8 @@ COLUMN_PHRASE_MAP = [
     (re.compile(r"Marketing opex actual", re.I), "opex_marketing_actual"),
 ]
 COLUMN_TO_LINE = {
-    "cogs_actual": "COGS",
-    "revenue_actual": "Revenue",
+    "cogs_actual": "Cost of sales",
+    "revenue_actual": "Net billings",
     "opex_it_actual": "Opex - IT",
     "opex_marketing_actual": "Opex - Marketing",
 }
@@ -106,7 +106,7 @@ def main():
     failures, passes = [], []
 
     # 1. Trap normalized with a data-error reason and value actually replaced
-    trap = adj_index.get(("Brand Events", "Revenue", "2025-11"))
+    trap = adj_index.get(("Brand Events", "Net billings", "2025-11"))
     if trap and "data entry error" in trap["reason"]:
         if money_to_float(trap["used"]) < 0.25 * money_to_float(trap["raw"]):
             passes.append("Fat-finger trap normalized out of the history (data-error reason, value replaced)")
@@ -163,14 +163,14 @@ def main():
         passes.append(f"No raw anomaly month used as a forecast base ({n_anomaly_bases} anomaly base month(s), all normalized)")
 
     # 5. FX dip not re-forecast
-    fx_truth = [s for s in singles if s["line_item"] == "Revenue"]
+    fx_truth = [s for s in singles if s["line_item"] == "Net billings"]
     for s in fx_truth:
         base_raw = var[(var["business_unit"] == s["business_unit"])
-                       & (var["line_item"] == "Revenue")
+                       & (var["line_item"] == "Net billings")
                        & (var["month"] == s["month"])]["actual"].iloc[0]
         fc_month = str(pd.Period(s["month"], "M") + 12)
         fc_row = fc[(fc["business_unit"] == s["business_unit"])
-                    & (fc["line_item"] == "Revenue") & (fc["month"] == fc_month)]
+                    & (fc["line_item"] == "Net billings") & (fc["month"] == fc_month)]
         if fc_row.empty:
             continue  # anomaly base outside the forecast horizon
         if fc_row["forecast"].iloc[0] > base_raw:

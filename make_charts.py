@@ -76,7 +76,7 @@ def load_variance_table():
     v = pd.read_csv(VARIANCE_TABLE_PATH)
     v["materiality"] = v["materiality"].fillna("")
     v["evidence_notes"] = v["evidence_notes"].fillna("")
-    v["is_cost"] = v["line_item"] != "Revenue"
+    v["is_cost"] = v["line_item"] != "Net billings"
     # P&L impact: favorable is positive regardless of line type
     v["impact"] = v.apply(
         lambda r: -r["variance_eur"] if r["is_cost"] else r["variance_eur"], axis=1)
@@ -122,20 +122,21 @@ def bridge_components(v):
     unexplained_mask = (y["materiality"] != "") & (y["evidence_notes"] == "") & (~err)
     unexplained = y.loc[unexplained_mask, "impact"].sum()
     # Everything below materiality, split so the reader can see whether the
-    # residual is revenue landing a little under plan month after month or
-    # cost lines drifting: the two read very differently to a CFO.
+    # residual is gross margin landing a little under plan month after month
+    # or staff costs and overheads drifting: the two read very differently.
     quiet = (y["materiality"] == "") & (~err)
-    other_revenue = y.loc[quiet & ~y["is_cost"], "impact"].sum()
-    other_costs = y.loc[quiet & y["is_cost"], "impact"].sum()
+    margin_lines = y["line_item"].isin(["Net billings", "Cost of sales"])
+    other_revenue = y.loc[quiet & margin_lines, "impact"].sum()
+    other_costs = y.loc[quiet & ~margin_lines, "impact"].sum()
     actual_net = budget_net + y["impact"].sum()
 
     deltas = [
-        ("Falcon project overrun (COGS)", falcon, False),
-        ("FX on USD contract (revenue)", fx, False),
-        ("Corporate Events savings programme (opex)", savings, False),
+        ("Falcon project overrun (cost of sales)", falcon, False),
+        ("FX on USD contract (net billings)", fx, False),
+        ("Corporate Events savings programme (marketing)", savings, False),
         (f"Routed to analyst, no documented note, net of {unexplained_mask.sum()} items", unexplained, True),
-        ("Revenue, months within tolerance, net", other_revenue, False),
-        ("Costs, months within tolerance, net", other_costs, False),
+        ("Gross margin, months within tolerance, net", other_revenue, False),
+        ("Staff costs and overheads, months within tolerance, net", other_costs, False),
     ]
     recon = budget_net + sum(d[1] for d in deltas)
     assert abs(recon - actual_net) < 1e-6, "bridge does not reconcile"
@@ -317,8 +318,10 @@ def highlights_chart(v):
 def forecast_chart():
     fc = pd.read_csv(FORECAST_PATH)
     months = sorted(fc["month"].unique())
-    rev = fc[fc["line_item"] == "Revenue"].groupby("month")[["forecast", "base_value"]].sum()
-    costs = fc[fc["line_item"] != "Revenue"].groupby("month")["forecast"].sum()
+    by_line = fc.groupby(["line_item", "month"])[["forecast", "base_value"]].sum()
+    rev = by_line.loc["Net billings"] - by_line.loc["Cost of sales"]
+    costs = fc[~fc["line_item"].isin(["Net billings", "Cost of sales"])
+               ].groupby("month")["forecast"].sum()
     net = rev["forecast"].sum() - costs.sum()
     margin = net / rev["forecast"].sum()
 
@@ -326,15 +329,15 @@ def forecast_chart():
     w = 0.36
     fig, ax = plt.subplots(figsize=(9, 5.4), dpi=150)
     ax.bar([i - w / 2 for i in x], rev.loc[months, "forecast"] / 1e6, width=w,
-           color=ANCHOR, zorder=3, label="Revenue (forecast)")
+           color=ANCHOR, zorder=3, label="Gross margin (forecast)")
     ax.bar([i + w / 2 for i in x], costs.loc[months] / 1e6, width=w,
-           color=COSTS, zorder=3, label="Total costs (forecast)")
+           color=COSTS, zorder=3, label="Staff costs and overheads (forecast)")
     ax.scatter([i - w / 2 for i in x], rev.loc[months, "base_value"] / 1e6,
                marker="D", s=42, color=MUTED, edgecolor=SURFACE, linewidth=1.5,
-               zorder=4, label="Revenue same month last year (normalized)")
+               zorder=4, label="Gross margin same month last year (normalized)")
 
     for i, m in enumerate(months):
-        ax.text(i - w / 2, rev.loc[m, "forecast"] / 1e6 + 0.15,
+        ax.text(i - w / 2, rev.loc[m, "forecast"] / 1e6 + 0.05,
                 f"{rev.loc[m, 'forecast'] / 1e6:,.1f}", ha="center",
                 fontsize=9.5, color=INK)
 
@@ -351,7 +354,7 @@ def forecast_chart():
         fig,
         "Rolling forecast: Q3 2026",
         f"Seasonal base x median year-over-year growth, one-offs excluded from the base. "
-        f"Quarter operating result EUR{net / 1e6:,.1f}M, a {margin:.1%} margin.",
+        f"Quarter operating result EUR{net / 1e6:,.1f}M, {margin:.1%} of gross margin.",
         top=0.86,
     )
     fig.savefig(FORECAST_PNG, bbox_inches="tight")

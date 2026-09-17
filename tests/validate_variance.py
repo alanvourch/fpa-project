@@ -35,8 +35,8 @@ COLUMN_PHRASE_MAP = [
 
 # ground-truth column name -> line item label used in the variance report
 COLUMN_TO_LINE = {
-    "cogs_actual": "COGS",
-    "revenue_actual": "Revenue",
+    "cogs_actual": "Cost of sales",
+    "revenue_actual": "Net billings",
     "opex_it_actual": "Opex - IT",
     "opex_marketing_actual": "Opex - Marketing",
 }
@@ -210,11 +210,11 @@ def main():
     # 7: the fat-finger trap stays a data error, not a variance story
     trap_in_material = [
         (m["business_unit"], m["line_item"], m["months"]) for m in material
-        if m["business_unit"] == "Brand Events" and m["line_item"] == "Revenue"
+        if m["business_unit"] == "Brand Events" and m["line_item"] == "Net billings"
         and "2025-11" in m["months"]
     ]
     trap_excluded = any(
-        e["business_unit"] == "Brand Events" and e["line_item"] == "Revenue"
+        e["business_unit"] == "Brand Events" and e["line_item"] == "Net billings"
         and e["month"] == "2025-11" for e in excluded
     )
     if trap_in_material:

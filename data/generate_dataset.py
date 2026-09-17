@@ -1,17 +1,17 @@
 """Generate a synthetic 30-month Budget/Actual/N-1 dataset for the fictional
 events agency "EventCo" (4 BUs, ~150 FTE, ~EUR100M/year revenue).
 
-Cost structure, as a share of group revenue in the base year: external
-production bought for client projects (venues, technical suppliers, staging,
-catering, freight, content, media) about 63%; freelance and project staff
-(intermittents, freelance producers, event staff) about 11%; permanent
-payroll, fully loaded with employer social charges, about 12% for the 130
-FTE in the business lines; overheads about 10%, made of allocated office
-rent and facilities, the agency's own marketing and new business, IT,
-non-billable travel, allocated central G&A (the 20 central FTE in finance,
-HR, IT and management, professional fees, insurance, other admin) and
-depreciation. The operating result lands around 4% of revenue, the low
-single digits a French events agency of this size earns.
+The P&L follows agency reporting. Net billings (what clients are invoiced,
+about EUR100M a year) less cost of sales (venues, technical suppliers,
+staging, catering, freight, media, and the freelance and intermittent crews
+hired for each project) gives the gross margin, the agency's real net
+revenue, at roughly a quarter of billings. Staff costs (gross salaries,
+employer social charges, bonuses and profit sharing for 150 FTE) take a
+little over 60% of gross margin, and overheads (office rent and facilities,
+IT and telecoms, new business and the agency's own advertising, professional
+fees and other G&A, non-billable travel, depreciation) a little over 20%.
+The operating result lands around 17% of gross margin, about 4% of net
+billings.
 
 Two distinct kinds of "problems" are planted on purpose:
   - business anomalies: real economic events the Variance Agent should explain
@@ -53,46 +53,51 @@ ANNUAL_REVENUE_GROWTH = 0.04
 ANNUAL_PAY_INFLATION = 0.03
 
 # Month-to-month noise (standard deviation of actual / budget) per line.
-# Revenue carries the business's own volatility; external production and
-# freelance are built on actual revenue, so their own noise is the rate
-# and mix wobble on top of the volume effect they inherit from revenue.
+# Net billings carry the business's own volatility; cost of sales is built
+# on actual billings, so its own noise is the project-margin wobble on top
+# of the volume effect it inherits.
 NOISE = {
-    "revenue": 0.05, "cogs": 0.03, "freelance": 0.04, "payroll": 0.02,
-    "travel": 0.10, "marketing": 0.10, "it": 0.08, "facilities": 0.015,
-    "ga": 0.04, "depreciation": 0.005, "prior_year": 0.03,
+    "revenue": 0.05, "cogs": 0.02, "payroll": 0.02, "social_charges": 0.01,
+    "bonus": 0.06, "travel": 0.10, "marketing": 0.10, "it": 0.08,
+    "facilities": 0.015, "ga": 0.04, "depreciation": 0.005, "prior_year": 0.03,
 }
 
-# Per business line: annual revenue; external production (cogs) and freelance
-# as shares of revenue; permanent FTE and their fully loaded annual cost
-# (gross salary plus employer social charges); monthly overhead bases.
-# Facilities are allocated by headcount (about EUR2.0M a year of Paris office
-# and warehouse for 130 desks), G&A and depreciation by revenue share
-# (EUR4.8M and EUR0.8M a year at group level).
+# Employer social charges and the bonus / profit-sharing accrual, as rates
+# on gross salaries.
+SOCIAL_CHARGES_RATE = 0.46
+BONUS_RATE = 0.18
+
+# Per business line: annual net billings; cost of sales as a share of
+# billings (freelance crews included); permanent FTE and average gross
+# salary; monthly overhead bases. Rent, IT and depreciation are allocated
+# by headcount, new business and G&A roughly by gross margin; Corporate
+# Events carries most of the agency's own marketing programme.
 BU_PARAMS = {
-    "Brand Events":              {"revenue_annual": 45_000_000, "cogs_ratio": 0.67, "freelance_ratio": 0.12,
-                                   "fte": 52, "avg_cost": 84_000,
-                                   "travel_base": 25_000, "marketing_base": 30_000, "it_base": 20_000,
-                                   "facilities_base": 66_700, "ga_base": 180_000, "da_base": 30_000},
-    "Corporate Events":          {"revenue_annual": 20_000_000, "cogs_ratio": 0.61, "freelance_ratio": 0.11,
-                                   "fte": 26, "avg_cost": 90_000,
-                                   "travel_base": 15_000, "marketing_base": 45_000, "it_base": 10_000,
-                                   "facilities_base": 33_300, "ga_base": 80_000, "da_base": 13_300},
-    "Digital/Influence":         {"revenue_annual": 25_000_000, "cogs_ratio": 0.59, "freelance_ratio": 0.10,
-                                   "fte": 36, "avg_cost": 104_000,
-                                   "travel_base": 12_000, "marketing_base": 20_000, "it_base": 20_000,
-                                   "facilities_base": 46_200, "ga_base": 100_000, "da_base": 16_700},
-    "Government & Institutions": {"revenue_annual": 10_000_000, "cogs_ratio": 0.56, "freelance_ratio": 0.12,
-                                   "fte": 16, "avg_cost": 81_000,
-                                   "travel_base": 6_000, "marketing_base": 5_000, "it_base": 15_000,
-                                   "facilities_base": 20_500, "ga_base": 40_000, "da_base": 6_700},
+    "Brand Events":              {"revenue_annual": 45_000_000, "cogs_ratio": 0.81,
+                                   "fte": 55, "avg_salary": 59_000,
+                                   "travel_base": 9_000, "marketing_base": 20_000, "it_base": 36_000,
+                                   "facilities_base": 44_500, "ga_base": 37_000, "da_base": 11_000},
+    "Corporate Events":          {"revenue_annual": 20_000_000, "cogs_ratio": 0.74,
+                                   "fte": 30, "avg_salary": 62_000,
+                                   "travel_base": 4_000, "marketing_base": 45_000, "it_base": 20_000,
+                                   "facilities_base": 24_300, "ga_base": 21_000, "da_base": 6_000},
+    "Digital/Influence":         {"revenue_annual": 25_000_000, "cogs_ratio": 0.68,
+                                   "fte": 45, "avg_salary": 67_000,
+                                   "travel_base": 5_000, "marketing_base": 12_000, "it_base": 32_000,
+                                   "facilities_base": 36_500, "ga_base": 31_000, "da_base": 9_000},
+    "Government & Institutions": {"revenue_annual": 10_000_000, "cogs_ratio": 0.70,
+                                   "fte": 20, "avg_salary": 57_000,
+                                   "travel_base": 2_000, "marketing_base": 4_000, "it_base": 15_000,
+                                   "facilities_base": 16_200, "ga_base": 11_000, "da_base": 4_000},
 }
 
 FINAL_COLUMNS = [
     "month", "business_unit",
     "revenue_budget", "revenue_actual", "revenue_prior_year",
     "cogs_budget", "cogs_actual",
-    "freelance_budget", "freelance_actual",
     "payroll_budget", "payroll_actual",
+    "social_charges_budget", "social_charges_actual",
+    "bonus_budget", "bonus_actual",
     "opex_travel_budget", "opex_travel_actual",
     "opex_marketing_budget", "opex_marketing_actual",
     "opex_it_budget", "opex_it_actual",
@@ -117,7 +122,7 @@ def generate_clean_data():
             cogs_budget = revenue_budget * p["cogs_ratio"]
             cogs_actual = revenue_actual * p["cogs_ratio"] * rng.normal(1.0, NOISE["cogs"])
 
-            payroll_budget = p["fte"] * p["avg_cost"] / 12 * pay_growth
+            payroll_budget = p["fte"] * p["avg_salary"] / 12 * pay_growth
             payroll_actual = payroll_budget * rng.normal(1.0, NOISE["payroll"])
 
             travel_budget = p["travel_base"] * (0.7 + 0.3 * season)
@@ -133,10 +138,13 @@ def generate_clean_data():
             fac_budget = p["facilities_base"] * (1 + 0.015 * i / 12)
             fac_actual = fac_budget * rng.normal(1.0, NOISE["facilities"])
 
-            # Freelance follows activity like external production, with its
-            # own rate noise on top (day rates, last-minute crews).
-            freelance_budget = revenue_budget * p["freelance_ratio"]
-            freelance_actual = revenue_actual * p["freelance_ratio"] * rng_overhead.normal(1.0, NOISE["freelance"])
+            # Social charges and the bonus accrual are budgeted as rates on
+            # gross salaries; actuals carry their own small wobble (charge-rate
+            # mix, bonus true-ups).
+            social_budget = payroll_budget * SOCIAL_CHARGES_RATE
+            social_actual = payroll_actual * SOCIAL_CHARGES_RATE * rng_overhead.normal(1.0, NOISE["social_charges"])
+            bonus_budget = payroll_budget * BONUS_RATE
+            bonus_actual = payroll_actual * BONUS_RATE * rng_overhead.normal(1.0, NOISE["bonus"])
 
             # Allocated central costs and depreciation are budgeted flat with
             # slow growth; their actuals move with central spend, not activity.
@@ -150,7 +158,8 @@ def generate_clean_data():
                 "month": date, "business_unit": bu,
                 "revenue_budget": revenue_budget, "revenue_actual": revenue_actual,
                 "cogs_budget": cogs_budget, "cogs_actual": cogs_actual,
-                "freelance_budget": freelance_budget, "freelance_actual": freelance_actual,
+                "social_charges_budget": social_budget, "social_charges_actual": social_actual,
+                "bonus_budget": bonus_budget, "bonus_actual": bonus_actual,
                 "payroll_budget": payroll_budget, "payroll_actual": payroll_actual,
                 "opex_travel_budget": travel_budget, "opex_travel_actual": travel_actual,
                 "opex_marketing_budget": mktg_budget, "opex_marketing_actual": mktg_actual,
@@ -176,11 +185,10 @@ def generate_clean_data():
     return df[FINAL_COLUMNS[:1] + FINAL_COLUMNS[1:2] + [c for c in FINAL_COLUMNS if c not in ("month", "business_unit")]]
 
 
-# Q2 2025 external-production overrun on one Brand Events project: about
-# EUR2.0M over three months, consistent with the BU controller's note N13.
-# (The three months run a few percent under budget before the injection,
-# so the factor is set above the +21% the variance report ends up showing.)
-OVERRUN_FACTOR = 1.29
+# Q2 2025 cost-of-sales overrun on one Brand Events project, about EUR2M over
+# three months (see the BU controller's note N13). The factor applies on top
+# of the months' own noise, so the reported variance differs slightly.
+OVERRUN_FACTOR = 1.19
 
 
 def inject_business_anomalies(df):
@@ -439,17 +447,19 @@ def main():
     # Base-year (first 12 months) group P&L on true actuals, so the cost
     # structure behind the parameters above is visible at a glance.
     base = clean_df[clean_df["month"] < MONTHS[12]]
-    revenue = base["revenue_actual"].sum()
-    print(f"\nBase-year group P&L (true actuals, {MONTHS[0]:%Y}), EUR and % of revenue:")
-    print(f"  {'Revenue':<24} {revenue:>14,.0f}  100.0%")
-    cost_lines = [c for c in FINAL_COLUMNS if c.endswith("_actual") and c != "revenue_actual"]
-    total_costs = 0.0
-    for col in cost_lines:
+    billings = base["revenue_actual"].sum()
+    margin = billings - base["cogs_actual"].sum()
+    print()
+    print(f"Base-year group P&L (true actuals, {MONTHS[0]:%Y}): EUR, % of net billings, % of gross margin")
+    print(f"  {'net billings':<24} {billings:>14,.0f}  {1:>6.1%}")
+    print(f"  {'cost of sales':<24} {base['cogs_actual'].sum():>14,.0f}  {base['cogs_actual'].sum() / billings:>6.1%}")
+    print(f"  {'gross margin':<24} {margin:>14,.0f}  {margin / billings:>6.1%}  {1:>6.1%}")
+    result = margin
+    for col in [c for c in FINAL_COLUMNS if c.endswith("_actual") and c not in ("revenue_actual", "cogs_actual")]:
         value = base[col].sum()
-        total_costs += value
-        print(f"  {col[:-7]:<24} {value:>14,.0f}  {value / revenue:>5.1%}")
-    result = revenue - total_costs
-    print(f"  {'Operating result':<24} {result:>14,.0f}  {result / revenue:>5.1%}")
+        result -= value
+        print(f"  {col[:-7]:<24} {value:>14,.0f}  {value / billings:>6.1%}  {value / margin:>6.1%}")
+    print(f"  {'operating result':<24} {result:>14,.0f}  {result / billings:>6.1%}  {result / margin:>6.1%}")
     print(f"\nWrote data/ground_truth.md ({len(business_notes)} business anomalies, "
           f"{len(dq_notes)} data quality issue categories)")
 

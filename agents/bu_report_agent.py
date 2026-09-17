@@ -51,13 +51,14 @@ NOTES_PATH = "data/business_notes.csv"
 OUT_DIR = "output/bu_reports"
 
 YEAR = "2025"
-COST_LINES = ["COGS", "Freelance", "Payroll", "Opex - Travel", "Opex - Marketing",
-              "Opex - IT", "Opex - Facilities", "Opex - G&A", "Depreciation"]
+COST_LINES = ["Cost of sales", "Payroll", "Social charges", "Bonuses and profit sharing",
+              "Opex - Travel", "Opex - Marketing", "Opex - IT", "Opex - Facilities",
+              "Opex - G&A", "Depreciation"]
+STAFF_LINES = ["Payroll", "Social charges", "Bonuses and profit sharing"]
 BRIDGE_GROUPS = [
-    ("Revenue", ["Revenue"]),
-    ("External production (COGS)", ["COGS"]),
-    ("Freelance", ["Freelance"]),
-    ("Payroll", ["Payroll"]),
+    ("Net billings", ["Net billings"]),
+    ("Cost of sales", ["Cost of sales"]),
+    ("Staff costs", STAFF_LINES),
     ("Overheads", ["Opex - Travel", "Opex - Marketing", "Opex - IT", "Opex - Facilities",
                    "Opex - G&A", "Depreciation"]),
 ]
@@ -112,7 +113,7 @@ def load_inputs():
     vt["materiality"] = vt["materiality"].fillna("")
     vt["evidence_notes"] = vt["evidence_notes"].fillna("")
     vt["analyst_comment"] = vt["analyst_comment"].fillna("")
-    vt["is_cost"] = vt["line_item"] != "Revenue"
+    vt["is_cost"] = vt["line_item"] != "Net billings"
     vt["impact"] = vt.apply(
         lambda r: -r["variance_eur"] if r["is_cost"] else r["variance_eur"], axis=1)
     fc = pd.read_csv(FORECAST_PATH)
@@ -135,20 +136,25 @@ def fy_slice(vt, bu):
 
 def scorecard(y):
     err = y["suspected_data_error"]
-    rev = y[y["line_item"] == "Revenue"]
+    rev = y[y["line_item"] == "Net billings"]
     shown_rev_actual = rev.apply(
         lambda r: r["budget"] if r["suspected_data_error"] else r["actual"], axis=1).sum()
     rev_budget = rev["budget"].sum()
-    costs = y[y["line_item"] != "Revenue"]
+    costs = y[y["line_item"] != "Net billings"]
     costs_actual, costs_budget = costs["actual"].sum(), costs["budget"].sum()
     net_actual = shown_rev_actual - costs_actual
     net_budget = rev_budget - costs_budget
+    cos = y[y["line_item"] == "Cost of sales"]
+    gm_actual = shown_rev_actual - cos["actual"].sum()
+    gm_budget = rev_budget - cos["budget"].sum()
     return {
+        "gm_actual": gm_actual, "gm_budget": gm_budget,
         "revenue_actual": shown_rev_actual, "revenue_budget": rev_budget,
         "costs_actual": costs_actual, "costs_budget": costs_budget,
         "net_actual": net_actual, "net_budget": net_budget,
         "net_variance": net_actual - net_budget,
-        "margin_actual": net_actual / shown_rev_actual if shown_rev_actual else float("nan"),
+        "margin_actual": net_actual / gm_actual if gm_actual else float("nan"),
+        "margin_billings": net_actual / shown_rev_actual if shown_rev_actual else float("nan"),
         "held_rows": int(err.sum()),
     }
 
@@ -188,7 +194,7 @@ def revenue_driver_split(vt, drivers, bu):
     """FY2025 revenue variance split into projects volume and price/mix,
     excluding suspected data-entry months (their finance figure is not
     usable; the ops-side project count is reported alongside instead)."""
-    rev = vt[(vt["business_unit"] == bu) & (vt["line_item"] == "Revenue")
+    rev = vt[(vt["business_unit"] == bu) & (vt["line_item"] == "Net billings")
              & (vt["month"].str.startswith(YEAR))]
     d = drivers[(drivers["business_unit"] == bu) & (drivers["month"].str.startswith(YEAR))]
     m = rev.merge(d, on=["month", "business_unit"])
@@ -277,15 +283,18 @@ def _first_sentence(text, limit=130):
 def outlook(fc, bu):
     g = fc[fc["business_unit"] == bu]
     months = sorted(g["month"].unique())
-    rev = g[g["line_item"] == "Revenue"]
-    costs = g[g["line_item"] != "Revenue"]
+    rev = g[g["line_item"] == "Net billings"]
+    costs = g[g["line_item"] != "Net billings"]
     rev_total, rev_py = rev["forecast"].sum(), rev["base_value"].sum()
     costs_total, costs_py = costs["forecast"].sum(), costs["base_value"].sum()
     net = rev_total - costs_total
+    cos = g[g["line_item"] == "Cost of sales"]
+    gm, gm_py = rev_total - cos["forecast"].sum(), rev_py - cos["base_value"].sum()
     return {
         "months": months, "revenue": rev_total, "revenue_vs_py": rev_total / rev_py - 1,
         "costs": costs_total, "costs_vs_py": costs_total / costs_py - 1,
-        "net": net, "margin": net / rev_total if rev_total else float("nan"),
+        "gm": gm, "gm_vs_py": gm / gm_py - 1,
+        "net": net, "margin": net / gm if gm else float("nan"),
     }
 
 
@@ -395,14 +404,18 @@ def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
         "",
         "| | Actual | Budget | Variance |",
         "|---|---|---|---|",
-        f"| Revenue | {fmt_money(card['revenue_actual'])} | {fmt_money(card['revenue_budget'])} "
+        f"| Net billings | {fmt_money(card['revenue_actual'])} | {fmt_money(card['revenue_budget'])} "
         f"| {fmt_signed_k(card['revenue_actual'] - card['revenue_budget'])} |",
-        f"| Total costs | {fmt_money(card['costs_actual'])} | {fmt_money(card['costs_budget'])} "
-        f"| {fmt_signed_k(card['costs_actual'] - card['costs_budget'])} |",
+        f"| Gross margin | {fmt_money(card['gm_actual'])} | {fmt_money(card['gm_budget'])} "
+        f"| {fmt_signed_k(card['gm_actual'] - card['gm_budget'])} |",
+        f"| Staff costs and overheads | {fmt_money(card['gm_actual'] - card['net_actual'])} "
+        f"| {fmt_money(card['gm_budget'] - card['net_budget'])} "
+        f"| {fmt_signed_k((card['gm_actual'] - card['net_actual']) - (card['gm_budget'] - card['net_budget']))} |",
         f"| Operating result | {fmt_money(card['net_actual'])} | {fmt_money(card['net_budget'])} "
         f"| {fmt_signed_k(card['net_variance'])} |",
         "",
-        f"Operating margin {card['margin_actual']:.1%}."
+        f"Operating margin {card['margin_actual']:.1%} of gross margin, "
+        f"{card['margin_billings']:.1%} of net billings."
         + (" Nov-2025 revenue held at budget pending correction of a suspected data entry error."
            if card["held_rows"] else ""),
         "",
@@ -415,11 +428,11 @@ def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
         f"{pay['fte_budget_avg']:.1f} planned), rate effect {fmt_signed_k(pay['rate'])} "
         "(salary mix, overtime and timing). The two effects reconcile exactly to the "
         "payroll variance.",
-        f"- **Revenue ran {fmt_signed_k(rev['variance'])} vs budget"
+        f"- **Net billings ran {fmt_signed_k(rev['variance'])} vs budget"
         + (" (excluding the month pending data correction)" if rev["excluded_months"] else "")
         + f".** Volume effect {fmt_signed_k(rev['volume'])} ({rev['projects_actual']} projects "
         f"delivered vs {rev['projects_budget']} planned), price/mix effect "
-        f"{fmt_signed_k(rev['price'])}. The two effects reconcile exactly to the revenue "
+        f"{fmt_signed_k(rev['price'])}. The two effects reconcile exactly to the net billings "
         "variance.",
     ]
     for ex in rev["excluded_months"]:
@@ -448,10 +461,10 @@ def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
         "",
         f"## Q3 2026 outlook ({q_label})",
         "",
-        f"Revenue {fmt_money(out['revenue'])} ({out['revenue_vs_py']:+.1%} vs the same "
-        f"quarter last year), total costs {fmt_money(out['costs'])} "
-        f"({out['costs_vs_py']:+.1%}), operating result {fmt_money(out['net'])} at a "
-        f"{out['margin']:.1%} margin. One-off events and concluded programmes are "
+        f"Net billings {fmt_money(out['revenue'])} ({out['revenue_vs_py']:+.1%} vs the same "
+        f"quarter last year), gross margin {fmt_money(out['gm'])} "
+        f"({out['gm_vs_py']:+.1%}), operating result {fmt_money(out['net'])}, "
+        f"{out['margin']:.1%} of gross margin. One-off events and concluded programmes are "
         "excluded from the forecast base; see the forecast report's audit trail.",
         "",
         "---",
@@ -507,15 +520,14 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
 
     # Scorecard strip
     pdf.ln(2)
-    # (label, value, delta, favorable): revenue and operating result are favorable
-    # when above budget, costs when below.
+    # (label, value, delta, favorable): all three are favorable when above budget.
     cols = [
-        ("Revenue", card["revenue_actual"],
+        ("Net billings", card["revenue_actual"],
          card["revenue_actual"] - card["revenue_budget"],
          card["revenue_actual"] >= card["revenue_budget"]),
-        ("Total costs", card["costs_actual"],
-         card["costs_actual"] - card["costs_budget"],
-         card["costs_actual"] <= card["costs_budget"]),
+        ("Gross margin", card["gm_actual"],
+         card["gm_actual"] - card["gm_budget"],
+         card["gm_actual"] >= card["gm_budget"]),
         ("Operating result", card["net_actual"], card["net_variance"],
          card["net_variance"] >= 0),
     ]
@@ -548,7 +560,7 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
         f"{fmt_signed_k(pay['volume'])} (average {pay['fte_actual_avg']:.1f} FTE vs "
         f"{pay['fte_budget_avg']:.1f} planned) and rate effect {fmt_signed_k(pay['rate'])} "
         "(salary mix, overtime, timing). "
-        f"Revenue ran {fmt_signed_k(rev['variance'])} vs budget"
+        f"Net billings ran {fmt_signed_k(rev['variance'])} vs budget"
         + (" (excluding the month pending data correction)" if rev["excluded_months"] else "")
         + f": volume {fmt_signed_k(rev['volume'])} ({rev['projects_actual']} projects vs "
         f"{rev['projects_budget']} planned) and price/mix {fmt_signed_k(rev['price'])}. "
@@ -595,10 +607,10 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
     q_label = " / ".join(pd.Period(m).strftime("%b %Y") for m in out["months"])
     pdf.h2(f"Q3 2026 outlook ({q_label})")
     pdf.body(
-        f"Revenue {fmt_money(out['revenue'])} ({out['revenue_vs_py']:+.1%} vs the same "
-        f"quarter last year), total costs {fmt_money(out['costs'])} "
-        f"({out['costs_vs_py']:+.1%}), operating result {fmt_money(out['net'])} at a "
-        f"{out['margin']:.1%} margin. One-offs and concluded programmes are excluded "
+        f"Net billings {fmt_money(out['revenue'])} ({out['revenue_vs_py']:+.1%} vs the same "
+        f"quarter last year), gross margin {fmt_money(out['gm'])} "
+        f"({out['gm_vs_py']:+.1%}), operating result {fmt_money(out['net'])}, "
+        f"{out['margin']:.1%} of gross margin. One-offs and concluded programmes are excluded "
         "from the forecast base (full audit trail in the forecast report).")
 
     pdf.ln(1)

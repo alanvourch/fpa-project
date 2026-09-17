@@ -86,7 +86,7 @@ REPORT_CHARTS = {
     ),
     "forecast_report.md": (
         "forecast_outlook.png",
-        "Q3 2026 forecast: revenue and total costs by month, with prior-year reference",
+        "Q3 2026 forecast: gross margin against staff costs and overheads by month, with prior-year reference",
         "Forecast by BU and line item",
     ),
 }

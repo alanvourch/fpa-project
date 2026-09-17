@@ -79,8 +79,12 @@ def main():
     m = true_df.merge(cleaned, on=["month", "business_unit"], suffixes=("_true", "_clean"))
     check(len(m) == 120, f"true world joins cleaned CSV on all 120 rows (found {len(m)})")
     pay_match = (m["payroll_actual_true"] - m["payroll_actual_clean"]).abs().max()
-    check(pay_match < 0.01,
-          f"replayed true payroll matches cleaned payroll on every row (max diff EUR{pay_match:.4f})")
+    # A payroll cell stored as currency-formatted text in the raw export holds
+    # whole euros only, so the cleaned value can sit up to EUR0.50 from the
+    # replayed figure.
+    check(pay_match <= 0.5,
+          f"replayed true payroll matches cleaned payroll on every row, to the whole euro "
+          f"(max diff EUR{pay_match:.4f})")
     trap_mask = (m["business_unit"] == TRAP_BU) & (m["month"] == TRAP_MONTH)
     rev_diff = (m.loc[~trap_mask, "revenue_actual_true"]
                 - m.loc[~trap_mask, "revenue_actual_clean"]).abs().max()
