@@ -489,7 +489,7 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
     pdf = OnePagerPDF()
     pdf.add_page()
     pdf.h1(f"{bu}: FY{YEAR} budget vs actual")
-    pdf.sub("Business unit one-pager, EventCo monthly close. Figures trace to the "
+    pdf.sub("Business unit one-pager, EventCo monthly budget vs actual pack. Figures trace to the "
             "variance and forecast reports; driver splits reconcile exactly. "
             "DRAFT, pending human sign-off.")
 

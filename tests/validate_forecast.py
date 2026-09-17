@@ -5,10 +5,10 @@ data/ground_truth.md; this script reads it after the fact and checks the
 agent's outputs (output/forecast.csv, output/forecast_report.md) against it:
 
   1. The fat-finger trap is normalized in the history audit trail (data-error
-     reason) and its value actually replaced — it must never touch a trend.
+     reason) and its value actually replaced; it must never touch a trend.
   2. Every ground-truth ONE-OFF anomaly month (isolated month) is normalized
      out of the history.
-  3. Every ground-truth EPISODE month is handled with an explicit decision —
+  3. Every ground-truth EPISODE month is handled with an explicit decision;
      here both episodes ended before the cutoff, so they must be normalized,
      with their evidence notes cited in the audit trail.
   4. No forecast is based on a raw anomaly month (base_was_normalized must be
@@ -55,7 +55,7 @@ def parse_ground_truth(path):
 
     anomalies = []
     for line in business_section.splitlines():
-        m = re.match(r"- \*\*([\w\-&/ ]+) / (\d{4}-\d{2})\*\* — (.+)", line)
+        m = re.match(r"- \*\*([\w\-&/ ]+) / (\d{4}-\d{2})\*\*: (.+)", line)
         if not m:
             continue
         bu, month, rest = m.groups()

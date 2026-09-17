@@ -4,7 +4,7 @@ Chains the pipeline end to end: Ingestion -> Variance & Root-Cause ->
 Forecast -> Narrative -> QA/Reviewer -> assembled pack. Each step is a
 separate script, run as its own process (the same way a finance ops team
 would run a sequence of jobs) so every step's own console output, and every
-intermediate file it writes, stays independently inspectable — nothing is
+intermediate file it writes, stays independently inspectable; nothing is
 hidden inside one big in-memory pipeline.
 
 This is deliberately NOT a fully autonomous, fire-and-forget pipeline.
@@ -19,11 +19,11 @@ stay in the loop:
 - The Narrative Agent is the only step that calls an external AI provider,
   and only ever receives the two already-aggregated summary reports (see
   agents/qa_agent.py's data-governance checks, which verify this
-  structurally on every run) — never the raw dataset, never anything
+  structurally on every run), never the raw dataset, never anything
   client-identifying beyond what the Variance Agent already aggregated to
   BU/month level.
 - If the Narrative Agent can't run (no API credentials configured), the
-  orchestrator does not stop the rest of the pipeline or fail silently — it
+  orchestrator does not stop the rest of the pipeline or fail silently; it
   logs the gap plainly and the assembled pack says so explicitly, rather
   than pretending a narrative exists when it doesn't.
 
@@ -48,7 +48,7 @@ QA_REPORT_PATH = "output/qa_report.md"
 
 # (script, description, halt_pipeline_on_failure). The narrative step is the
 # one expected point of failure in an environment with no LLM credentials
-# configured — it must not take the rest of the pipeline down with it.
+# configured; it must not take the rest of the pipeline down with it.
 STEPS = [
     ("agents/ingestion_agent.py", "Data Ingestion", True),
     ("agents/variance_agent.py", "Variance & Root-Cause", True),

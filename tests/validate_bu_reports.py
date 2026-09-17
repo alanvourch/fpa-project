@@ -100,7 +100,7 @@ def main():
                   f"{n_open} still-open item(s)")
 
         # 6. Style rules
-        check("—" not in md, f"{bu}: no em dashes on the page")
+        check(chr(0x2014) not in md, f"{bu}: no em dashes on the page")
         hits = [w for w in BUZZWORDS if w in md.lower()]
         check(not hits, f"{bu}: no buzzwords on the page"
               if not hits else f"{bu}: buzzword(s) found: {hits}")

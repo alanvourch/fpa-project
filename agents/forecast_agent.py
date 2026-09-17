@@ -2,7 +2,7 @@
 
 Produces the rolling forecast for the next three months (N+1 to N+3 after the
 last closed month) for every BU and line item, using the Variance Agent's
-output table (output/variance_table.csv — cleaned actuals/budgets plus each
+output table (output/variance_table.csv: cleaned actuals/budgets plus each
 month's materiality classification and evidence). It never reads
 data/ground_truth.md.
 
@@ -14,14 +14,14 @@ Method: seasonal base x robust growth.
     earlier) across the last 12 closed months. The median keeps any single
     distorted pair from steering the factor.
 
-Normalization is where forecasting judgment lives — a forecast is only as
+Normalization is where forecasting judgment lives: a forecast is only as
 good as the history it extrapolates:
   - Suspected data errors (the ingestion agent's >4x/<0.25x rule; still
     uncorrected in the cleaned file) are replaced with budget x the line's
     typical achievement ratio. A fat-finger digit must never touch a trend.
   - One-off material months (single-month variances in the variance table:
     the FX hit, the IT incident, and unexplained outliers alike) are
-    replaced the same way. One-offs, by definition, don't recur — carrying
+    replaced the same way. One-offs, by definition, don't recur; carrying
     them into a seasonal base would re-forecast last year's accident.
   - Sustained episodes are the judgment call: a programme still running at
     the forecast cutoff SHOULD be carried into the forecast, so episode
@@ -51,7 +51,7 @@ REPORT_PATH = "output/forecast_report.md"
 HORIZON_MONTHS = 3
 GROWTH_WINDOW_MONTHS = 12
 # An episode counts as still active if its last month is within this many
-# months of the last closed month — one or two quiet months at the end of a
+# months of the last closed month: one or two quiet months at the end of a
 # still-running programme shouldn't flip it to "concluded".
 EPISODE_ACTIVE_GRACE_MONTHS = 2
 
@@ -72,7 +72,7 @@ def normalize_history(g, cutoff):
     """Return (normalized series indexed like g, adjustment records).
 
     Flagged months are replaced with budget x the line's typical achievement
-    ratio (median actual/budget over unflagged months) — except months of an
+    ratio (median actual/budget over unflagged months), except months of an
     episode still active at cutoff, which are deliberately kept.
     """
     unflagged = g[(g["materiality"] == "") & (~g["suspected_data_error"])]

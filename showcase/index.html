@@ -3,8 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alan Vourc'h &middot; AI for the FP&A close</title>
-<meta name="description" content="A portfolio project by Alan Vourc'h, FP&A: how data analysis, automation and AI agents speed up the monthly close and reporting, so the finance team spends more time partnering with the business.">
+<title>Monthly budget vs actual pack | Alan Vourc'h</title>
+<meta name="description" content="FY2025 came in EUR3.1M under budget. A monthly budget-versus-actual pack for a fictional EUR100M events agency: variances with their provenance, a rolling forecast, one-pagers per business line and a draft board pack held for sign-off. By Alan Vourc'h, FP&A.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://alanvourch.com/fpa-project/">
+<meta property="og:title" content="Monthly budget vs actual pack | Alan Vourc'h">
+<meta property="og:description" content="FY2025 came in EUR3.1M under budget. A EUR2.08M project overrun explains most of it; a 10x revenue typo was caught before the board pack.">
+<meta property="og:image" content="https://alanvourch.com/fpa-project/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Monthly budget vs actual pack | Alan Vourc'h">
+<meta name="twitter:description" content="FY2025 came in EUR3.1M under budget. A EUR2.08M project overrun explains most of it; a 10x revenue typo was caught before the board pack.">
+<meta name="twitter:image" content="https://alanvourch.com/fpa-project/assets/og.png">
 <style>
   :root {
     --bg: #fcfcfb;
@@ -52,7 +63,7 @@
     display: inline-block; font-size: 13px; color: var(--accent-ink); font-weight: 600;
     background: var(--accent-soft); border-radius: 99px; padding: 5px 14px; margin-bottom: 22px;
   }
-  .hero h1 { max-width: 15em; }
+  .hero h1 { max-width: 16em; }
   .hero p { margin-top: 18px; font-size: 18px; max-width: 40em; }
   .cta-row { margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
   .btn {
@@ -170,27 +181,66 @@
 
 <header class="hero">
   <div class="wrap">
-    <span class="eyebrow">Alan Vourc'h &middot; FP&amp;A, finance and data together</span>
-    <h1>I automate the monthly close so finance can spend the month with the business.</h1>
-    <p>After ten years in FP&amp;A, I've learned the value isn't in producing the reports, it's in the
-    time they free up to partner with the CFO and the business managers. This project shows how I use
-    data analysis, automation and AI agents to run a monthly close cleanly and safely, so an analyst
-    spends less time assembling numbers and more time acting on them.</p>
+    <span class="eyebrow">Alan Vourc'h &middot; FP&amp;A &middot; case study</span>
+    <h1>FY2025 came in EUR3.1M under budget. This pack explains why, and says plainly what it can't.</h1>
+    <p>A monthly budget-versus-actual pack for a fictional EUR100M events agency, modelled on the
+    monthly cycle I ran as Head of FP&amp;A at a EUR100M events agency. It cleans the reporting
+    export, keeps a revenue entry ten times too large out of the numbers, sorts 20 material
+    variances into documented, analyst-explained and still open, refreshes next quarter's
+    forecast, and stops at a draft board pack held for sign-off.</p>
     <div class="cta-row">
-      <a class="btn primary" href="#how">See how it works</a>
-      <a class="btn" href="#results">Read the reports</a>
+      <a class="btn primary" href="#results">See the results</a>
+      <a class="btn" href="#how">How it works</a>
     </div>
   </div>
 </header>
 
+<section id="results">
+  <div class="wrap">
+    <span class="kicker">1 &middot; The results</span>
+    <h2>The full-year walk from budget to actual, reconciled to the euro</h2>
+    <div class="result-hero">
+      <img src="assets/variance_bridge_2025.png" alt="FY2025 waterfall from EUR52.0M budgeted net result to EUR48.9M actual, named drivers solid and a hatched block for items sent to the analyst.">
+      <div>
+        <blockquote>"Three stories dominate the variances: a EUR2.08 million cost overrun on a client
+        project, a currency swing on an international contract, and a cost-savings programme that ran
+        ahead of plan."</blockquote>
+        <p class="muted">The opening of the executive summary. The three named drivers are the only
+        ones backed by a dated business note. The hatched block groups the items sent to the analyst,
+        and the last block is everything below materiality, which nets to EUR1.03M unfavorable across
+        the remaining line-months with no single item large enough to comment on.</p>
+      </div>
+    </div>
+    <div class="reports">
+      <a class="rcard" href="reports/executive_summary.html" target="_blank" rel="noopener"><h3>Executive summary</h3><p>The month in prose, for the CFO.</p><span class="go">Read it &rarr;</span></a>
+      <a class="rcard" href="reports/variance_report.html" target="_blank" rel="noopener"><h3>Variance analysis</h3><p>All 20 material variances, each with its source.</p><span class="go">Read it &rarr;</span></a>
+      <a class="rcard" href="reports/forecast_report.html" target="_blank" rel="noopener"><h3>Rolling forecast</h3><p>Next quarter by business line.</p><span class="go">Read it &rarr;</span></a>
+      <a class="rcard" href="reports/board_pack.html" target="_blank" rel="noopener"><h3>Board pack</h3><p>Everything assembled, ending on sign-off.</p><span class="go">Read it &rarr;</span></a>
+      <a class="rcard" href="reports/data_quality_report.html" target="_blank" rel="noopener"><h3>Data quality report</h3><p>Every fix applied to the raw file.</p><span class="go">Read it &rarr;</span></a>
+      <a class="rcard" href="reports/qa_report.html" target="_blank" rel="noopener"><h3>QA review</h3><p>The checks that run before sign-off.</p><span class="go">Read it &rarr;</span></a>
+    </div>
+    <p style="margin-top:26px;"><b>One page per business line</b>, generated automatically, ready to hand
+    to each manager: budget-to-actual bridge, what drove payroll and revenue, and the open follow-ups.</p>
+    <div class="pagers">
+      <a class="pager" href="assets/brand_events.pdf" target="_blank" rel="noopener">Brand Events <span>PDF</span></a>
+      <a class="pager" href="assets/corporate_events.pdf" target="_blank" rel="noopener">Corporate Events <span>PDF</span></a>
+      <a class="pager" href="assets/digital_influence.pdf" target="_blank" rel="noopener">Digital/Influence <span>PDF</span></a>
+      <a class="pager" href="assets/government_institutions.pdf" target="_blank" rel="noopener">Government &amp; Institutions <span>PDF</span></a>
+    </div>
+    <p class="muted" style="margin-top:22px;">These are the files the pipeline writes, shown as produced,
+    draft status included.</p>
+  </div>
+</section>
+
 <section id="data">
   <div class="wrap">
-    <span class="kicker">1 &middot; The data</span>
-    <h2>A realistic company, built from scratch</h2>
-    <p class="lead" style="margin-top:10px;">EventCo is a fictional events agency I created a full
-    dataset for. It mirrors the numbers a real finance team works with every month: the full P&amp;L
-    plus the operational drivers behind it, headcount and projects delivered, for four business lines
-    over thirty months.</p>
+    <span class="kicker">2 &middot; The data</span>
+    <h2>A fictional company with a monthly reporting export</h2>
+    <p class="lead" style="margin-top:10px;">EventCo is a fictional events agency with a dataset I
+    generated: revenue, direct costs, payroll and four overhead lines for four business lines over
+    thirty months, plus headcount and projects delivered. One row per business line per month, the
+    shape of a management reporting export, with 840 budget-versus-actual tests (120 rows across 7
+    lines).</p>
     <div class="stats">
       <div class="stat"><b>EUR100M</b><span>annual revenue</span></div>
       <div class="stat"><b>4</b><span>business lines</span></div>
@@ -198,10 +248,10 @@
       <div class="stat"><b>P&amp;L + FTE</b><span>revenue, costs, headcount, volumes</span></div>
     </div>
     <details class="raw">
-      <summary>It arrives messy, on purpose. See the raw export &rarr;</summary>
-      <p class="muted" style="margin-top:12px;">Every problem below is one I have met in a real close:
+      <summary>The export arrives with problems, on purpose. See the raw rows &rarr;</summary>
+      <p class="muted" style="margin-top:12px;">Every problem below is one I have met in a real month:
       mixed date formats, typos in names, amounts typed as text, a duplicate row, and one revenue
-      figure with an extra digit (EUR52m in a EUR5m month).</p>
+      figure with an extra digit (EUR52M in a EUR5M month).</p>
       <div class="rawtable">
         <table>
           <tr><th>month</th><th>business_line</th><th>revenue_budget</th><th>revenue_actual</th></tr>
@@ -221,28 +271,28 @@
 
 <section id="how">
   <div class="wrap">
-    <span class="kicker">2 &middot; How it works</span>
-    <h2>The machine does the legwork. I keep the judgment.</h2>
+    <span class="kicker">3 &middot; How it works</span>
+    <h2>Four things the pipeline does, then a person signs</h2>
     <div class="flow">
       <div class="node io">
         <span class="role">Data in</span>
         <h3>Raw sources</h3>
-        <p>Accounting export, business notes, HR and operations. Unclean, from several systems.</p>
+        <p>Monthly reporting export, business notes, HR and operations. Unclean, from several systems.</p>
       </div>
       <div class="node sys">
-        <span class="role">Agent &middot; 1</span>
+        <span class="role">Step &middot; 1</span>
         <h3>Clean &amp; structure</h3>
         <p>Fixes dates, names, duplicates and text amounts. Flags anything that looks like an entry error.</p>
       </div>
       <div class="node sys">
-        <span class="role">Agents &middot; 3</span>
+        <span class="role">Steps &middot; 2 to 4</span>
         <h3>Analyse</h3>
-        <p>Variance vs budget, rolling forecast, and a check that no raw data leaves the company.</p>
+        <p>Variance vs budget with materiality tests, rolling forecast, one-pagers, and a check that no raw data leaves the company.</p>
       </div>
       <div class="node you">
-        <span class="role">Me</span>
+        <span class="role">Analyst</span>
         <h3>FP&amp;A analyst</h3>
-        <p>Explains the gaps the data can't, runs manual controls, edits the commentary and signs off.</p>
+        <p>Explains the gaps the data can't, reviews the draft commentary and signs off.</p>
       </div>
       <div class="node io">
         <span class="role">Results</span>
@@ -251,66 +301,35 @@
       </div>
     </div>
     <div class="flow-legend">
-      <span><span class="swatch" style="background:var(--sys-bg);"></span>Automated agent, same result every run</span>
-      <span><span class="swatch" style="background:var(--accent);"></span>My input, where finance judgment is needed</span>
+      <span><span class="swatch" style="background:var(--sys-bg);"></span>Automated step, same result every run</span>
+      <span><span class="swatch" style="background:var(--accent);"></span>Human input, where finance judgment is needed</span>
     </div>
-    <p class="flow-caption">The system flags 20 material variances. It explains only the 4 backed by a
-    documented note. The other 16 come to me: I explain 14 after following up with the business, and
-    2 stay openly unexplained. Every line in the pack shows which of the three it is.</p>
-  </div>
-</section>
-
-<section id="results">
-  <div class="wrap">
-    <span class="kicker">3 &middot; The results</span>
-    <h2>Real reports, not mockups</h2>
-    <div class="result-hero">
-      <img src="assets/variance_bridge_2025.png" alt="FY2025 waterfall from EUR52.0M budgeted net result to EUR48.9M actual, named drivers solid and a hatched block for items sent to the analyst.">
-      <div>
-        <blockquote>"Three stories dominate the variances: a EUR2.08 million cost overrun on a client
-        project, a currency swing on an international contract, and a cost-savings programme that ran
-        ahead of plan."</blockquote>
-        <p class="muted">The opening of the executive summary, and the full-year walk from budget to
-        actual behind it, reconciled to the euro.</p>
-      </div>
-    </div>
-    <div class="reports">
-      <a class="rcard" href="reports/executive_summary.html" target="_blank" rel="noopener"><h3>Executive summary</h3><p>The story of the close, for the CFO.</p><span class="go">Read it &rarr;</span></a>
-      <a class="rcard" href="reports/variance_report.html" target="_blank" rel="noopener"><h3>Variance analysis</h3><p>All 20 variances, each with its source.</p><span class="go">Read it &rarr;</span></a>
-      <a class="rcard" href="reports/forecast_report.html" target="_blank" rel="noopener"><h3>Rolling forecast</h3><p>Next quarter by business line.</p><span class="go">Read it &rarr;</span></a>
-      <a class="rcard" href="reports/board_pack.html" target="_blank" rel="noopener"><h3>Board pack</h3><p>Everything assembled, ending on sign-off.</p><span class="go">Read it &rarr;</span></a>
-      <a class="rcard" href="reports/data_quality_report.html" target="_blank" rel="noopener"><h3>Data quality report</h3><p>Every fix applied to the raw file.</p><span class="go">Read it &rarr;</span></a>
-      <a class="rcard" href="reports/qa_report.html" target="_blank" rel="noopener"><h3>QA review</h3><p>The checks that run before I sign.</p><span class="go">Read it &rarr;</span></a>
-    </div>
-    <p style="margin-top:26px;"><b>One page per business line</b>, generated automatically, ready to hand
-    to each manager: budget-to-actual bridge, what drove payroll and revenue, and the open follow-ups.</p>
-    <div class="pagers">
-      <a class="pager" href="assets/brand_events.pdf" target="_blank" rel="noopener">Brand Events <span>PDF</span></a>
-      <a class="pager" href="assets/corporate_events.pdf" target="_blank" rel="noopener">Corporate Events <span>PDF</span></a>
-      <a class="pager" href="assets/digital_influence.pdf" target="_blank" rel="noopener">Digital/Influence <span>PDF</span></a>
-      <a class="pager" href="assets/government_institutions.pdf" target="_blank" rel="noopener">Government &amp; Institutions <span>PDF</span></a>
-    </div>
+    <p class="flow-caption">The system flags 20 material variances and explains only the 4 backed by a
+    dated business note. The other 16 go to the analyst: 14 now carry a written explanation, labelled as
+    analyst input, and 2 stay open. In this demo those 14 explanations are written for illustration,
+    since the variances behind them are generated noise. What the pack guarantees is that it never mixes
+    the three kinds: documented evidence, analyst input and open items are labelled on every line.</p>
   </div>
 </section>
 
 <section id="why">
   <div class="wrap">
-    <span class="kicker">4 &middot; Why this matters</span>
-    <h2>Better reports, because it isn't fully automated</h2>
-    <p class="lead" style="margin-top:10px;">The point isn't to replace the analyst. It's to hand the
-    analyst back their time, with the data cleaner and the controls already run.</p>
+    <span class="kicker">4 &middot; What stays with the analyst</span>
+    <h2>The pipeline does the repeatable work. The analyst explains and signs.</h2>
+    <p class="lead" style="margin-top:10px;">The cleaning, the materiality tests and the first draft run
+    the same way every month. The analyst explains what the data can't and signs off.</p>
     <div class="tiles">
-      <div class="tile"><h3>The close stops eating the calendar</h3><p>The mechanical work runs in minutes, identically every month. The time goes into the two open questions, not into reformatting dates.</p></div>
-      <div class="tile"><h3>Commentary you can defend</h3><p>Every cause in the pack is either documented, signed by the analyst, or marked openly unexplained. In a board meeting, that difference matters.</p></div>
-      <div class="tile"><h3>No invented numbers</h3><p>The AI only rewords analysis that is already computed and checked. Every figure is traced back to a source, and an untraceable one fails the run.</p></div>
-      <div class="tile"><h3>The data stays in-house</h3><p>Only one step talks to an AI service, and only with aggregated summaries. The raw ledger never leaves the machine, and a check confirms it every run.</p></div>
+      <div class="tile"><h3>The mechanical work takes minutes</h3><p>Cleaning, variance tests, forecast refresh and one-pagers run identically every month. The analyst's time goes to the open questions.</p></div>
+      <div class="tile"><h3>Commentary you can defend</h3><p>Every cause in the pack is either documented, labelled as analyst input, or marked openly unexplained. In a board meeting, that difference matters.</p></div>
+      <div class="tile"><h3>No invented numbers</h3><p>The language model only rewords analysis that is already computed and checked. Every figure in its text is traced back to a source, and an untraceable one fails the run.</p></div>
+      <div class="tile"><h3>The data stays in-house</h3><p>Only one step talks to an AI service, and only with aggregated summaries. The monthly export never leaves the machine, and a check confirms it every run.</p></div>
     </div>
     <div class="proof">
       <p><b>A concrete example:</b> one line in the export read <span class="num">52,243,584</span> in a
-      business line whose normal month is EUR5 million, with costs and payroll unchanged. A rushed close
+      business line whose normal month is EUR5 million, with costs and payroll unchanged. A rushed month
       turns that into a growth story. Here it was flagged as a probable typo, kept out of every number
-      and every sentence, and sent to me for correction. The operations data agreed: a normal month, 17
-      projects delivered against 17 planned.</p>
+      and every sentence, and sent to the analyst for correction. The operations data agreed: a normal
+      month, 17 projects delivered against 17 planned.</p>
     </div>
   </div>
 </section>
@@ -318,7 +337,7 @@
 <section id="demo">
   <div class="wrap">
     <span class="kicker">5 &middot; See it run</span>
-    <h2>One command, the whole close</h2>
+    <h2>One command, the whole pack</h2>
     <div class="demo-grid">
       <div class="term"><pre><span class="m">$</span> <span class="c">python orchestrator.py</span>
 
@@ -346,8 +365,8 @@ QA checks: <span class="g">8 passed, 0 failed</span>
 <span class="m">Nothing sent anywhere. Awaiting sign-off.</span></pre></div>
       <div class="demo-side">
         <img src="assets/brand_events_onepager.png" alt="The Brand Events business line one-pager: scorecard, budget-to-actual bridge, driver commentary, variances and outlook on one page.">
-        <p>Every run is identical and reproducible. The output above is real, and every report it
-        names is one click up the page.</p>
+        <p>Every run is identical and reproducible. The output above is the real console output, and every
+        report it names is one click up the page.</p>
       </div>
     </div>
   </div>
@@ -358,16 +377,16 @@ QA checks: <span class="g">8 passed, 0 failed</span>
     <span class="kicker">6 &middot; About</span>
     <div class="about">
       <b>Alan Vourc'h</b>
-      <span class="title">FP&amp;A &middot; finance and data, together</span>
-      <p>EventCo is fictional, but its monthly close is not. I ran this cycle for real at a EUR100M
-      events agency, including stepping in to close the books when the finance director was out. The
-      overruns, the currency hits and the fat-fingered digits in this dataset are the ones that actually
-      happen. I built this to show what the close looks like when software does the repetitive part and
-      a human keeps the final word.</p>
-      <p>If you'd like to see what this could look like on your numbers, or your clients', I'm happy to
-      walk you through it.</p>
+      <span class="title">FP&amp;A &middot; finance and data together</span>
+      <p>EventCo is fictional. The monthly cycle is the one I ran as Head of FP&amp;A for a EUR100M
+      events agency, including closing the books when the finance director was out. The overruns, the
+      currency hits and the fat-fingered digits in this dataset are the ones that happen in that job.</p>
+      <p>I am looking for Senior FP&amp;A, FP&amp;A Manager and Finance &amp; Strategy roles in
+      Montr&eacute;al and Paris.</p>
       <div class="contact">
-        <a class="btn primary" href="https://www.linkedin.com/in/alan-vourch/">LinkedIn</a>
+        <a class="btn primary" href="https://alanvourch.com/">Portfolio</a>
+        <a class="btn" href="https://alanvourch.com/Alan-Vourch-Resume-EN.pdf">Resume</a>
+        <a class="btn" href="https://www.linkedin.com/in/alan-vourch/">LinkedIn</a>
         <a class="btn" href="mailto:alan.vourch@gmail.com">alan.vourch@gmail.com</a>
       </div>
     </div>
@@ -376,8 +395,8 @@ QA checks: <span class="g">8 passed, 0 failed</span>
 
 <footer>
   <div class="wrap">
-    <p>All data on this page is synthetic and generated from a fixed seed. Nothing real except the method.
-    The full code and an honest list of limitations are in the
+    <p>All data on this page is synthetic and generated from a fixed seed. The method is real; the numbers
+    are not. The full code and the list of known limitations are in the
     <a href="https://github.com/alanvourch/fpa-project">GitHub repository</a>.</p>
   </div>
 </footer>

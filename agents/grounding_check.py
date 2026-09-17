@@ -1,13 +1,13 @@
-"""Narrative grounding checks — shared logic.
+"""Narrative grounding checks: shared logic.
 
 Extracted so both agents/qa_agent.py (the production QA/Reviewer Agent) and
 tests/validate_narrative.py (the standalone dev-time re-validation script)
 run the exact same check, rather than maintaining two copies. Unlike the
 ingestion/variance/forecast validators, none of this logic needs
-data/ground_truth.md — it only cross-references the narrative against the
+data/ground_truth.md; it only cross-references the narrative against the
 two upstream reports it was actually given, which is exactly what a real
 QA/Reviewer step could do in production (there is no hidden answer key on
-a live monthly close).
+a live monthly reporting cycle).
 
 See tests/validate_narrative.py for the CLI entry point and full rationale
 for the tolerance choices.
@@ -137,7 +137,7 @@ def check_trap_not_narrated(narrative_text):
     """The excluded data-entry-error row must not be framed as a business event.
 
     Scoped to the paragraph(s) that actually mention the trap, not the whole
-    document — the narrative legitimately discusses unrelated business events
+    document: the narrative legitimately discusses unrelated business events
     (e.g. a real client project overrun) elsewhere, and a document-wide keyword
     scan would misfire on that unrelated mention.
     """

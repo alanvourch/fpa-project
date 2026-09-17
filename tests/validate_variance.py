@@ -14,7 +14,7 @@ after the fact. It verifies that:
   5. Material rows not matching any real anomaly say "no clear driver
      identified" instead of inventing an explanation.
   6. The favorable anomaly is reported and marked F.
-  7. The fat-finger trap does not resurface as a business variance story —
+  7. The fat-finger trap does not resurface as a business variance story;
      it must sit in the excluded-data-errors section, not the material table.
 
 Run: .venv/Scripts/python.exe tests/validate_variance.py
@@ -62,7 +62,7 @@ def parse_ground_truth(path):
 
     anomaly_months = []
     for line in business_section.splitlines():
-        m = re.match(r"- \*\*([\w\-&/ ]+) / (\d{4}-\d{2})\*\* — (.+)", line)
+        m = re.match(r"- \*\*([\w\-&/ ]+) / (\d{4}-\d{2})\*\*: (.+)", line)
         if not m:
             continue
         bu, month, rest = m.groups()
@@ -151,11 +151,11 @@ def main():
         if not (cited & signal_notes.get(a["business_unit"], set())):
             unexplained.append((a["business_unit"], a["month"], a["column"]))
     if missed:
-        failures.append(f"MISSED ANOMALY MONTH(S) — not flagged material: {missed}")
+        failures.append(f"MISSED ANOMALY MONTH(S): not flagged material: {missed}")
     else:
         passes.append(f"All {len(anomaly_months)} real anomaly months flagged as material on the right line item")
     if unexplained:
-        failures.append(f"UNGROUNDED — anomaly months flagged but not explained via their signal notes: {unexplained}")
+        failures.append(f"UNGROUNDED: anomaly months flagged but not explained via their signal notes: {unexplained}")
     else:
         passes.append("Every real anomaly is explained with a citation of its own signal note(s)")
 
@@ -175,11 +175,11 @@ def main():
                 and "analyst input" not in m["explanation"].lower():
             # A row outside any real anomaly may carry clearly-labeled manual
             # analyst commentary (the human half of the workflow) or the
-            # explicit no-driver statement — anything else is the agent
+            # explicit no-driver statement; anything else is the agent
             # inventing a cause, which is exactly what must never happen.
             invented.append(row_id)
     if false_attributions:
-        failures.append(f"FALSE ATTRIBUTION(S) — rows citing notes that don't belong to their anomaly: {false_attributions}")
+        failures.append(f"FALSE ATTRIBUTION(S): rows citing notes that don't belong to their anomaly: {false_attributions}")
     else:
         passes.append("No false attributions: every citation belongs to the citing row's own real anomaly")
     if noise_cited:
@@ -187,7 +187,7 @@ def main():
     else:
         passes.append(f"None of the {len(noise_notes)} noise notes is cited anywhere")
     if invented:
-        failures.append(f"INVENTED CAUSE(S) — material rows outside any real anomaly lacking a 'no clear driver' statement or a labeled analyst input: {invented}")
+        failures.append(f"INVENTED CAUSE(S): material rows outside any real anomaly lacking a 'no clear driver' statement or a labeled analyst input: {invented}")
     else:
         n_analyst = sum(1 for m in material if not m["cited"]
                         and "analyst input" in m["explanation"].lower())
@@ -205,7 +205,7 @@ def main():
         passes.append("Favorable variance(s) covered and marked F: "
                       + ", ".join(f"{m['business_unit']}/{m['line_item']}" for m in favorable_rows))
     else:
-        failures.append("FAVORABLE MISSING — no explained anomaly row is marked F")
+        failures.append("FAVORABLE MISSING: no explained anomaly row is marked F")
 
     # 7: the fat-finger trap stays a data error, not a variance story
     trap_in_material = [

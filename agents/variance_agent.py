@@ -1,7 +1,7 @@
 """Variance & Root-Cause Agent.
 
 Computes Budget vs Actual variances (EUR and %) for every line item, by BU and
-month, from the ingestion agent's cleaned table — never the raw file. Material
+month, from the ingestion agent's cleaned table, never the raw file. Material
 variances are then explained by searching a log of dated, BU-tagged internal
 business notes (data/business_notes.csv) for corroborating evidence: numbers
 can only say WHERE and HOW MUCH, so the WHY must be grounded in documented
@@ -29,13 +29,13 @@ Materiality:
   - Sustained episodes: >= 2 consecutive months, same direction, each
     |variance| >= 8% of budget, cumulative |variance| >= EUR 40k and >= 10%
     of cumulative budget. A persistent drift can be material in aggregate
-    even when no single month clears the monthly EUR floor — classic
+    even when no single month clears the monthly EUR floor: classic
     "creep" that monthly-only thresholds miss. One below-threshold month is
     bridged if the drift resumes in the same direction right after: a
     sustained programme doesn't switch off because one month's noise masks
     it. A direction flip or two quiet months in a row end the episode.
 
-Rows already implausible as business events (actual >4x or <0.25x budget —
+Rows already implausible as business events (actual >4x or <0.25x budget,
 the same rule the ingestion agent uses) are excluded from the analysis and
 listed separately as pending data corrections, so a fat-finger entry can
 never be dressed up as a business story.
@@ -88,7 +88,7 @@ DATA_ERROR_RATIO_LOW = 0.25
 # Evidence window around a variance period: operational notes usually either
 # announce an event a few days before it hits the P&L (a savings programme, a
 # scope change) or confirm it shortly after month-end close. The window is
-# deliberately tight on both sides — a note written well before or well after
+# deliberately tight on both sides: a note written well before or well after
 # the variance period is stale context for it, and citing stale notes is how
 # an old, unrelated event gets wrongly blamed for a fresh variance.
 EVIDENCE_LOOKBACK_DAYS = 10

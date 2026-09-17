@@ -16,6 +16,8 @@ Charts:
      documented driver exists.
   3. docs/forecast_outlook.png      - Q3 2026 revenue vs total costs by month,
      with the normalized same-month-last-year revenue as a reference marker.
+  4. docs/og.png                    - 1200x630 link-preview card for the case
+     study page: the FY2025 headline result, computed from the same table.
 
 Colors follow a validated palette (CVD-checked): anchors #2a78d6, favorable
 #0ca30c, unfavorable #d03b3b; every block carries a direct value label so color
@@ -23,6 +25,8 @@ is never the only channel.
 
 Run: .venv/Scripts/python.exe make_charts.py
 """
+
+import textwrap
 
 import matplotlib
 matplotlib.use("Agg")
@@ -36,6 +40,7 @@ FORECAST_PATH = "output/forecast.csv"
 BRIDGE_PNG = "docs/variance_bridge_2025.png"
 HIGHLIGHTS_PNG = "docs/variance_highlights.png"
 FORECAST_PNG = "docs/forecast_outlook.png"
+OG_PNG = "docs/og.png"
 
 # Palette (light surface #fcfcfb; validated for CVD separation and contrast)
 SURFACE = "#fcfcfb"
@@ -97,7 +102,10 @@ def fig_titles(fig, title, subtitle, top):
 # ---------------------------------------------------------------- chart 1
 
 
-def bridge_chart(v):
+def bridge_components(v):
+    """FY2025 group walk from budgeted to actual net result, as (label, value,
+    hatched) blocks that reconcile exactly. Shared by the bridge chart and
+    the link-preview card so both quote the same figures."""
     y = v[v["month"].str.startswith("2025")].copy()
     err = y["suspected_data_error"]
     # The suspected data-entry row (Brand Events revenue 2025-11) is held at
@@ -117,18 +125,29 @@ def bridge_chart(v):
     actual_net = budget_net + y["impact"].sum()
 
     deltas = [
-        ("Falcon project\noverrun (COGS)", falcon, False),
-        ("FX on USD\ncontract (revenue)", fx, False),
-        ("Corp. Events savings\nprogramme (opex)", savings, False),
-        (f"Routed to analyst\n(no documented note),\nnet of {unexplained_mask.sum()} items", unexplained, True),
-        ("All other,\nbelow materiality", other, False),
+        ("Falcon project overrun (COGS)", falcon, False),
+        ("FX on USD contract (revenue)", fx, False),
+        ("Corporate Events savings programme (opex)", savings, False),
+        (f"Routed to analyst, no documented note, net of {unexplained_mask.sum()} items", unexplained, True),
+        ("All other, below materiality", other, False),
     ]
     recon = budget_net + sum(d[1] for d in deltas)
     assert abs(recon - actual_net) < 1e-6, "bridge does not reconcile"
+    return budget_net, actual_net, deltas
 
-    fig, ax = plt.subplots(figsize=(10.5, 6.2), dpi=150)
 
-    labels = ["FY2025 budget\nnet result"] + [d[0] for d in deltas] + ["FY2025 actual\nnet result"]
+def bridge_chart(v):
+    budget_net, actual_net, deltas = bridge_components(v)
+
+    fig, ax = plt.subplots(figsize=(11.5, 6.4), dpi=150)
+
+    # Labels are wrapped at a fixed width so none can run into its neighbour:
+    # seven slots across the axis leave about 1.4 inches each at this size.
+    def wrap(text):
+        return "\n".join(textwrap.wrap(text, 16))
+
+    labels = (["FY2025 budget\nnet result"] + [wrap(d[0]) for d in deltas]
+              + ["FY2025 actual\nnet result"])
     n = len(labels)
 
     running = budget_net
@@ -179,7 +198,7 @@ def bridge_chart(v):
 
     ax.set_ylim(y0, y1)
     ax.set_xticks(range(n))
-    ax.set_xticklabels(labels, fontsize=9, color=INK_2)
+    ax.set_xticklabels(labels, fontsize=8.5, color=INK_2)
     ax.set_yticks([])
     style_axes(ax)
     ax.spines["left"].set_visible(False)
@@ -239,7 +258,6 @@ def _episode_item(bu, line, run):
 
 def highlights_chart(v):
     items = material_items(v)
-    assert len(items) == 20, f"expected 20 material items, got {len(items)}"
     items.sort(key=lambda x: abs(x["impact"]))
 
     fig, ax = plt.subplots(figsize=(10.5, 7.5), dpi=150)
@@ -277,7 +295,7 @@ def highlights_chart(v):
     fig_titles(
         fig,
         "Material budget variances, 2024-2026",
-        "All 20 items that met materiality, as P&L impact. Hatched bars have no "
+        f"All {len(items)} items that met materiality, as P&L impact. Hatched bars have no "
         "corroborating business note: they went to the FP&A analyst as follow-ups "
         "instead of being given an invented cause.",
         top=0.90,
@@ -335,11 +353,47 @@ def forecast_chart():
     print(f"Wrote {FORECAST_PNG} (net EUR{net / 1e6:,.1f}M, margin {margin:.1%})")
 
 
+# ---------------------------------------------------------------- chart 4
+
+
+def og_image(v):
+    """Link-preview card (1200x630) for the case study page. The headline is
+    computed from the variance table, never typed in, so it cannot go stale
+    when the dataset regenerates."""
+    budget_net, actual_net, deltas = bridge_components(v)
+    gap = actual_net - budget_net
+    largest = max(deltas[:3], key=lambda d: abs(d[1]))
+    fig = plt.figure(figsize=(12, 6.3), dpi=100)
+    fig.patch.set_facecolor(SURFACE)
+    fig.text(0.06, 0.82, "MONTHLY BUDGET VS ACTUAL PACK", fontsize=14,
+             color=ANCHOR, fontweight="bold", va="top")
+    fig.text(0.06, 0.72,
+             f"FY2025 came in EUR{abs(gap) / 1e6:,.1f}M "
+             f"{'under' if gap < 0 else 'over'} budget.",
+             fontsize=36, fontweight="bold", color=INK, va="top")
+    fig.text(0.06, 0.58,
+             "This pack explains why, and says plainly what it cannot explain.",
+             fontsize=20, color=INK_2, va="top")
+    fig.text(0.06, 0.43,
+             f"Net result EUR{actual_net / 1e6:,.1f}M against a EUR{budget_net / 1e6:,.1f}M budget. "
+             f"Largest named driver: {largest[0]}, "
+             f"EUR{abs(largest[1]) / 1e6:,.2f}M.\n"
+             "A revenue entry ten times too large was caught before it reached the pack.",
+             fontsize=14.5, color=INK_2, va="top", linespacing=1.6)
+    fig.add_artist(plt.Line2D([0.06, 0.94], [0.21, 0.21], color=GRID, linewidth=1.2))
+    fig.text(0.06, 0.15, "Alan Vourc'h   |   alanvourch.com/fpa-project   |   synthetic data, real method",
+             fontsize=12.5, color=MUTED, va="top")
+    fig.savefig(OG_PNG, dpi=100, facecolor=SURFACE)
+    plt.close(fig)
+    print(f"Wrote {OG_PNG} (1200x630, FY2025 gap {gap:+,.0f})")
+
+
 def main():
     v = load_variance_table()
     bridge_chart(v)
     highlights_chart(v)
     forecast_chart()
+    og_image(v)
 
 
 if __name__ == "__main__":

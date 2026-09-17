@@ -6,16 +6,16 @@ check: extract every monetary figure and percentage mentioned in
 output/executive_summary.md, and confirm each one actually derives from a
 figure present in output/variance_report.md or output/forecast_report.md
 (the only two documents the narrative agent was given). A figure that
-doesn't match anything in the source reports — within a tolerance that
+doesn't match anything in the source reports, within a tolerance that
 allows for the light, readability rounding the agent's prompt explicitly
-permits ("EUR2.08 million" for "EUR2,077,456") — is flagged as a probable
+permits ("EUR2.08 million" for "EUR2,077,456"), is flagged as a probable
 hallucination and fails the check loudly.
 
 The actual parsing/matching logic lives in agents/grounding_check.py and is
-shared with agents/qa_agent.py — this script is a thin CLI wrapper for
+shared with agents/qa_agent.py; this script is a thin CLI wrapper for
 standalone dev-time re-validation. See that module's docstring for the full
 tolerance rationale (money: 0.5% relative AND EUR15,000 absolute; percent:
-1.0 percentage point absolute — both deliberately tight given ~280
+1.0 percentage point absolute, both deliberately tight given ~280
 candidate source figures across the two reports).
 
 Also checks the two honesty requirements from the agent's system prompt:
@@ -27,7 +27,7 @@ Also checks the two honesty requirements from the agent's system prompt:
 Known limitation: the trap check is keyword-based (it looks for data-quality
 language, then checks that language isn't paired with business-event
 phrasing). It cannot catch a narrative that fabricates a plausible business
-story around the excluded figure WITHOUT ever using a data-quality word —
+story around the excluded figure WITHOUT ever using a data-quality word;
 that would require semantic understanding this script doesn't have. This
 mirrors the accepted, documented heuristic limitations elsewhere in this
 project (e.g. the ingestion agent's IQR tier in Phase 3); the money/percent

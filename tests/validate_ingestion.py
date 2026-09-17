@@ -41,7 +41,7 @@ def parse_ground_truth(path):
 
     anomalies = []
     for line in business_section.splitlines():
-        m = re.match(r"- \*\*([\w\-&/ ]+) / (\d{4}-\d{2})\*\* — (.+)", line)
+        m = re.match(r"- \*\*([\w\-&/ ]+) / (\d{4}-\d{2})\*\*: (.+)", line)
         if not m:
             continue
         bu, month, rest_of_line = m.groups()
@@ -49,7 +49,7 @@ def parse_ground_truth(path):
         anomalies.append({"business_unit": bu.strip(), "month": month, "column": column})
 
     trap_match = re.search(
-        r"\*\*DATA ENTRY TRAP — ([\w\-&/ ]+) / (\d{4}-\d{2}) / (\w+)\*\*: recorded as EUR([\d,]+).*?"
+        r"\*\*DATA ENTRY TRAP: ([\w\-&/ ]+) / (\d{4}-\d{2}) / (\w+)\*\*: recorded as EUR([\d,]+).*?"
         r"True value is EUR([\d,]+)",
         rest, re.S,
     )

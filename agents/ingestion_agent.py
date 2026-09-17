@@ -1,7 +1,7 @@
 """Data Ingestion Agent.
 
 Cleans the raw EventCo monthly export (data/eventco_monthly.csv) into an
-analysis-ready table, using only generalizable heuristics — fuzzy name
+analysis-ready table, using only generalizable heuristics: fuzzy name
 matching, time-series interpolation, currency-string parsing, and
 budget-relative outlier detection. It never reads data/ground_truth.md: on
 real, unseen data there would be no answer key, so every fix and flag here
