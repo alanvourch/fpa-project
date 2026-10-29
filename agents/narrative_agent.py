@@ -1,194 +1,35 @@
-"""Narrative Agent.
+"""Render constrained commentary locally; optionally ask AI to order bound facts.
 
-Writes the board-level executive commentary for EventCo's monthly Budget vs
-Actual + rolling forecast pack, from the two upstream reports:
-output/variance_report.md and output/forecast_report.md.
-
-This is the first agent in the pipeline that calls an LLM, and deliberately
-so. The Ingestion, Variance, and Forecast agents are all plain deterministic
-Python: materiality thresholds, evidence grounding, and trend normalization
-are decisions that need to be auditable and reproducible: the same input
-must always produce the same threshold check or the same normalized
-history, and a reviewer must be able to read the code and know exactly why
-a number was flagged or adjusted. None of that holds for writing a coherent
-executive narrative from already-computed, already-grounded numbers: turning
-a variance table and a forecast table into readable prose for a CFO is a
-language task, not an arithmetic one, and that is exactly what an LLM is
-for. The reasoning that could hallucinate a cause has already happened
-upstream in the Variance Agent (which only cites evidence it can point to,
-or says "no clear driver identified"); this agent's only job is to write
-clearly from those already-grounded conclusions, so it is explicitly
-instructed never to introduce a new number, cause, or claim of its own.
-
-Model: claude-sonnet-5. The judgment calls (materiality thresholds, evidence
-grounding, forecast normalization) are already resolved by the upstream
-agents; this step is disciplined prose generation from structured, cited
-inputs, not open-ended reasoning, so a mid-tier model fits: a larger model
-adds cost without adding anything to a writing pass, and a smaller one was
-rejected because the executive summary is the one document a CFO reads line
-by line.
-
-Authenticates via the default Anthropic() client construction, which
-resolves ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN, or an `ant auth login`
-OAuth profile (whichever is available); no key is ever hardcoded. This
-project was tested against a personal Claude Pro subscription via OAuth; in
-a company deployment, the same client construction resolves an
-organization's internal model gateway or any other Anthropic-compatible
-endpoint approved by IT, just by setting the corresponding environment
-variables, with no code change needed. See README.md for setup.
-
-Output: output/executive_summary.md
-
-Run: .venv/Scripts/python.exe agents/narrative_agent.py
+The AI option sends the structured statement catalogue, which may contain
+business names and context, to the configured provider. It is opt-in and is
+suitable here because all data is synthetic. Aggregation is not anonymization.
 """
+import argparse
+import json
+import os
+from pathlib import Path
 
-import datetime
-
-import anthropic
-
-VARIANCE_REPORT_PATH = "output/variance_report.md"
-FORECAST_REPORT_PATH = "output/forecast_report.md"
-OUTPUT_PATH = "output/executive_summary.md"
-
-MODEL = "claude-sonnet-5"
-MAX_TOKENS = 4096
-
-SYSTEM_PROMPT = """You are a senior FP&A writer producing the executive commentary section of \
-EventCo's monthly Budget vs Actual and Rolling Forecast board pack. Your audience is the CFO \
-and the board, not analysts, not engineers.
-
-You will be given two source documents: a Variance & Root-Cause Report and a Rolling Forecast \
-Report. Both were produced by deterministic analysis: every variance, every materiality \
-threshold, every evidence citation, and every forecast figure in them has already been computed \
-and checked. Your only job is to turn those already-grounded conclusions into clear, readable \
-prose. You are not being asked to analyze the business yourself.
-
-STRICT GROUNDING RULES: these are the most important instructions in this prompt:
-- Only state figures, causes, and conclusions that are explicitly present in the two source \
-documents below. Never invent, estimate, or infer a number, cause, or claim that is not in the \
-source text.
-- You may lightly round a monetary figure for readability, but keep at least three \
-significant digits after the leading digit, so the rounded figure never drifts more than \
-about 0.3% from the source value. For example, write "roughly EUR2.08 million" or \
-"EUR2,080,000" for a source value of "EUR2,077,456"; write "roughly EUR16.93 million" \
-rather than "EUR16.9 million" for a source value of "EUR16,928,330"; write "roughly \
-EUR81,500" rather than "EUR81,000" for a source value of "EUR81,464". Never alter, \
-combine, or extrapolate figures beyond what is given.
-- The Variance Report labels every material row with one of three explanation types, and \
-you must preserve that provenance in your prose: (1) rows "corroborated by the business \
-notes log" are documented evidence and may be narrated directly; (2) rows marked "Analyst \
-input" carry an explanation a human analyst entered manually after follow-up; when you \
-use one, attribute it (for example "per the analyst's review" or "the analyst attributes \
-this to"), and never present it as if it came from documented records; (3) rows that say \
-"no clear driver identified" are still open. For those, you must preserve that honesty: \
-describe the variance as material but unexplained, note that it stays on the follow-up \
-list, do NOT invent a plausible-sounding cause, and do NOT phrase it in a way that reads \
-as confidently explained.
-- The report also lists a row excluded as a suspected data entry error. Mention only that a \
-data quality issue was identified and excluded pending correction at source. Do not narrate it \
-as a business event or attempt to explain it as if it were a real variance.
-- Cover the favorable variance(s) as prominently as the unfavorable ones; the report should \
-not read as one-sided ("everything is bad"). Prioritize by materiality (largest EUR impact \
-first), not by favorable/unfavorable.
-
-STYLE:
-- Plain business English. No AI or technical jargon anywhere ("agent", "pipeline", "model", \
-"LLM", "automated" or similar words must not appear); write as a human FP&A analyst would.
-- Never use an em dash anywhere in the output; punctuate with commas, periods, or colons \
-instead. Avoid filler words like "leverage", "streamline", "seamless", "robust", "holistic", \
-"data-driven"; say the concrete thing.
-- Concise: aim for roughly 500-800 words of prose, using short section headers to aid scanning, \
-not a wall of text and not a bullet-only outline.
-- Structure: (1) a short 2-4 sentence opening on overall performance and outlook, (2) a \
-"Variance Highlights" section covering the material variances with their evidence, largest \
-impact first, (3) an "Items Requiring Follow-Up" section for the material variances that have \
-no documented driver, (4) a "Rolling Forecast" section summarizing the outlook and any \
-methodology judgment calls worth flagging to the reader, (5) an optional one-sentence closing \
-line. Do not add a section for the excluded data-error row; one sentence in an appropriate \
-place is enough.
-- Do not fabricate a title, company boilerplate, or sign-off beyond a simple heading."""
-
-
-def build_user_message(variance_report, forecast_report):
-    return f"""Here are the two source reports. Write the executive commentary from them.
-
-<variance_report>
-{variance_report}
-</variance_report>
-
-<forecast_report>
-{forecast_report}
-</forecast_report>
-
-Write the executive commentary now, following the grounding rules and structure in your \
-instructions. Output only the commentary itself (starting with a heading), no preamble."""
+from commentary_facts import build_facts, render_summary
 
 
 def main():
-    with open(VARIANCE_REPORT_PATH, encoding="utf-8") as f:
-        variance_report = f.read()
-    with open(FORECAST_REPORT_PATH, encoding="utf-8") as f:
-        forecast_report = f.read()
-
-    # Bare Anthropic() resolves credentials in order: ANTHROPIC_API_KEY,
-    # ANTHROPIC_AUTH_TOKEN, then an active `ant auth login` OAuth profile,
-    # so this works whether the caller has a metered API key or is
-    # authenticating through their Claude subscription via OAuth. Never
-    # hardcode a key here.
-    client = anthropic.Anthropic()
-    try:
-        response = client.messages.create(
-            model=MODEL,
-            max_tokens=MAX_TOKENS,
-            output_config={"effort": "medium"},
-            system=SYSTEM_PROMPT,
-            messages=[
-                {"role": "user", "content": build_user_message(variance_report, forecast_report)},
-            ],
-        )
-    except anthropic.AnthropicError as e:
-        # Covers AuthenticationError (rejected key) as well as errors raised
-        # earlier in the credential-resolution chain, such as an expired
-        # `ant auth login` OAuth session (WorkloadIdentityError): different
-        # failure shapes for the same underlying problem: no usable
-        # credential was available for this run.
-        raise SystemExit(
-            "No usable model credentials for this run, so the Narrative step is skipped "
-            "rather than failing the pipeline (see README.md, 'Narrative Agent credentials'). "
-            "Set ANTHROPIC_API_KEY, run `ant auth login`, or point this client at your "
-            "organization's internal model gateway or another approved provider.\n"
-            f"Underlying error: {e}"
-        )
-    except TypeError as e:
-        # When NO credential source exists at all (not even an invalid one),
-        # the SDK fails at header-construction time with a plain TypeError
-        # rather than an AnthropicError subclass, a different failure shape
-        # for the same underlying problem, so it needs its own catch here.
-        if "Could not resolve authentication method" not in str(e):
-            raise
-        raise SystemExit(
-            "No model credentials configured, so the Narrative step is skipped rather than "
-            "failing the pipeline (see README.md, 'Narrative Agent credentials'). Set "
-            "ANTHROPIC_API_KEY, run `ant auth login`, or point this client at your "
-            "organization's internal model gateway or another approved provider."
-        )
-
-    if response.stop_reason == "refusal":
-        raise SystemExit("Model declined to generate the summary (stop_reason=refusal).")
-
-    narrative = next(b.text for b in response.content if b.type == "text")
-
-    header = (
-        f"<!-- Generated by agents/narrative_agent.py using {MODEL} on "
-        f"{datetime.date.today():%Y-%m-%d}. Source: output/variance_report.md and "
-        f"output/forecast_report.md. Never reads data/ground_truth.md. -->\n\n"
-    )
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        f.write(header + narrative.strip() + "\n")
-
-    print(f"Input tokens: {response.usage.input_tokens}, output tokens: {response.usage.output_tokens}")
-    print(f"Wrote {OUTPUT_PATH}")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ai', action='store_true', help='Send synthetic statement catalogue to configured AI provider for ordering only')
+    args = parser.parse_args()
+    facts = build_facts()
+    order = [f['id'] for f in facts]
+    if args.ai:
+        import anthropic
+        client = anthropic.Anthropic()
+        response = client.messages.create(model=os.environ.get('FPA_NARRATIVE_MODEL', 'claude-sonnet-5'), max_tokens=2048,
+            system='Return only a JSON array containing every supplied statement id exactly once, ordered for readability. No other text.',
+            messages=[{'role':'user','content':json.dumps(facts)}])
+        order = json.loads(next(b.text for b in response.content if b.type == 'text'))
+    summary = render_summary(facts, order)
+    Path('output/narrative_claims.json').write_text(json.dumps(dict(facts=facts, order=order), indent=2), encoding='utf-8')
+    Path('output/executive_summary.md').write_text(summary, encoding='utf-8')
+    print(f'Commentary: {len(facts)} bound statements; '+('AI ordering' if args.ai else 'local deterministic rendering'))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -33,6 +33,11 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import sys
+from pathlib import Path
+from matplotlib.ticker import FuncFormatter
+sys.path.insert(0, str(Path(__file__).resolve().parent / "agents"))
+from reporting_basis import load_reporting_table
 
 VARIANCE_TABLE_PATH = "output/variance_table.csv"
 FORECAST_PATH = "output/forecast.csv"
@@ -73,9 +78,10 @@ plt.rcParams.update({
 
 
 def load_variance_table():
-    v = pd.read_csv(VARIANCE_TABLE_PATH)
+    v = load_reporting_table(VARIANCE_TABLE_PATH)
     v["materiality"] = v["materiality"].fillna("")
     v["evidence_notes"] = v["evidence_notes"].fillna("")
+    v["analyst_comment"] = v["analyst_comment"].fillna("")
     v["is_cost"] = v["line_item"] != "Net billings"
     # P&L impact: favorable is positive regardless of line type
     v["impact"] = v.apply(
@@ -107,7 +113,7 @@ def bridge_components(v):
     hatched) blocks that reconcile exactly. Shared by the bridge chart and
     the link-preview card so both quote the same figures."""
     y = v[v["month"].str.startswith("2025")].copy()
-    err = y["suspected_data_error"]
+    err = y["withheld_from_analysis"]
     # The suspected data-entry row (Brand Events revenue 2025-11) is held at
     # budget on both sides pending correction at source: zero variance
     # contribution, budget total stays complete.
@@ -131,12 +137,12 @@ def bridge_components(v):
     actual_net = budget_net + y["impact"].sum()
 
     deltas = [
-        ("Falcon project overrun (cost of sales)", falcon, False),
-        ("FX on USD contract (net billings)", fx, False),
-        ("Corporate Events savings programme (marketing)", savings, False),
-        (f"Routed to analyst, no documented note, net of {unexplained_mask.sum()} items", unexplained, True),
-        ("Gross margin, months within tolerance, net", other_revenue, False),
-        ("Staff costs and overheads, months within tolerance, net", other_costs, False),
+        ("Project overrun", falcon, False),
+        ("FX billings", fx, False),
+        ("Marketing Jul-Dec", savings, False),
+        ("Other material items", unexplained, True),
+        ("Other gross margin", other_revenue, False),
+        ("Other staff / overheads", other_costs, False),
     ]
     recon = budget_net + sum(d[1] for d in deltas)
     assert abs(recon - actual_net) < 1e-6, "bridge does not reconcile"
@@ -154,7 +160,7 @@ def bridge_chart(v):
         return "\n".join(textwrap.wrap(text, 16))
 
     labels = (["FY2025 budget\noperating result"] + [wrap(d[0]) for d in deltas]
-              + ["FY2025 actual\noperating result"])
+              + ["FY2025 provisional\noperating result"])
     n = len(labels)
 
     running = budget_net
@@ -175,7 +181,7 @@ def bridge_chart(v):
     # zero-based axis; every bar carries its value label, so nothing is implied
     # by bar length alone.
     pad = (hi - lo) * 0.45
-    y0, y1 = lo - pad, hi + pad * 0.9
+    y0, y1 = min(0, lo) - pad * 0.1, hi + pad * 0.9
 
     for x, bottom, height, color, hatch_ink in bars:
         kwargs = {}
@@ -205,18 +211,18 @@ def bridge_chart(v):
 
     ax.set_ylim(y0, y1)
     ax.set_xticks(range(n))
-    ax.set_xticklabels(labels, fontsize=8.5, color=INK_2)
-    ax.set_yticks([])
+    ax.set_xticklabels(labels, fontsize=10.5, color=INK_2)
+    ax.axhline(0, color=INK_2, linewidth=1)
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v/1e6:.1f}"))
+    ax.set_ylabel("EUR millions", fontsize=10)
     style_axes(ax)
     ax.spines["left"].set_visible(False)
 
     fig_titles(
         fig,
-        "FY2025 operating result: budget to actual",
-        "EventCo group, EUR. Green favorable, red unfavorable; the hatched block groups "
-        "material variances with no documented note, routed to the analyst.\n"
-        "Y-axis zoomed to the variance range; every bar is value-labeled. Brand Events "
-        "Nov-2025 revenue held at budget pending correction of a suspected data entry error.",
+        "FY2025 operating result: budget to provisional",
+        "Synthetic case study. Provisional scenario includes unapproved missing-cell estimates and a November billings budget placeholder.\n"
+        "Marketing attribution covers Jul-Dec only; other material items include the unexplained portions of the detected run. Zero baseline shown.",
         top=0.84,
     )
     fig.savefig(BRIDGE_PNG, bbox_inches="tight")
@@ -264,52 +270,40 @@ def _episode_item(bu, line, run):
 
 
 def highlights_chart(v):
-    items = material_items(v)
-    items.sort(key=lambda x: abs(x["impact"]))
-
-    fig, ax = plt.subplots(figsize=(10.5, 7.5), dpi=150)
-    for i, item in enumerate(items):
-        value = item["impact"] / 1e3
-        color = FAVORABLE if value >= 0 else UNFAVORABLE
-        kwargs = {}
-        if not item["grounded"]:
-            ink = FAVORABLE_INK if value >= 0 else UNFAVORABLE_INK
-            kwargs = {"hatch": "///", "edgecolor": ink, "linewidth": 0}
-        ax.barh(i, value, height=0.62, color=color, zorder=3, **kwargs)
-
-    ax.axvline(0, color=BASELINE, linewidth=1, zorder=2)
-    ax.set_yticks(range(len(items)))
-    ax.set_yticklabels([it["label"] for it in items], fontsize=8.5, color=INK_2)
-    ax.set_xlabel("P&L impact vs budget (EUR thousands); favorable to the right",
-                  fontsize=9.5)
-    ax.grid(axis="x", color=GRID, linewidth=1, zorder=0)
-    ax.set_axisbelow(True)
-    style_axes(ax)
-    ax.spines["left"].set_visible(False)
-
-    handles = [
-        plt.Rectangle((0, 0), 1, 1, color=FAVORABLE),
-        plt.Rectangle((0, 0), 1, 1, color=UNFAVORABLE),
-        plt.Rectangle((0, 0), 1, 1, facecolor=SURFACE, hatch="///",
-                      edgecolor=INK_2, linewidth=0),
-        plt.Rectangle((0, 0), 1, 1, facecolor=SURFACE, edgecolor=INK_2,
-                      linewidth=1),
-    ]
-    ax.legend(handles, ["Favorable", "Unfavorable", "No documented note: analyst follow-up",
-                        "Grounded in cited evidence (solid fill)"],
-              loc="lower left", frameon=False, fontsize=8.5)
-
-    fig_titles(
-        fig,
-        "Material budget variances, 2024-2026",
-        f"All {len(items)} items that met materiality, as P&L impact. Hatched bars have no "
-        "corroborating business note: they went to the FP&A analyst as follow-ups "
-        "instead of being given an invented cause.",
-        top=0.90,
-    )
-    fig.savefig(HIGHLIGHTS_PNG, bbox_inches="tight")
-    plt.close(fig)
-    print(f"Wrote {HIGHLIGHTS_PNG} ({len(items)} material items)")
+    from bu_report_agent import material_items as bu_items
+    items = []
+    for bu in sorted(v.business_unit.unique()):
+        for it in bu_items(v, bu):
+            status = 'documented' if it['evidence_ids'] else ('analyst' if it['analyst_comment'] else 'unresolved')
+            impact = it['variance_eur'] * (1 if it['line_item'] == 'Net billings' else -1)
+            items.append(dict(label=f"{bu}: {it['line_item']} ({it['period']})", period=it['period'], impact=impact, status=status))
+    def draw(path, history):
+        groups = ([(f'{year} single months', [i for i in items if i['period'].startswith(year) and '..' not in i['period']]) for year in ('2024','2025','2026')]
+                  if history else [('FY2025 single months', [i for i in items if i['period'].startswith('2025') and '..' not in i['period']])])
+        groups += [('Multi-month episodes (cumulative; separate scale)', [i for i in items if '..' in i['period']])]
+        fig, axes = plt.subplots(len(groups), 1, figsize=(13, 4+len(groups)*2.0), gridspec_kw={'height_ratios':[max(2,len(g)) for _,g in groups]})
+        for ax, (title, subset) in zip(axes, groups):
+            subset.sort(key=lambda it: it['impact'])
+            for n, it in enumerate(subset):
+                value = it['impact']/1000
+                ax.barh(n, value, color=FAVORABLE if value > 0 else UNFAVORABLE,
+                        hatch={'documented':'', 'analyst':'//', 'unresolved':'xx'}[it['status']], edgecolor=INK_2, linewidth=0.2)
+                ax.annotate(f"{value:+,.0f}k",(value,n),xytext=(5 if value > 0 else -5,0), textcoords='offset points',
+                            ha='left' if value > 0 else 'right', va='center',fontsize=9)
+            ax.set_yticks(range(len(subset)),[i['label'] for i in subset],fontsize=9)
+            ax.set_title(title,loc='left',fontsize=11)
+            ax.axvline(0,color=BASELINE)
+            ax.margins(x=0.20)
+            ax.set_xlabel('P&L impact, EURk; favorable right',fontsize=9)
+            style_axes(ax)
+        fig.suptitle('Historical material variances as of 30 June 2026',x=.02,ha='left',fontsize=15)
+        fig.text(.02,.015,'Solid: dated evidence (marketing partly documented) | //: illustrative analyst explanation | xx: unresolved. Each panel has its own scale.',fontsize=9)
+        fig.tight_layout(rect=(0,.04,1,.95),h_pad=2.2)
+        fig.savefig(path,bbox_inches='tight')
+        plt.close(fig)
+    draw(HIGHLIGHTS_PNG,False)
+    draw('docs/variance_history.png',True)
+    print(f'Variance rankings: FY2025 view and full-history appendix ({len(items)} items)')
 
 
 # ---------------------------------------------------------------- chart 3
@@ -334,13 +328,17 @@ def forecast_chart():
            color=COSTS, zorder=3, label="Staff costs and overheads (forecast)")
     ax.scatter([i - w / 2 for i in x], rev.loc[months, "base_value"] / 1e6,
                marker="D", s=42, color=MUTED, edgecolor=SURFACE, linewidth=1.5,
-               zorder=4, label="Gross margin same month last year (normalized)")
+               zorder=4, label="Gross margin same month last year (provisional)")
 
     for i, m in enumerate(months):
+        monthly_net = rev.loc[m, 'forecast'] - costs.loc[m]
+        ax.text(i, max(rev.loc[m,'forecast'],costs.loc[m])/1e6+.32,
+                f"Operating result {monthly_net/1000:+,.0f}k",ha='center',fontsize=9.5,fontweight='bold')
         ax.text(i - w / 2, rev.loc[m, "forecast"] / 1e6 + 0.05,
                 f"{rev.loc[m, 'forecast'] / 1e6:,.1f}", ha="center",
                 fontsize=9.5, color=INK)
 
+    ax.set_ylim(0, max(rev["forecast"].max(),costs.max())/1e6+.75)
     ax.set_xticks(list(x))
     ax.set_xticklabels([pd.Period(m).strftime("%b %Y") for m in months],
                        fontsize=10, color=INK_2)
@@ -348,15 +346,16 @@ def forecast_chart():
     ax.grid(axis="y", color=GRID, linewidth=1, zorder=0)
     ax.set_axisbelow(True)
     style_axes(ax)
-    ax.legend(loc="upper left", frameon=False, fontsize=9)
+    ax.legend(loc="upper left", bbox_to_anchor=(0,-0.12), frameon=False, fontsize=9)
 
     fig_titles(
         fig,
         "Rolling forecast: Q3 2026",
-        f"Seasonal base x median year-over-year growth, one-offs excluded from the base. "
+        f"Provisional seasonal baseline; unresolved effects retained. See raw baseline and sensitivity in forecast report.\n"
         f"Quarter operating result EUR{net / 1e6:,.1f}M, {margin:.1%} of gross margin.",
         top=0.86,
     )
+    fig.subplots_adjust(bottom=0.25)
     fig.savefig(FORECAST_PNG, bbox_inches="tight")
     plt.close(fig)
     print(f"Wrote {FORECAST_PNG} (net EUR{net / 1e6:,.1f}M, margin {margin:.1%})")
@@ -374,23 +373,17 @@ def og_image(v):
     largest = max(deltas[:3], key=lambda d: abs(d[1]))
     fig = plt.figure(figsize=(12, 6.3), dpi=100)
     fig.patch.set_facecolor(SURFACE)
-    fig.text(0.06, 0.82, "MONTHLY BUDGET VS ACTUAL PACK", fontsize=14,
+    fig.text(0.06, 0.82, "ALAN VOURC'H | SYNTHETIC CASE STUDY", fontsize=14,
              color=ANCHOR, fontweight="bold", va="top")
-    fig.text(0.06, 0.72,
-             f"FY2025 came in EUR{abs(gap) / 1e6:,.1f}M "
-             f"{'under' if gap < 0 else 'over'} budget.",
-             fontsize=36, fontweight="bold", color=INK, va="top")
-    fig.text(0.06, 0.58,
-             "This pack explains why, and says plainly what it cannot explain.",
-             fontsize=20, color=INK_2, va="top")
-    fig.text(0.06, 0.43,
-             f"Operating result EUR{actual_net / 1e6:,.1f}M against a EUR{budget_net / 1e6:,.1f}M budget. "
-             f"Largest named driver: {largest[0]}, "
-             f"EUR{abs(largest[1]) / 1e6:,.2f}M.\n"
-             "A revenue entry ten times too large was caught before it reached the pack.",
-             fontsize=14.5, color=INK_2, va="top", linespacing=1.6)
+    fig.text(0.06, 0.71, "FP&A reporting automation", fontsize=34,fontweight='bold',color=INK,va='top')
+    fig.text(0.06, 0.57, "Variance analysis and a three-month forecast", fontsize=23,color=INK_2,va='top')
+    fig.text(0.06, 0.40,
+             f"Synthetic FY2025 provisional result: EUR{actual_net/1e6:.1f}M vs EUR{budget_net/1e6:.1f}M budget.\n"
+             "Source checks, business-line reviews and explicit forecast assumptions.\n"
+             "Includes unapproved estimates and a billings placeholder; pending review.",
+             fontsize=16,color=INK_2,va='top',linespacing=1.6)
     fig.add_artist(plt.Line2D([0.06, 0.94], [0.21, 0.21], color=GRID, linewidth=1.2))
-    fig.text(0.06, 0.15, "Alan Vourc'h   |   alanvourch.com/fpa-project   |   synthetic data, real method",
+    fig.text(0.06, 0.15, "Alan Vourc'h   |   alanvourch.com/fpa-project   |   FP&A and data",
              fontsize=12.5, color=MUTED, va="top")
     fig.savefig(OG_PNG, dpi=100, facecolor=SURFACE)
     plt.close(fig)

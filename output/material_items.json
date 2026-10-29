@@ -1,0 +1,202 @@
+[
+  {
+    "business_unit": "Brand Events",
+    "line_item": "Cost of sales",
+    "period": "2025-04..2025-06",
+    "variance_eur": 1639707.83,
+    "direction": "U",
+    "evidence": [
+      "N11",
+      "N13"
+    ],
+    "status": "documented",
+    "explanation": "Corroborated by the business notes log: N11 (2025-04-14, Brand Events, Project Director): \"Falcon product-launch event (Riyadh): client requested a major on-site scope expansion during build week. Overtime crews, additional staging and expedited freight all booked at premium rates. Expect a production cost overrun through the end of Q2 while the change-order negotiation with the client is still open.\" / N13 (2025-06-30, Brand Events, BU Controller): \"Q2 close: Falcon launch cost overrun confirmed at roughly EUR1.6m above plan across April-June, concentrated in external production costs. Change order signed for partial recovery only; margin impact flagged to group controlling.\""
+  },
+  {
+    "business_unit": "Brand Events",
+    "line_item": "Cost of sales",
+    "period": "2026-04",
+    "variance_eur": 457333.3,
+    "direction": "U",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2026-05-12): \"An unplanned client project was won in late March and delivered inside April; external production was booked at short-notice premium rates. Together with the matching revenue line the net margin impact is slightly negative. Change-order discipline flagged to the project director.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Brand Events",
+    "line_item": "Net billings",
+    "period": "2026-04",
+    "variance_eur": 388823.26,
+    "direction": "F",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2026-05-12): \"Unbudgeted revenue from the same late-won April project; see the matching COGS variance. Invoiced on delivery in this simplified case study.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Brand Events",
+    "line_item": "Cost of sales",
+    "period": "2024-11",
+    "variance_eur": -346812.86,
+    "direction": "F",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2024-12-10): \"November events were delivered with in-house crew and staging stock instead of the subcontracting assumed in budget; Q4 freight was also renegotiated. Genuine savings, not a timing shift.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Brand Events",
+    "line_item": "Net billings",
+    "period": "2025-07",
+    "variance_eur": 247345.74,
+    "direction": "F",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2025-08-11): \"A client brought part of its September roadshow forward into July. Timing between months rather than new business; the September shortfall stayed within tolerance.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Digital/Influence",
+    "line_item": "Net billings",
+    "period": "2025-01",
+    "variance_eur": -224810.11,
+    "direction": "U",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2025-02-10): \"Two platform go-lives slipped from January into February on client-side content delays. Billings follow delivery in this simplified case study, so January carries the gap; both projects were invoiced in February.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Corporate Events",
+    "line_item": "Net billings",
+    "period": "2024-10",
+    "variance_eur": 215565.45,
+    "direction": "F",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2024-11-08): \"A brand activation sold for early 2025 was pulled into October at the client's request. The matching cost variance appears on the COGS line the same month.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Corporate Events",
+    "line_item": "Cost of sales",
+    "period": "2024-10",
+    "variance_eur": 212499.59,
+    "direction": "U",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2024-11-08): \"Production costs of the pulled-forward October activation; see the matching revenue variance.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Digital/Influence",
+    "line_item": "Net billings",
+    "period": "2025-09",
+    "variance_eur": -196952.51,
+    "direction": "U",
+    "evidence": [
+      "N08"
+    ],
+    "status": "documented",
+    "explanation": "Corroborated by the business notes log: N08 (2025-09-26, Digital/Influence, Account Manager): \"NovaTech (US client) roadshow is invoiced in USD. The euro strengthened sharply against the dollar this month, so reported revenue on the contract translates materially lower in EUR. No change in delivered scope or client commitment; delivery costs are EUR-denominated and unaffected.\""
+  },
+  {
+    "business_unit": "Digital/Influence",
+    "line_item": "Cost of sales",
+    "period": "2025-01",
+    "variance_eur": -162419.68,
+    "direction": "F",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2025-02-10): \"External development spend paused over the year-end delivery freeze and resumed in February, alongside the two go-lives that slipped on the revenue line. This recurs every holiday season; budget phasing to be corrected in the next cycle.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Digital/Influence",
+    "line_item": "Cost of sales",
+    "period": "2024-07",
+    "variance_eur": -144467.11,
+    "direction": "F",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2024-08-09): \"Contractor spend deferred during the summer staffing gap on the delivery bench; caught up from September.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Digital/Influence",
+    "line_item": "Net billings",
+    "period": "2025-08",
+    "variance_eur": 135341.04,
+    "direction": "F",
+    "evidence": [],
+    "status": "unresolved",
+    "explanation": "No clear driver identified: no corroborating note found in the business log for this BU, line item and period, and the analyst has not yet returned commentary from follow-up. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause."
+  },
+  {
+    "business_unit": "Government & Institutions",
+    "line_item": "Net billings",
+    "period": "2024-10",
+    "variance_eur": -115949.92,
+    "direction": "U",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2024-11-08): \"Two institutional clients pushed their October milestone invoicing into November after a budget-cycle approval delay on their side. Timing only.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Government & Institutions",
+    "line_item": "Cost of sales",
+    "period": "2024-10",
+    "variance_eur": -91742.33,
+    "direction": "F",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2024-11-08): \"Delivery costs of the two milestones that slipped into November were held back with them; see the matching revenue variance. Timing only.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Government & Institutions",
+    "line_item": "Cost of sales",
+    "period": "2024-06",
+    "variance_eur": -81712.51,
+    "direction": "F",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2024-07-09): \"The June conference was held in a client-owned venue instead of the hired venue assumed in budget; venue and catering pass-through came in under plan. A saving, not timing.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Corporate Events",
+    "line_item": "Opex - Marketing",
+    "period": "2025-04..2026-02",
+    "variance_eur": -81464.02,
+    "direction": "F",
+    "evidence": [
+      "N12",
+      "N16"
+    ],
+    "status": "documented",
+    "explanation": "Detected run starts in April 2025; in-housing is documented only for July-December 2025. April-June and January-February require separate review. Corroborated by the business notes log: N12 (2025-06-25, Corporate Events, Practice Lead): \"Media buying and content creation move in-house from 1 July; both external agency retainers terminated end of June. Marketing spend expected to run 20-30% under budget for the rest of the year.\" / N16 (2025-09-15, Corporate Events, BU Controller): \"In-housing of media buying is tracking ahead of plan - marketing spend well under budget again this month, and the underspend should persist through year-end.\""
+  },
+  {
+    "business_unit": "Government & Institutions",
+    "line_item": "Cost of sales",
+    "period": "2025-09",
+    "variance_eur": 68616.47,
+    "direction": "U",
+    "evidence": [],
+    "status": "unresolved",
+    "explanation": "No clear driver identified: no corroborating note found in the business log for this BU, line item and period, and the analyst has not yet returned commentary from follow-up. The variance is numerically material but unexplained. Recommend follow-up with the BU controller rather than attributing a cause."
+  },
+  {
+    "business_unit": "Government & Institutions",
+    "line_item": "Cost of sales",
+    "period": "2024-01",
+    "variance_eur": 55386.42,
+    "direction": "U",
+    "evidence": [],
+    "status": "analyst",
+    "explanation": "Analyst input (FP&A Analyst, 2024-02-09): \"January carried final supplier invoices for a December 2023 conference that arrived after the prior-year cut-off. Timing across the year-end, no change to the full-year run-rate.\" Written manually after follow-up; not derived from the business notes log."
+  },
+  {
+    "business_unit": "Government & Institutions",
+    "line_item": "Opex - IT",
+    "period": "2024-11",
+    "variance_eur": 24116.12,
+    "direction": "U",
+    "evidence": [
+      "N06"
+    ],
+    "status": "documented",
+    "explanation": "Corroborated by the business notes log: N06 (2024-11-08, Government & Institutions, AV & Systems Manager): \"On-site registration and AV control systems failed during a ministry summit engagement on 4 November; emergency replacement hardware and expedited vendor licenses procured outside the normal purchasing cycle. One-off cost; insurance claim filed with the provider.\""
+  }
+]

@@ -111,7 +111,7 @@ def main():
                  if l.startswith("|") and "2025-11" in l and "Net billings" in l]
     check(not trap_rows,
           "Brand Events: the trap month never appears as a material variance row")
-    check("data entry error" in prod_md,
+    check("pending" in prod_md and "budget placeholder" in prod_md,
           "Brand Events: the page discloses the Nov-2025 data note")
     trap = drivers[(drivers["business_unit"] == "Brand Events") & (drivers["month"] == "2025-11")].iloc[0]
     check(f"{int(trap['projects_actual'])} projects delivered vs {int(trap['projects_budget'])} planned" in prod_md,

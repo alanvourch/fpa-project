@@ -1,0 +1,13 @@
+{
+  "basis": "Optional provisional synthetic demonstration; no accounting correction or analyst approval is asserted.",
+  "placeholders": [
+    {
+      "business_unit": "Brand Events",
+      "month": "2025-11",
+      "column": "revenue_actual",
+      "budget_column": "revenue_budget",
+      "expected_source_value": 52243583.97,
+      "reason": "Suspected anomaly; source amount unconfirmed. Budget substitution is a demonstration assumption."
+    }
+  ]
+}

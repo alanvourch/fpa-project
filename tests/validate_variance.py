@@ -98,7 +98,7 @@ def extract_table_rows(section_text):
 def parse_report(path):
     text = open(path, encoding="utf-8").read()
     excluded_section = get_section(
-        text, "## Excluded from analysis", "## Material variances")
+        text, "## Withheld under the explicit provisional reporting policy", "## Material variances")
     material_section = get_section(text, "## Material variances")
 
     excluded = [

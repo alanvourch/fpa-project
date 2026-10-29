@@ -1,45 +1,10 @@
-"""QA/Reviewer Agent.
-
-Checks the consistency of the pipeline's own outputs, never against a
-hidden answer key (there is no data/ground_truth.md-equivalent on a real,
-unseen monthly reporting cycle; that file exists in this project purely to validate
-the earlier agents during development, in tests/validate_*.py, and this
-agent never reads it). Everything below is a cross-check between what the
-Ingestion, Variance, Forecast, and Narrative agents actually produced.
-
-Two categories of check:
-
-1. Consistency checks: do the pipeline's own outputs agree with each
-   other? Every flagged variance is either evidence-cited or explicitly
-   marked "no clear driver identified" (never silently unexplained); every
-   flagged month in the variance table is accounted for in the forecast's
-   normalization audit trail; the narrative's figures all trace back to the
-   two reports it was given (via agents/grounding_check.py, shared with
-   tests/validate_narrative.py).
-
-2. Data-governance checks: this project's most important non-technical
-   requirement: only one component in this pipeline should ever call an
-   external AI provider, and it should only ever see already-aggregated
-   summary reports, never the raw dataset. This agent verifies that
-   structurally, by scanning the other agent files for any external-API
-   usage and confirming the Narrative Agent's own inputs are scoped to the
-   two report files, not the raw CSV or ground truth.
-
-This agent's report is explicitly a DRAFT gate, not a publish decision:
-see the "Human sign-off" banner in output/qa_report.md. Nothing in this
-pipeline sends a report anywhere on its own; a human always reviews the
-QA report and the assembled pack before either is distributed.
-
-Output: output/qa_report.md
-
-Run: .venv/Scripts/python.exe agents/qa_agent.py
-"""
-
+"""Cross-output checks and constrained commentary checks. Source scans are limited regression checks, not runtime isolation."""
 import glob
 import os
 import re
 
 from grounding_check import run_all_checks
+from release_gate import stamp_manifest
 
 VARIANCE_REPORT_PATH = "output/variance_report.md"
 FORECAST_REPORT_PATH = "output/forecast_report.md"
@@ -127,16 +92,12 @@ def check_forecast_covers_all_flagged_rows(variance_table_text, forecast_text):
 
     missing = [key for key in flagged if key not in audit_keys]
     if missing:
-        return False, f"variance-flagged row(s) missing from the forecast normalization audit trail: {missing}"
-    return True, f"all {len(flagged)} variance-flagged row(s) are accounted for in the forecast normalization audit trail"
+        return False, f"variance-flagged row(s) missing from the forecast recurrence-decision audit trail: {missing}"
+    return True, f"all {len(flagged)} variance-flagged row(s) are accounted for in the forecast recurrence-decision audit trail"
 
 
 def check_llm_isolation():
-    """Data governance: only narrative_agent.py may call an external AI
-    provider. Every other agent script must be free of any such reference;
-    this is checked structurally (source-code scan), not by trusting a
-    comment, so it holds even if someone edits an agent later without
-    reading this docstring."""
+    """Detect specified Anthropic import/endpoint regressions only."""
     violations = []
     for path in sorted(glob.glob(os.path.join(AGENTS_DIR, "*.py"))):
         if os.path.basename(path) == NARRATIVE_AGENT_FILENAME:
@@ -146,12 +107,11 @@ def check_llm_isolation():
             violations.append(path)
     if violations:
         return False, f"external AI provider usage found outside narrative_agent.py: {violations}"
-    return True, "no agent other than narrative_agent.py references an external AI provider"
+    return True, "Limited source regression scan: no specified Anthropic reference outside narrative_agent.py; this is not runtime network isolation or data-loss prevention"
 
 
 def check_narrative_input_scope():
-    """Data governance: the Narrative Agent must only ever be given the two
-    already-aggregated report files, never the raw dataset or ground truth.
+    """Limited scan for specified prohibited literal filenames in open() calls.
 
     Scoped to the arguments of actual `open(...)` calls, not the whole file:
     a defensive comment or docstring elsewhere in the script (e.g. "never
@@ -165,7 +125,7 @@ def check_narrative_input_scope():
     })
     if hits:
         return False, f"narrative_agent.py opens a data source beyond the two aggregated reports: {hits}"
-    return True, "narrative_agent.py's file reads are scoped to the two aggregated report files only"
+    return True, "Limited input regression scan: no prohibited filename in literal open() calls; not a comprehensive input or confidentiality control"
 
 
 def main():
@@ -184,7 +144,7 @@ def main():
         narrative_text = load(NARRATIVE_PATH)
         results.extend(run_all_checks(variance_text, forecast_text, narrative_text))
     else:
-        results.append((None, "output/executive_summary.md not found; narrative grounding not checked this run"))
+        results.append((False, "Executive summary missing; required commentary validation cannot run"))
 
     passed = [msg for ok, msg in results if ok is True]
     failed = [msg for ok, msg in results if ok is False]
@@ -204,7 +164,7 @@ def main():
     ]
     if failed:
         lines += [
-            "**REQUIRES ATTENTION BEFORE HUMAN SIGN-OFF.** One or more consistency or "
+            "**FAILED REVIEW: SITE BUILD BLOCKED.** One or more consistency or "
             "governance checks failed. See below.", "",
         ]
     lines += [
@@ -230,9 +190,9 @@ def main():
 
     lines += render_group(consistency_results)
     lines += ["", "## Data governance checks", "",
-              "Confirms the project's core control principle: only the Narrative Agent may "
-              "call an external AI provider, and only with already-aggregated summary data, "
-              "never the raw dataset, never client-identifying transaction detail.", ""]
+              "These source scans detect specified regressions only. Calculations run locally. "
+              "The optional AI ordering step sends a structured statement catalogue to its provider. "
+              "Business context can identify clients even after aggregation; live employer data needs an approved confidentiality policy.", ""]
     lines += render_group(governance_results)
     lines += ["", "## Narrative grounding checks", ""]
     lines += render_group(narrative_results)
@@ -240,6 +200,10 @@ def main():
     with open(QA_REPORT_PATH, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
 
+    # Only the orchestrator can grant a fresh build manifest after ALL validators.
+    # A standalone QA pass does not replace the full pipeline validation.
+    if failed:
+        stamp_manifest(False, "; ".join(failed))
     print(f"QA checks: {len(passed)} passed, {len(failed)} failed, {len(skipped)} skipped")
     for msg in failed:
         print(f"  FAIL - {msg}")

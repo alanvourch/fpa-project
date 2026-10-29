@@ -35,10 +35,9 @@ Materiality:
     sustained programme doesn't switch off because one month's noise masks
     it. A direction flip or two quiet months in a row end the episode.
 
-Rows already implausible as business events (actual >4x or <0.25x budget,
-the same rule the ingestion agent uses) are excluded from the analysis and
-listed separately as pending data corrections, so a fat-finger entry can
-never be dressed up as a business story.
+Ratio flags require source verification. They do not prove an error. Only
+an explicit cell-specific provisional placeholder is withheld from materiality
+analysis. Source actuals and budgets remain alongside separate scenario columns.
 
 Outputs:
   - output/variance_table.csv   (full BU x month x line variance grain)
@@ -47,11 +46,14 @@ Outputs:
 Run: .venv/Scripts/python.exe agents/variance_agent.py
 """
 
+import argparse
+import json
 import os
 import re
 from datetime import timedelta
 
 import pandas as pd
+from reporting_basis import provisional_scenario
 
 CLEANED_PATH = "data/eventco_monthly_cleaned.csv"
 NOTES_PATH = "data/business_notes.csv"
@@ -84,8 +86,7 @@ EPISODE_MIN_MONTHS = 2
 EPISODE_CUM_EUR = 40_000
 EPISODE_CUM_PCT = 0.10
 
-# Same magnitude rule as the ingestion agent: a single line landing >4x or
-# <0.25x its budget is a probable data entry error, not a business event.
+# Same source-review trigger as ingestion; never an error diagnosis.
 DATA_ERROR_RATIO_HIGH = 4.0
 DATA_ERROR_RATIO_LOW = 0.25
 
@@ -164,13 +165,18 @@ def build_variance_table(df):
             var_eur = actual - budget
             var_pct = var_eur / budget if budget else float("nan")
             favorable = var_eur < 0 if is_cost else var_eur > 0
-            ratio = actual / budget if budget else float("nan")
+            source_actual = r.get(f"source_{actual_col}", actual)
+            source_budget = r.get(f"source_{budget_col}", budget)
+            ratio = source_actual / source_budget if source_budget else float("nan")
             rows.append({
                 "month": r["month"], "business_unit": r["business_unit"],
                 "line_item": line, "actual": actual, "budget": budget,
                 "variance_eur": var_eur, "variance_pct": var_pct,
                 "direction": "F" if favorable else "U",
                 "suspected_data_error": ratio > DATA_ERROR_RATIO_HIGH or ratio < DATA_ERROR_RATIO_LOW,
+                "source_actual": source_actual, "source_budget": source_budget,
+                "withheld_from_analysis": actual != source_actual and pd.notna(source_actual),
+                "estimated_actual": pd.isna(source_actual), "estimated_budget": pd.isna(source_budget),
             })
     return pd.DataFrame(rows).sort_values(
         ["business_unit", "line_item", "month"]).reset_index(drop=True)
@@ -180,7 +186,7 @@ def find_material_items(var_df):
     """Return (episodes, single_months): sustained multi-month episodes first,
     then standalone material months not absorbed by an episode. Suspected data
     errors are excluded from both and reported separately."""
-    clean = var_df[~var_df["suspected_data_error"]]
+    clean = var_df[~var_df["withheld_from_analysis"]]
     episodes = []
     covered = set()
 
@@ -203,7 +209,12 @@ def find_material_items(var_df):
                 covered.update((bu, line, m) for m in seg["month"])
 
         run, bridge = [], []
+        previous_month = None
         for i, r in g.iterrows():
+            if previous_month is not None and (r["month"].to_period("M") - previous_month.to_period("M")).n != 1:
+                flush(run)
+                run, bridge = [], []
+            previous_month = r["month"]
             strong = abs(r["variance_pct"]) >= EPISODE_PCT
             same_dir = not run or g.loc[run[-1], "direction"] == r["direction"]
             if strong and same_dir:
@@ -284,7 +295,10 @@ def explanation_text(item):
                 f"{n['note_id']} ({n['date']:%Y-%m-%d}, {n['business_unit']}, "
                 f"{n['author_role']}): \"{n['note']}\""
             )
-        return "Corroborated by the business notes log: " + " / ".join(parts)
+        scope = ("Detected run starts in April 2025; in-housing is documented only for July-December 2025. "
+                 "April-June and January-February require separate review. "
+                 if any(h["note"]["note_id"] == "N12" for h in item["evidence"]) else "")
+        return scope + "Corroborated by the business notes log: " + " / ".join(parts)
     if item.get("analyst") is not None:
         a = item["analyst"]
         return (f"Analyst input ({a['author']}, {a['date']}): \"{a['comment']}\" "
@@ -300,7 +314,13 @@ def explanation_text(item):
 def render_report(material, excluded, var_df):
     n_lines = var_df.groupby(["business_unit", "line_item"]).ngroups
     lines = [
-        "# Variance Report: EventCo Budget vs Actual",
+        "# Variance report: EventCo provisional reporting scenario",
+        "",
+        "> Synthetic case study as of 30 June 2026. FY2025 totals are provisional. "
+        "Missing source cells use unapproved estimates; November 2025 Brand Events billings "
+        "use a budget placeholder pending source verification. Source actuals and budgets remain "
+        "in the CSV beside separate provisional columns. Net billings are invoiced amounts, "
+        "not a measure of revenue recognized under accounting standards.",
         "",
         "Generated by `agents/variance_agent.py` from "
         "`data/eventco_monthly_cleaned.csv` (the Data Ingestion Agent's output) "
@@ -309,7 +329,7 @@ def render_report(material, excluded, var_df):
         "",
         "## Method",
         "",
-        "Variance = actual − budget, computed for every line item, BU and month "
+        "Variance = actual Ã¢Ë†â€™ budget, computed for every line item, BU and month "
         f"({n_lines} BU/line series across {var_df['month'].nunique()} months; "
         "full grain in `output/variance_table.csv`). Direction is **F** "
         "(favorable) or **U** (unfavorable): revenue above budget is favorable, "
@@ -317,21 +337,21 @@ def render_report(material, excluded, var_df):
         "",
         "**Materiality:**",
         "",
-        f"- *Monthly (dual threshold):* |variance| ≥ {MATERIALITY_PCT:.0%} of "
-        f"budget **and** ≥ {fmt_money(MATERIALITY_EUR)}. The % leg is a "
+        f"- *Monthly (dual threshold):* |variance| Ã¢â€°Â¥ {MATERIALITY_PCT:.0%} of "
+        f"budget **and** Ã¢â€°Â¥ {fmt_money(MATERIALITY_EUR)}. The % leg is a "
         "standard planning tolerance; the EUR floor (~0.25% of average "
         "monthly group revenue) keeps percentage noise on small opex lines "
         "out of the report, while the % leg keeps small relative wobbles on "
         "multi-million revenue lines out.",
-        f"- *Monthly (absolute trigger):* |variance| ≥ "
-        f"{fmt_money(ABS_MATERIALITY_EUR)} **and** ≥ "
+        f"- *Monthly (absolute trigger):* |variance| Ã¢â€°Â¥ "
+        f"{fmt_money(ABS_MATERIALITY_EUR)} **and** Ã¢â€°Â¥ "
         f"{ABS_MATERIALITY_MIN_PCT:.0%} of budget. On a large line, a miss "
         "of this size (~2% of monthly group revenue) warrants comment even "
         "below the 10% tolerance; the % floor sits just above the routine "
-        "forecast-noise band of the biggest lines (±6% in a normal month).",
-        f"- *Sustained episodes:* ≥ {EPISODE_MIN_MONTHS} consecutive months in "
-        f"the same direction, each ≥ {EPISODE_PCT:.0%} off budget, with a "
-        f"cumulative gap ≥ {fmt_money(EPISODE_CUM_EUR)} and ≥ "
+        "forecast-noise band of the biggest lines (Ã‚Â±6% in a normal month).",
+        f"- *Sustained episodes:* Ã¢â€°Â¥ {EPISODE_MIN_MONTHS} consecutive months in "
+        f"the same direction, each Ã¢â€°Â¥ {EPISODE_PCT:.0%} off budget, with a "
+        f"cumulative gap Ã¢â€°Â¥ {fmt_money(EPISODE_CUM_EUR)} and Ã¢â€°Â¥ "
         f"{EPISODE_CUM_PCT:.0%} of the period budget. Persistent drifts are "
         "material in aggregate even when no single month clears the monthly "
         "EUR floor. A single below-threshold month is bridged when the drift "
@@ -339,7 +359,7 @@ def render_report(material, excluded, var_df):
         "of noise masking a sustained programme doesn't end the episode. A "
         "direction flip or two quiet months in a row do end it.",
         "",
-        "**Root-cause discipline:** this agent never invents a cause. Every "
+        "**Explanation provenance:** every "
         "material row carries exactly one of three explanation types, and the "
         "type is always visible:",
         "",
@@ -357,13 +377,12 @@ def render_report(material, excluded, var_df):
         "The item stays on the follow-up list; the number is reported "
         "without a story.",
         "",
-        "## Excluded from analysis: suspected data entry errors",
+        "## Withheld under the explicit provisional reporting policy",
         "",
-        "Same magnitude rule as the ingestion agent (actual >4x or <0.25x "
-        "budget is not a plausible business event). These rows are withheld "
-        "from variance analysis and materiality testing entirely, pending "
-        "correction at source. Explaining them as business variances would "
-        "be inventing a story about a typo.",
+        "Only the cell-specific placeholder in data/reporting_policy.json is withheld "
+        "from materiality testing. A ratio trigger alone does not exclude an observation. "
+        "The displayed source amount is unconfirmed; the scenario substitutes budget and "
+        "does not establish a corrected accounting value.",
         "",
     ]
     if excluded:
@@ -380,10 +399,10 @@ def render_report(material, excluded, var_df):
         "## Material variances",
         "",
         "Sorted by absolute EUR impact. Period spans of more than one month "
-        "are sustained episodes; Actual/Budget/Variance are cumulative over "
+        "are sustained episodes; provisional amounts and variances are cumulative over "
         "the period. Evidence cites note IDs from `data/business_notes.csv`.",
         "",
-        "| Business Unit | Line item | Period | Actual | Budget | Variance EUR | Variance % | F/U | Evidence | Explanation |",
+        "| Business Unit | Line item | Period | Provisional actual | Budget comparator | Variance EUR | Variance % | F/U | Evidence | Explanation |",
         "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for item in material:
@@ -405,15 +424,28 @@ def render_report(material, excluded, var_df):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--provisional", action="store_true")
+    args = parser.parse_args()
     df, notes = load_data()
+    source = df.copy()
+    df, adjustments = provisional_scenario(source, enabled=args.provisional)
+    original = source.set_index(["business_unit", "month"])
+    for col in source.columns.difference(["business_unit", "month"]):
+        df[f"source_{col}"] = [original.loc[(r.business_unit, r.month), col] for r in df.itertuples()]
+    pd.DataFrame(adjustments).to_csv("output/reporting_adjustments.csv", index=False)
     analyst = load_analyst_commentary()
     var_df = build_variance_table(df)
 
     excluded = [
         {"business_unit": r["business_unit"], "line_item": r["line_item"],
          "month": r["month"], "actual": r["actual"], "budget": r["budget"]}
-        for _, r in var_df[var_df["suspected_data_error"]].iterrows()
+        for _, r in var_df[var_df["withheld_from_analysis"]].iterrows()
     ]
+    for e in excluded:
+        e["actual"] = var_df[(var_df["business_unit"] == e["business_unit"]) &
+                              (var_df["month"] == e["month"]) &
+                              (var_df["line_item"] == e["line_item"])]["source_actual"].iloc[0]
 
     episodes, single_months = find_material_items(var_df)
     material = attach_evidence(episodes + single_months, notes)
@@ -448,20 +480,37 @@ def main():
         a = item.get("analyst")
         comment = f"{a['comment']} ({a['author']}, {a['date']})" if a is not None else ""
         for m in item["months"]:
-            flag_map[(item["business_unit"], item["line_item"], m)] = (kind, ids, comment)
+            scoped_ids = ids
+            if "N12" in ids and not (pd.Timestamp("2025-07-01") <= m <= pd.Timestamp("2025-12-01")):
+                scoped_ids = ""
+            flag_map[(item["business_unit"], item["line_item"], m)] = (kind, scoped_ids, comment)
     out = var_df.copy()
     keys = list(zip(out["business_unit"], out["line_item"], out["month"]))
     out["materiality"] = [flag_map.get(k, ("", "", ""))[0] for k in keys]
     out["evidence_notes"] = [flag_map.get(k, ("", "", ""))[1] for k in keys]
     out["analyst_comment"] = [flag_map.get(k, ("", "", ""))[2] for k in keys]
+    out["provisional_actual"] = out["actual"]
+    out["provisional_budget"] = out["budget"]
+    out["actual"] = out.pop("source_actual")
+    out["budget"] = out.pop("source_budget")
+    out["reporting_basis"] = "provisional demonstration; unapproved estimates and placeholder"
     out["month"] = out["month"].dt.strftime("%Y-%m")
     # Round at the serialization boundary only: every threshold check and
     # evidence match above already ran on full precision, so this only
     # trims float noise from the published file, never from the analysis.
-    for col in ("actual", "budget", "variance_eur"):
+    for col in ("actual", "budget", "provisional_actual", "provisional_budget", "variance_eur"):
         out[col] = out[col].round(2)
     out["variance_pct"] = out["variance_pct"].round(6)
     out.to_csv(TABLE_PATH, index=False)
+    records = []
+    for item in material:
+        records.append(dict(business_unit=item["business_unit"], line_item=item["line_item"],
+                            period=fmt_period(item["months"]), variance_eur=round(float(item["variance_eur"]), 2),
+                            direction=item["direction"], evidence=[h["note"]["note_id"] for h in item["evidence"]],
+                            status="documented" if item["evidence"] else ("analyst" if item.get("analyst") is not None else "unresolved"),
+                            explanation=explanation_text(item)))
+    with open("output/material_items.json", "w", encoding="utf-8") as f:
+        json.dump(records, f, indent=2)
 
     with open(REPORT_PATH, "w", encoding="utf-8") as f:
         f.write(render_report(material, excluded, var_df))

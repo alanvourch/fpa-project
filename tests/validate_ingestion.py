@@ -86,10 +86,10 @@ def parse_report(path):
     text = open(path, encoding="utf-8").read()
 
     errors_section = get_section(
-        text, "## 6. Flagged values: likely data entry errors",
+        text, "## 6. Suspected anomalies requiring source verification",
         "## 7. Flagged values: notable variances",
     )
-    notable_section = get_section(text, "## 7. Flagged values: notable variances")
+    notable_section = get_section(text, "## 7. Flagged values: notable variances").split("\n## ", 1)[0]
 
     def rows_to_keys(rows):
         # table columns: Month | Business Unit | Column | Actual | Budget | Ratio...
@@ -125,8 +125,8 @@ def check_cleaned_csv(path):
     opex_cols = [c for c in NUMERIC_COLUMNS if c.startswith("opex_")]
     missing = df[opex_cols].isna().sum()
     still_missing = missing[missing > 0]
-    if len(still_missing):
-        problems.append(f"Opex columns still have missing values: {still_missing.to_dict()}")
+    if missing.sum() != 9:
+        problems.append(f"Expected 9 source gaps to be preserved; found {missing.sum()}")
 
     return problems, df
 
@@ -140,9 +140,9 @@ def main():
 
     trap_key = (trap["business_unit"], trap["month"], trap["column"])
     if trap_key in data_errors:
-        passes.append(f"Fat-finger trap correctly flagged as a likely data error: {trap_key}")
+        passes.append(f"Fat-finger trap correctly flagged for source verification: {trap_key}")
     else:
-        failures.append(f"MISS: fat-finger trap {trap_key} was NOT flagged as a likely data error")
+        failures.append(f"MISS: fat-finger trap {trap_key} was NOT flagged for source verification")
 
     false_positives = []
     for a in anomalies:
@@ -166,11 +166,11 @@ def main():
     if csv_problems:
         failures.extend(f"CLEANED CSV ISSUE: {p}" for p in csv_problems)
     else:
-        passes.append("Cleaned CSV passes all structural checks (BU names, dedup, dates, numeric, no missing opex)")
+        passes.append("Cleaned CSV passes all structural checks (BU names, dedup, dates, numeric, source gaps preserved)")
 
     print("=== Ingestion Agent Validation ===\n")
     print(f"Ground truth: {len(anomalies)} business anomalies + 1 data entry trap")
-    print(f"Report: {len(data_errors)} flagged as data errors, {len(notable_variances)} flagged as notable variances")
+    print(f"Report: {len(data_errors)} flagged for source verification, {len(notable_variances)} flagged as notable variances")
     print()
     for p in passes:
         print(f"  PASS - {p}")

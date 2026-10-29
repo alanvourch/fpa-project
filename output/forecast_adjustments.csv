@@ -1,0 +1,33 @@
+business_unit,line_item,month,source_actual,raw_actual,normalized_to,reason,evidence,classification,status
+Brand Events,Cost of sales,2024-11,3733130.07,3733130.07,3733130.07,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Brand Events,Cost of sales,2025-04,4238746.9,4238746.9,4238746.9,Retained: recurrence unresolved; materiality is a review trigger.,"N11, N13",unresolved,unreviewed
+Brand Events,Cost of sales,2025-05,4485816.95,4485816.95,4485816.95,Retained: recurrence unresolved; materiality is a review trigger.,"N11, N13",unresolved,unreviewed
+Brand Events,Cost of sales,2025-06,4437761.2,4437761.2,4437761.2,Retained: recurrence unresolved; materiality is a review trigger.,"N11, N13",unresolved,unreviewed
+Brand Events,Cost of sales,2026-04,4272725.09,4272725.09,4272725.09,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Brand Events,Net billings,2025-07,3627995.68,3627995.68,3627995.68,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Brand Events,Net billings,2025-11,52243583.97,5238445.24,5238445.24,Retained: recurrence unresolved; materiality is a review trigger. Source anomaly pending verification; reporting-policy placeholder is a separate provisional assumption.,,unresolved,unreviewed
+Brand Events,Net billings,2026-04,5099183.49,5099183.49,5099183.49,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Corporate Events,Cost of sales,2024-10,1736681.21,1736681.21,1736681.21,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Corporate Events,Net billings,2024-10,2275270.34,2275270.34,2275270.34,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Corporate Events,Opex - Marketing,2025-04,41484.03,41484.03,41484.03,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Corporate Events,Opex - Marketing,2025-05,40770.26,40770.26,40770.26,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Corporate Events,Opex - Marketing,2025-06,42864.57,42864.57,42864.57,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Corporate Events,Opex - Marketing,2025-07,25839.98,25839.98,25839.98,Retained: recurrence unresolved; materiality is a review trigger.,"N12, N16",unresolved,unreviewed
+Corporate Events,Opex - Marketing,2025-08,32713.19,32713.19,32713.19,Retained: recurrence unresolved; materiality is a review trigger.,"N12, N16",unresolved,unreviewed
+Corporate Events,Opex - Marketing,2025-09,38267.58,38267.58,38267.58,Retained: recurrence unresolved; materiality is a review trigger.,"N12, N16",unresolved,unreviewed
+Corporate Events,Opex - Marketing,2025-10,38632.46,38632.46,38632.46,Retained: recurrence unresolved; materiality is a review trigger.,"N12, N16",unresolved,unreviewed
+Corporate Events,Opex - Marketing,2025-11,39033.0,39033.0,39033.0,Retained: recurrence unresolved; materiality is a review trigger.,"N12, N16",unresolved,unreviewed
+Corporate Events,Opex - Marketing,2025-12,44568.16,44568.16,44568.16,Retained: recurrence unresolved; materiality is a review trigger.,"N12, N16",unresolved,unreviewed
+Corporate Events,Opex - Marketing,2026-01,34388.75,34388.75,34388.75,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Corporate Events,Opex - Marketing,2026-02,36324.0,36324.0,36324.0,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Digital/Influence,Cost of sales,2024-07,1083546.76,1083546.76,1083546.76,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Digital/Influence,Cost of sales,2025-01,868913.65,868913.65,868913.65,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Digital/Influence,Net billings,2025-01,1291856.56,1291856.56,1291856.56,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Digital/Influence,Net billings,2025-08,1465426.26,1465426.26,1465426.26,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Digital/Influence,Net billings,2025-09,1915910.14,1915910.14,1915910.14,Retained: recurrence unresolved; materiality is a review trigger.,N08,unresolved,unreviewed
+Government & Institutions,Cost of sales,2024-01,463719.75,463719.75,463719.75,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Government & Institutions,Cost of sales,2024-06,629820.85,629820.85,629820.85,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Government & Institutions,Cost of sales,2024-10,629154.38,629154.38,629154.38,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Government & Institutions,Cost of sales,2025-09,660218.01,660218.01,660218.01,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Government & Institutions,Net billings,2024-10,913902.53,913902.53,913902.53,Retained: recurrence unresolved; materiality is a review trigger.,,unresolved,unreviewed
+Government & Institutions,Opex - IT,2024-11,39366.12,39366.12,39366.12,Retained: recurrence unresolved; materiality is a review trigger.,N06,unresolved,unreviewed

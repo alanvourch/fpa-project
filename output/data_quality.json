@@ -1,0 +1,478 @@
+{
+  "dates_unparsed": [],
+  "dates_original_sample": [
+    "01/01/2024",
+    "01/01/2025",
+    "01/01/2026",
+    "02/01/2024",
+    "02/01/2026",
+    "03/01/2024",
+    "03/01/2025",
+    "03/01/2026"
+  ],
+  "bu_corrections": [
+    {
+      "row": 11,
+      "month": "2024-12-01 00:00:00",
+      "original": "Brand Evnets",
+      "corrected": "Brand Events",
+      "match_confidence": 0.917
+    },
+    {
+      "row": 48,
+      "month": "2025-07-01 00:00:00",
+      "original": "corporate events",
+      "corrected": "Corporate Events",
+      "match_confidence": 1.0
+    },
+    {
+      "row": 73,
+      "month": "2025-02-01 00:00:00",
+      "original": "DIGITAL/INFLUENCE",
+      "corrected": "Digital/Influence",
+      "match_confidence": 1.0
+    },
+    {
+      "row": 87,
+      "month": "2026-04-01 00:00:00",
+      "original": "Digital/Inlfuence",
+      "corrected": "Digital/Influence",
+      "match_confidence": 0.941
+    },
+    {
+      "row": 94,
+      "month": "2024-05-01 00:00:00",
+      "original": "Government and Institutions",
+      "corrected": "Government & Institutions",
+      "match_confidence": 0.923
+    },
+    {
+      "row": 98,
+      "month": "2024-09-01 00:00:00",
+      "original": "Government&Institutions",
+      "corrected": "Government & Institutions",
+      "match_confidence": 0.958
+    },
+    {
+      "row": 119,
+      "month": "2026-06-01 00:00:00",
+      "original": "Government&Institutions",
+      "corrected": "Government & Institutions",
+      "match_confidence": 0.958
+    }
+  ],
+  "duplicates_removed": [
+    {
+      "month": "2025-01-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "identical_to_kept_row": true
+    },
+    {
+      "month": "2025-06-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "identical_to_kept_row": true
+    },
+    {
+      "month": "2026-04-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "identical_to_kept_row": true
+    },
+    {
+      "month": "2026-03-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "identical_to_kept_row": true
+    }
+  ],
+  "currency_parsed": [
+    {
+      "row": 21,
+      "month": "2025-10-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "revenue_budget",
+      "raw_value": "EUR4,819,709"
+    },
+    {
+      "row": 119,
+      "month": "2026-06-01 00:00:00",
+      "business_unit": "Government & Institutions",
+      "column": "revenue_budget",
+      "raw_value": "EUR1,099,421"
+    },
+    {
+      "row": 52,
+      "month": "2025-11-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "revenue_prior_year",
+      "raw_value": "EUR2,292,396"
+    },
+    {
+      "row": 71,
+      "month": "2024-12-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "column": "cogs_actual",
+      "raw_value": "1,525,033 EUR"
+    },
+    {
+      "row": 46,
+      "month": "2025-05-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "payroll_actual",
+      "raw_value": "EUR167,102"
+    },
+    {
+      "row": 16,
+      "month": "2025-05-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "social_charges_budget",
+      "raw_value": "129,392 EUR"
+    },
+    {
+      "row": 28,
+      "month": "2026-05-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "social_charges_actual",
+      "raw_value": "EUR130,626"
+    },
+    {
+      "row": 83,
+      "month": "2025-12-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "column": "opex_facilities_actual",
+      "raw_value": "37,078 EUR"
+    },
+    {
+      "row": 7,
+      "month": "2024-08-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "opex_ga_actual",
+      "raw_value": "38,263 EUR"
+    },
+    {
+      "row": 102,
+      "month": "2025-01-01 00:00:00",
+      "business_unit": "Government & Institutions",
+      "column": "depreciation_budget",
+      "raw_value": "EUR4,120"
+    }
+  ],
+  "opex_imputed": [
+    {
+      "month": "2025-02-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "opex_travel_actual"
+    },
+    {
+      "month": "2025-01-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "opex_travel_actual"
+    },
+    {
+      "month": "2024-01-01 00:00:00",
+      "business_unit": "Government & Institutions",
+      "column": "opex_travel_actual"
+    },
+    {
+      "month": "2026-02-01 00:00:00",
+      "business_unit": "Government & Institutions",
+      "column": "opex_marketing_budget"
+    },
+    {
+      "month": "2024-04-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "opex_marketing_actual"
+    },
+    {
+      "month": "2025-11-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "column": "opex_facilities_budget"
+    },
+    {
+      "month": "2024-07-01 00:00:00",
+      "business_unit": "Government & Institutions",
+      "column": "opex_facilities_actual"
+    },
+    {
+      "month": "2024-04-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "opex_ga_budget"
+    },
+    {
+      "month": "2025-06-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "opex_ga_budget"
+    }
+  ],
+  "data_errors": [
+    {
+      "month": "2025-11-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "revenue_actual",
+      "actual": 52243583.97,
+      "budget": 5238445.24,
+      "ratio_to_budget": 9.97
+    }
+  ],
+  "notable_variances": [
+    {
+      "month": "2024-05-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "payroll_actual",
+      "actual": 284791.67,
+      "budget": 273094.23,
+      "ratio_to_budget": 1.04,
+      "historical_range": "[0.96, 1.03]"
+    },
+    {
+      "month": "2024-11-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "cogs_actual",
+      "actual": 3733130.07,
+      "budget": 4079942.93,
+      "ratio_to_budget": 0.91,
+      "historical_range": "[0.92, 1.11]"
+    },
+    {
+      "month": "2025-04-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "cogs_actual",
+      "actual": 4238746.9,
+      "budget": 3668645.95,
+      "ratio_to_budget": 1.16,
+      "historical_range": "[0.92, 1.11]"
+    },
+    {
+      "month": "2025-05-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "cogs_actual",
+      "actual": 4485816.95,
+      "budget": 4000713.2,
+      "ratio_to_budget": 1.12,
+      "historical_range": "[0.92, 1.11]"
+    },
+    {
+      "month": "2025-06-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "cogs_actual",
+      "actual": 4437761.2,
+      "budget": 3853258.07,
+      "ratio_to_budget": 1.15,
+      "historical_range": "[0.92, 1.11]"
+    },
+    {
+      "month": "2025-08-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "opex_facilities_actual",
+      "actual": 47548.07,
+      "budget": 45556.88,
+      "ratio_to_budget": 1.04,
+      "historical_range": "[0.97, 1.03]"
+    },
+    {
+      "month": "2025-08-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "opex_ga_actual",
+      "actual": 33937.82,
+      "budget": 38171.67,
+      "ratio_to_budget": 0.89,
+      "historical_range": "[0.90, 1.11]"
+    },
+    {
+      "month": "2025-09-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "payroll_actual",
+      "actual": 271959.16,
+      "budget": 284072.26,
+      "ratio_to_budget": 0.96,
+      "historical_range": "[0.96, 1.03]"
+    },
+    {
+      "month": "2026-04-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "revenue_actual",
+      "actual": 5099183.49,
+      "budget": 4710360.23,
+      "ratio_to_budget": 1.08,
+      "historical_range": "[0.93, 1.08]"
+    },
+    {
+      "month": "2026-04-01 00:00:00",
+      "business_unit": "Brand Events",
+      "column": "cogs_actual",
+      "actual": 4272725.09,
+      "budget": 3815391.79,
+      "ratio_to_budget": 1.12,
+      "historical_range": "[0.92, 1.11]"
+    },
+    {
+      "month": "2024-03-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "payroll_actual",
+      "actual": 163608.2,
+      "budget": 155765.49,
+      "ratio_to_budget": 1.05,
+      "historical_range": "[0.96, 1.05]"
+    },
+    {
+      "month": "2024-04-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "opex_it_actual",
+      "actual": 16647.16,
+      "budget": 20100.0,
+      "ratio_to_budget": 0.83,
+      "historical_range": "[0.87, 1.14]"
+    },
+    {
+      "month": "2024-06-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "opex_travel_actual",
+      "actual": 5471.75,
+      "budget": 4240.0,
+      "ratio_to_budget": 1.29,
+      "historical_range": "[0.82, 1.23]"
+    },
+    {
+      "month": "2025-03-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "opex_marketing_actual",
+      "actual": 51262.27,
+      "budget": 43650.0,
+      "ratio_to_budget": 1.17,
+      "historical_range": "[0.67, 1.14]"
+    },
+    {
+      "month": "2025-07-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "opex_marketing_actual",
+      "actual": 25839.98,
+      "budget": 42975.0,
+      "ratio_to_budget": 0.6,
+      "historical_range": "[0.67, 1.14]"
+    },
+    {
+      "month": "2025-08-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "payroll_actual",
+      "actual": 155724.16,
+      "budget": 162426.66,
+      "ratio_to_budget": 0.96,
+      "historical_range": "[0.96, 1.05]"
+    },
+    {
+      "month": "2025-08-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "social_charges_actual",
+      "actual": 70522.71,
+      "budget": 74716.26,
+      "ratio_to_budget": 0.94,
+      "historical_range": "[0.95, 1.06]"
+    },
+    {
+      "month": "2026-02-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "opex_it_actual",
+      "actual": 16983.16,
+      "budget": 20833.33,
+      "ratio_to_budget": 0.82,
+      "historical_range": "[0.87, 1.14]"
+    },
+    {
+      "month": "2026-05-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "payroll_actual",
+      "actual": 159448.06,
+      "budget": 166067.72,
+      "ratio_to_budget": 0.96,
+      "historical_range": "[0.96, 1.05]"
+    },
+    {
+      "month": "2026-05-01 00:00:00",
+      "business_unit": "Corporate Events",
+      "column": "opex_it_actual",
+      "actual": 17025.3,
+      "budget": 20933.33,
+      "ratio_to_budget": 0.81,
+      "historical_range": "[0.87, 1.14]"
+    },
+    {
+      "month": "2024-07-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "column": "cogs_actual",
+      "actual": 1083546.76,
+      "budget": 1228013.87,
+      "ratio_to_budget": 0.88,
+      "historical_range": "[0.89, 1.13]"
+    },
+    {
+      "month": "2025-01-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "column": "revenue_actual",
+      "actual": 1291856.56,
+      "budget": 1516666.67,
+      "ratio_to_budget": 0.85,
+      "historical_range": "[0.86, 1.15]"
+    },
+    {
+      "month": "2025-01-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "column": "cogs_actual",
+      "actual": 868913.65,
+      "budget": 1031333.33,
+      "ratio_to_budget": 0.84,
+      "historical_range": "[0.89, 1.13]"
+    },
+    {
+      "month": "2025-01-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "column": "payroll_actual",
+      "actual": 271314.96,
+      "budget": 258787.5,
+      "ratio_to_budget": 1.05,
+      "historical_range": "[0.96, 1.03]"
+    },
+    {
+      "month": "2025-01-01 00:00:00",
+      "business_unit": "Digital/Influence",
+      "column": "social_charges_actual",
+      "actual": 125382.45,
+      "budget": 119042.25,
+      "ratio_to_budget": 1.05,
+      "historical_range": "[0.95, 1.05]"
+    },
+    {
+      "month": "2024-06-01 00:00:00",
+      "business_unit": "Government & Institutions",
+      "column": "opex_marketing_actual",
+      "actual": 3152.55,
+      "budget": 4240.0,
+      "ratio_to_budget": 0.74,
+      "historical_range": "[0.76, 1.25]"
+    },
+    {
+      "month": "2024-11-01 00:00:00",
+      "business_unit": "Government & Institutions",
+      "column": "opex_it_actual",
+      "actual": 39366.12,
+      "budget": 15250.0,
+      "ratio_to_budget": 2.58,
+      "historical_range": "[0.81, 1.23]"
+    },
+    {
+      "month": "2024-12-01 00:00:00",
+      "business_unit": "Government & Institutions",
+      "column": "bonus_actual",
+      "actual": 19446.86,
+      "budget": 17569.67,
+      "ratio_to_budget": 1.11,
+      "historical_range": "[0.90, 1.10]"
+    },
+    {
+      "month": "2025-04-01 00:00:00",
+      "business_unit": "Government & Institutions",
+      "column": "bonus_actual",
+      "actual": 15520.29,
+      "budget": 17743.64,
+      "ratio_to_budget": 0.87,
+      "historical_range": "[0.90, 1.10]"
+    }
+  ]
+}

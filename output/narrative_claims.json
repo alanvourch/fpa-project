@@ -1,0 +1,401 @@
+{
+  "facts": [
+    {
+      "id": "fy_actual",
+      "section": "FY2025 assessment",
+      "business_unit": "GROUP",
+      "period": "FY2025",
+      "metric": "provisional operating result",
+      "amount": 2366737.78,
+      "direction": "positive",
+      "evidence": [
+        "variance_table.csv"
+      ],
+      "statement": "FY2025 provisional group operating result is EUR2,367k."
+    },
+    {
+      "id": "fy_budget",
+      "section": "FY2025 assessment",
+      "business_unit": "GROUP",
+      "period": "FY2025",
+      "metric": "provisional budget operating result",
+      "amount": 4795476.38,
+      "direction": "positive",
+      "evidence": [
+        "variance_table.csv"
+      ],
+      "statement": "The budget comparator is EUR4,795k and includes estimates for missing budget cells."
+    },
+    {
+      "id": "fy_gap",
+      "section": "FY2025 assessment",
+      "business_unit": "GROUP",
+      "period": "FY2025",
+      "metric": "operating result variance",
+      "amount": -2428738.6,
+      "direction": "negative",
+      "evidence": [
+        "variance_table.csv"
+      ],
+      "statement": "The shortfall is EUR2,429k, an adverse variance."
+    },
+    {
+      "id": "brand_loss",
+      "section": "FY2025 assessment",
+      "business_unit": "Brand Events",
+      "period": "FY2025",
+      "metric": "provisional operating result",
+      "amount": -391139.5,
+      "direction": "negative",
+      "evidence": [
+        "variance_table.csv"
+      ],
+      "statement": "Brand Events records a provisional FY2025 operating loss of EUR391k."
+    },
+    {
+      "id": "basis",
+      "section": "FY2025 assessment",
+      "business_unit": "GROUP",
+      "period": "FY2025",
+      "metric": "reporting basis",
+      "amount": null,
+      "direction": "context",
+      "evidence": [
+        "reporting_adjustments.csv",
+        "reporting_policy.json"
+      ],
+      "statement": "These results use unapproved estimates for missing source cells and a budget placeholder for November 2025 Brand Events billings. The source amount remains unconfirmed. Totals are a provisional demonstration scenario, pending source verification."
+    },
+    {
+      "id": "overrun",
+      "section": "Financial drivers",
+      "business_unit": "Brand Events",
+      "period": "2025-04..2025-06",
+      "metric": "project cost overrun",
+      "amount": -1639707.83,
+      "direction": "negative",
+      "evidence": [
+        "N11"
+      ],
+      "statement": "Brand Events: EUR1,640k adverse P&L impact from the project cost overrun during Apr-Jun 2025."
+    },
+    {
+      "id": "fx",
+      "section": "Financial drivers",
+      "business_unit": "Digital/Influence",
+      "period": "2025-09..2025-09",
+      "metric": "FX billings shortfall",
+      "amount": -196952.51,
+      "direction": "negative",
+      "evidence": [
+        "N08"
+      ],
+      "statement": "Digital/Influence: EUR197k adverse P&L impact from the FX billings shortfall during Sep 2025."
+    },
+    {
+      "id": "marketing",
+      "section": "Financial drivers",
+      "business_unit": "Corporate Events",
+      "period": "2025-07..2025-12",
+      "metric": "marketing underspend in the documented period",
+      "amount": 50945.63,
+      "direction": "positive",
+      "evidence": [
+        "N12"
+      ],
+      "statement": "Corporate Events: EUR51k favorable P&L impact from the marketing underspend in the documented period during Jul-Dec 2025."
+    },
+    {
+      "id": "quiet_margin",
+      "section": "Financial drivers",
+      "business_unit": "GROUP",
+      "period": "FY2025",
+      "metric": "gross margin variance below monthly materiality",
+      "amount": -955644.94,
+      "direction": "negative",
+      "evidence": [
+        "variance_table.csv"
+      ],
+      "statement": "Gross-margin variances below monthly materiality total EUR956k adverse in FY2025 and need review alongside the largest project item."
+    },
+    {
+      "id": "marketing_scope",
+      "section": "Financial drivers",
+      "business_unit": "Corporate Events",
+      "period": "2025-04..2026-02",
+      "metric": "cause-period limitation",
+      "amount": null,
+      "direction": "context",
+      "evidence": [
+        "N12",
+        "N16"
+      ],
+      "statement": "The Corporate Events marketing run spans April 2025-February 2026. In-housing is documented from July through December 2025. The earlier and later months need separate explanation; the detector cannot establish that the saving has ended."
+    },
+    {
+      "id": "open_10",
+      "section": "Open items",
+      "business_unit": "Digital/Influence",
+      "period": "2025-08",
+      "metric": "Net billings variance",
+      "amount": 135341.04,
+      "direction": "positive",
+      "evidence": [
+        "material_items.json"
+      ],
+      "statement": "Digital/Influence Net billings, 2025-08: EUR135k favorable, still unexplained. The BU controller owns the follow-up."
+    },
+    {
+      "id": "open_11",
+      "section": "Open items",
+      "business_unit": "Government & Institutions",
+      "period": "2025-09",
+      "metric": "Cost of sales variance",
+      "amount": -68616.47,
+      "direction": "negative",
+      "evidence": [
+        "material_items.json"
+      ],
+      "statement": "Government & Institutions Cost of sales, 2025-09: EUR69k adverse, still unexplained. The BU controller owns the follow-up."
+    },
+    {
+      "id": "open_count",
+      "section": "Open items",
+      "business_unit": "GROUP",
+      "period": "2024-01..2026-06",
+      "metric": "unresolved material item count",
+      "amount": 2.0,
+      "direction": "positive",
+      "evidence": [
+        "material_items.json"
+      ],
+      "statement": "2 material items remain unresolved in the full historical review. Analyst explanations elsewhere are illustrative manual input on synthetic data."
+    },
+    {
+      "id": "q3_bills_GROUP",
+      "section": "Q3 2026 outlook",
+      "business_unit": "GROUP",
+      "period": "Q3 2026",
+      "metric": "net billings forecast",
+      "amount": 23000029.69,
+      "direction": "positive",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Group Q3 2026 net billings forecast: EUR23,000k."
+    },
+    {
+      "id": "q3_op_GROUP",
+      "section": "Q3 2026 outlook",
+      "business_unit": "GROUP",
+      "period": "Q3 2026",
+      "metric": "operating result forecast",
+      "amount": 663265.86,
+      "direction": "positive",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Group Q3 2026 operating profit forecast: EUR663k."
+    },
+    {
+      "id": "q3_bills_Brand Events",
+      "section": "Q3 2026 outlook",
+      "business_unit": "Brand Events",
+      "period": "Q3 2026",
+      "metric": "net billings forecast",
+      "amount": 10681751.83,
+      "direction": "positive",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Brand Events Q3 2026 net billings forecast: EUR10,682k."
+    },
+    {
+      "id": "q3_op_Brand Events",
+      "section": "Q3 2026 outlook",
+      "business_unit": "Brand Events",
+      "period": "Q3 2026",
+      "metric": "operating result forecast",
+      "amount": 812471.07,
+      "direction": "positive",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Brand Events Q3 2026 operating profit forecast: EUR812k."
+    },
+    {
+      "id": "q3_bills_Corporate Events",
+      "section": "Q3 2026 outlook",
+      "business_unit": "Corporate Events",
+      "period": "Q3 2026",
+      "metric": "net billings forecast",
+      "amount": 4407507.78,
+      "direction": "positive",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Corporate Events Q3 2026 net billings forecast: EUR4,408k."
+    },
+    {
+      "id": "q3_op_Corporate Events",
+      "section": "Q3 2026 outlook",
+      "business_unit": "Corporate Events",
+      "period": "Q3 2026",
+      "metric": "operating result forecast",
+      "amount": -142778.6,
+      "direction": "negative",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Corporate Events Q3 2026 operating loss forecast: EUR143k."
+    },
+    {
+      "id": "q3_bills_Digital/Influence",
+      "section": "Q3 2026 outlook",
+      "business_unit": "Digital/Influence",
+      "period": "Q3 2026",
+      "metric": "net billings forecast",
+      "amount": 5563030.71,
+      "direction": "positive",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Digital/Influence Q3 2026 net billings forecast: EUR5,563k."
+    },
+    {
+      "id": "q3_op_Digital/Influence",
+      "section": "Q3 2026 outlook",
+      "business_unit": "Digital/Influence",
+      "period": "Q3 2026",
+      "metric": "operating result forecast",
+      "amount": -2484.86,
+      "direction": "negative",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Digital/Influence Q3 2026 operating loss forecast: EUR2k."
+    },
+    {
+      "id": "q3_bills_Government & Institutions",
+      "section": "Q3 2026 outlook",
+      "business_unit": "Government & Institutions",
+      "period": "Q3 2026",
+      "metric": "net billings forecast",
+      "amount": 2347739.37,
+      "direction": "positive",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Government & Institutions Q3 2026 net billings forecast: EUR2,348k."
+    },
+    {
+      "id": "q3_op_Government & Institutions",
+      "section": "Q3 2026 outlook",
+      "business_unit": "Government & Institutions",
+      "period": "Q3 2026",
+      "metric": "operating result forecast",
+      "amount": -3941.75,
+      "direction": "negative",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Government & Institutions Q3 2026 operating loss forecast: EUR4k."
+    },
+    {
+      "id": "month_2026-07",
+      "section": "Q3 2026 outlook",
+      "business_unit": "GROUP",
+      "period": "2026-07",
+      "metric": "operating result forecast",
+      "amount": 423126.34,
+      "direction": "positive",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Group July 2026 operating profit forecast: EUR423k."
+    },
+    {
+      "id": "month_2026-08",
+      "section": "Q3 2026 outlook",
+      "business_unit": "GROUP",
+      "period": "2026-08",
+      "metric": "operating result forecast",
+      "amount": -193141.5,
+      "direction": "negative",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Group August 2026 operating loss forecast: EUR193k."
+    },
+    {
+      "id": "month_2026-09",
+      "section": "Q3 2026 outlook",
+      "business_unit": "GROUP",
+      "period": "2026-09",
+      "metric": "operating result forecast",
+      "amount": 433281.02,
+      "direction": "positive",
+      "evidence": [
+        "forecast.csv"
+      ],
+      "statement": "Group September 2026 operating profit forecast: EUR433k."
+    },
+    {
+      "id": "outlook_risk",
+      "section": "Q3 2026 outlook",
+      "business_unit": "GROUP",
+      "period": "Q3 2026",
+      "metric": "forecast limitation",
+      "amount": null,
+      "direction": "context",
+      "evidence": [
+        "forecast_report.md"
+      ],
+      "statement": "The selected forecast retains unresolved historical effects. The August operating loss needs review by BU managers and group FP&A. A seasonal pattern does not establish that the loss is commercially acceptable; compare the raw baseline and unapproved sensitivity in the forecast report."
+    },
+    {
+      "id": "actions",
+      "section": "Management actions",
+      "business_unit": "GROUP",
+      "period": "As of 2026-06-30",
+      "metric": "owners",
+      "amount": null,
+      "direction": "context",
+      "evidence": [
+        "reporting_policy.json",
+        "material_items.json"
+      ],
+      "statement": "Brand Events' manager should review project recovery and margin controls with group FP&A. The Corporate Events manager should review the forecast loss and document the savings period. BU controllers should resolve the two unexplained items; the finance data owner should confirm missing cells and November billings before approval."
+    }
+  ],
+  "order": [
+    "fy_actual",
+    "fy_budget",
+    "fy_gap",
+    "brand_loss",
+    "basis",
+    "overrun",
+    "fx",
+    "marketing",
+    "quiet_margin",
+    "marketing_scope",
+    "open_10",
+    "open_11",
+    "open_count",
+    "q3_bills_GROUP",
+    "q3_op_GROUP",
+    "q3_bills_Brand Events",
+    "q3_op_Brand Events",
+    "q3_bills_Corporate Events",
+    "q3_op_Corporate Events",
+    "q3_bills_Digital/Influence",
+    "q3_op_Digital/Influence",
+    "q3_bills_Government & Institutions",
+    "q3_op_Government & Institutions",
+    "month_2026-07",
+    "month_2026-08",
+    "month_2026-09",
+    "outlook_risk",
+    "actions"
+  ]
+}

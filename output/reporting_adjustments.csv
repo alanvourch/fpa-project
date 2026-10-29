@@ -1,0 +1,11 @@
+month,business_unit,column,source_value,scenario_value,method,approval
+2025-02,Brand Events,opex_travel_actual,,8200.23,previous observed month only,unapproved demonstration estimate
+2025-01,Corporate Events,opex_travel_actual,,4016.19,previous observed month only,unapproved demonstration estimate
+2024-01,Government & Institutions,opex_travel_actual,,1820.0,opening actual has no earlier observation; same-month budget placeholder,unapproved demonstration estimate
+2026-02,Government & Institutions,opex_marketing_budget,,3640.0,previous observed month only,unapproved demonstration estimate
+2024-04,Brand Events,opex_marketing_actual,,21104.19,previous observed month only,unapproved demonstration estimate
+2025-11,Digital/Influence,opex_facilities_budget,,37458.13,previous observed month only,unapproved demonstration estimate
+2024-07,Government & Institutions,opex_facilities_actual,,16367.85,previous observed month only,unapproved demonstration estimate
+2024-04,Corporate Events,opex_ga_budget,,21070.0,previous observed month only,unapproved demonstration estimate
+2025-06,Corporate Events,opex_ga_budget,,21560.0,previous observed month only,unapproved demonstration estimate
+2025-11,Brand Events,revenue_actual,52243583.97,5238445.24,budget placeholder pending source verification,unapproved demonstration assumption

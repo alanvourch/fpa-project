@@ -43,6 +43,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 from fpdf import FPDF
+from matplotlib.ticker import FuncFormatter
+from reporting_basis import load_reporting_table
 
 VARIANCE_TABLE_PATH = "output/variance_table.csv"
 FORECAST_PATH = "output/forecast.csv"
@@ -92,12 +94,18 @@ def fmt_money(v):
     return f"-EUR{-v:,.0f}" if v < 0 else f"EUR{v:,.0f}"
 
 
+def fmt_k(v):
+    return f"-EUR{-v/1000:,.0f}k" if v < 0 else f"EUR{v/1000:,.0f}k"
+
+
 def fmt_millions(v):
     return f"-EUR{-v / 1e6:,.1f}M" if v < 0 else f"EUR{v / 1e6:,.1f}M"
 
 
 def fmt_signed_k(v):
     # One decimal below 10k so small-but-real effects never print as "+0k".
+    if abs(v) < 50:
+        return "0k"
     if abs(v) < 10_000:
         return f"{v / 1e3:+,.1f}k"
     return f"{v / 1e3:+,.0f}k"
@@ -109,7 +117,7 @@ def slugify(bu):
 
 
 def load_inputs():
-    vt = pd.read_csv(VARIANCE_TABLE_PATH)
+    vt = load_reporting_table(VARIANCE_TABLE_PATH)
     vt["materiality"] = vt["materiality"].fillna("")
     vt["evidence_notes"] = vt["evidence_notes"].fillna("")
     vt["analyst_comment"] = vt["analyst_comment"].fillna("")
@@ -130,15 +138,15 @@ def fy_slice(vt, bu):
     y = vt[(vt["business_unit"] == bu) & (vt["month"].str.startswith(YEAR))].copy()
     # Suspected data-entry rows are held at budget pending correction: zero
     # variance contribution, consistent with the group bridge in the pack.
-    y.loc[y["suspected_data_error"], "impact"] = 0.0
+    y.loc[y["withheld_from_analysis"], "impact"] = 0.0
     return y
 
 
 def scorecard(y):
-    err = y["suspected_data_error"]
+    err = y["withheld_from_analysis"]
     rev = y[y["line_item"] == "Net billings"]
     shown_rev_actual = rev.apply(
-        lambda r: r["budget"] if r["suspected_data_error"] else r["actual"], axis=1).sum()
+        lambda r: r["budget"] if r["withheld_from_analysis"] else r["actual"], axis=1).sum()
     rev_budget = rev["budget"].sum()
     costs = y[y["line_item"] != "Net billings"]
     costs_actual, costs_budget = costs["actual"].sum(), costs["budget"].sum()
@@ -198,8 +206,8 @@ def revenue_driver_split(vt, drivers, bu):
              & (vt["month"].str.startswith(YEAR))]
     d = drivers[(drivers["business_unit"] == bu) & (drivers["month"].str.startswith(YEAR))]
     m = rev.merge(d, on=["month", "business_unit"])
-    excluded = m[m["suspected_data_error"]]
-    m = m[~m["suspected_data_error"]]
+    excluded = m[m["withheld_from_analysis"]]
+    m = m[~m["withheld_from_analysis"]]
     val_b = m["budget"] / m["projects_budget"]
     val_a = m["actual"] / m["projects_actual"]
     vol = ((m["projects_actual"] - m["projects_budget"]) * val_b).sum()
@@ -266,6 +274,14 @@ def driver_label(item, notes):
     if item["evidence_ids"]:
         top = notes.loc[item["evidence_ids"][0], "note"]
         first = _first_sentence(top)
+        if 'N12' in item['evidence_ids']:
+            first = 'In-housing documented Jul-Dec 2025; other months need review.'
+        elif 'N11' in item['evidence_ids']:
+            first = 'Scope expansion raised production costs; partial recovery only.'
+        elif 'N08' in item['evidence_ids']:
+            first = 'USD billings translated lower after EUR strengthened.'
+        elif 'N06' in item['evidence_ids']:
+            first = 'Emergency hardware and vendor licenses after system failure.'
         return f"{first} (business note {', '.join(item['evidence_ids'])})"
     if item["analyst_comment"]:
         first = _first_sentence(item["analyst_comment"].rsplit(" (", 1)[0])
@@ -273,10 +289,10 @@ def driver_label(item, notes):
     return "No clear driver identified; still open with the BU controller."
 
 
-def _first_sentence(text, limit=130):
-    first = re.split(r"(?<=[.;])\s", str(text))[0].strip()
+def _first_sentence(text, limit=240):
+    first = re.split(r"(?<=[.])\s", str(text))[0].strip()
     if len(first) > limit:
-        first = first[:limit - 3].rstrip() + "..."
+        first = textwrap.shorten(first, width=limit, placeholder=" (see full explanation in variance report).")
     return first
 
 
@@ -304,7 +320,7 @@ def outlook(fc, bu):
 def bridge_chart(bu, card, blocks, png_path):
     labels = ([f"FY{YEAR} budget\noperating result"]
               + ["\n".join(textwrap.wrap(b[0], 14)) for b in blocks]
-              + [f"FY{YEAR} actual\noperating result"])
+              + [f"FY{YEAR} provisional\noperating result"])
     n = len(labels)
 
     fig, ax = plt.subplots(figsize=(8.6, 3.6), dpi=150)
@@ -320,7 +336,7 @@ def bridge_chart(bu, card, blocks, png_path):
     bars.append((n - 1, 0, card["net_actual"], ANCHOR))
 
     pad = max((hi - lo) * 0.5, abs(hi) * 0.02)
-    y0, y1 = lo - pad, hi + pad
+    y0, y1 = min(lo, 0) - pad * 0.25, max(hi, 0) + pad
     for x, bottom, height, color in bars:
         ax.bar(x, height, bottom=bottom, width=0.6, color=color, zorder=3)
 
@@ -346,7 +362,9 @@ def bridge_chart(bu, card, blocks, png_path):
     ax.set_ylim(y0, y1)
     ax.set_xticks(range(n))
     ax.set_xticklabels(labels, fontsize=8.5, color=INK_2)
-    ax.set_yticks([])
+    ax.axhline(0, color=INK_2, linewidth=1)
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v/1e6:.1f}"))
+    ax.set_ylabel("EUR millions", fontsize=8)
     for side in ("top", "right", "left"):
         ax.spines[side].set_visible(False)
     ax.tick_params(length=0)
@@ -355,11 +373,10 @@ def bridge_chart(bu, card, blocks, png_path):
     if card["held_rows"]:
         note = ("  Nov-2025 revenue held at budget pending correction of a "
                 "suspected data entry error.")
-    fig.text(0.02, 0.985, f"{bu}: FY{YEAR} operating result, budget to actual",
+    fig.text(0.02, 0.985, f"{bu}: FY{YEAR} operating result, budget to provisional",
              fontsize=12, fontweight="bold", color=INK, ha="left", va="top")
     fig.text(0.02, 0.985 - 0.055,
-             "EUR. Green favorable, red unfavorable; every bar value-labeled, "
-             "y-axis zoomed to the variance range." + note,
+             "Provisional scenario. Green favorable; red adverse. Zero baseline shown." + note,
              fontsize=7.5, color=MUTED, ha="left", va="top")
     fig.subplots_adjust(top=0.80)
     fig.savefig(png_path, bbox_inches="tight")
@@ -369,7 +386,7 @@ def bridge_chart(bu, card, blocks, png_path):
 # --------------------------------------------------------------- rendering
 
 
-def follow_ups(items, card):
+def follow_ups(items, card, out=None):
     ups = [it for it in items if not it["evidence_ids"] and not it["analyst_comment"]]
     lines = []
     for it in ups[:3]:
@@ -380,19 +397,24 @@ def follow_ups(items, card):
     if len(ups) > 3:
         lines.append(f"{len(ups) - 3} further material item(s) still open; "
                      "see the variance report for the full list.")
+    if card["net_actual"] < 0:
+        lines.append("BU manager: review project recovery and margin controls with group FP&A; agree an action plan for the annual operating loss.")
     if card["held_rows"]:
-        lines.append("Correct the Nov-2025 revenue entry at source: the recorded figure fails "
-                     "the magnitude plausibility check while the ops system shows normal "
-                     "project activity, so it is treated as a data error, not performance.")
+        lines.append("Verify the Nov-2025 revenue entry at source: the ratio triggers review while the ops system shows normal "
+                     "project activity. Verify the invoice source; the budget placeholder is unapproved.")
+    if any('N12' in it['evidence_ids'] for it in items):
+        lines.append("BU manager: explain the savings before July 2025 and after December; confirm which effects continue.")
+    if out and out['net'] < 0:
+        lines.append(f"BU manager and FP&A: review the Q3 forecast operating loss of {fmt_k(abs(out['net']))}; agree a margin and cost response.")
     if not lines:
-        lines.append("No open follow-ups this cycle.")
+        lines.append("BU manager: review the August group loss and sensitivity before approving the outlook.")
     return lines
 
 
 def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
     q_label = " / ".join(pd.Period(m).strftime("%b %Y") for m in out["months"])
     lines = [
-        f"# {bu}: FY{YEAR} Budget vs Actual and Q3 2026 Outlook",
+        f"# {bu}: FY{YEAR} provisional review and Q3 2026 outlook",
         "",
         "One-page business review for the BU manager. Generated by "
         "`agents/bu_report_agent.py` from the pipeline's own outputs "
@@ -400,9 +422,11 @@ def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
         "`data/eventco_drivers.csv`, `data/business_notes.csv`). "
         "This agent never reads `data/ground_truth.md`.",
         "",
-        f"## FY{YEAR} scorecard",
+        f"## FY{YEAR} provisional scorecard",
         "",
-        "| | Actual | Budget | Variance |",
+        "> As of 30 June 2026. Source gaps use unapproved estimates. Brand Events November billings use a budget placeholder pending verification. See reporting_adjustments.csv. Price/mix and rate effects are decompositions, not independently verified causes.",
+        "",
+        "| | Provisional | Budget comparator (includes estimates) | Variance |",
         "|---|---|---|---|",
         f"| Net billings | {fmt_money(card['revenue_actual'])} | {fmt_money(card['revenue_budget'])} "
         f"| {fmt_signed_k(card['revenue_actual'] - card['revenue_budget'])} |",
@@ -423,15 +447,15 @@ def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
         "",
         "## What drove it",
         "",
-        f"- **Payroll ran {fmt_signed_k(pay['variance'])} vs budget.** Headcount effect "
+        f"- Payroll ran {fmt_signed_k(pay['variance'])} vs budget. Headcount effect "
         f"{fmt_signed_k(pay['volume'])} (average {pay['fte_actual_avg']:.1f} FTE vs "
         f"{pay['fte_budget_avg']:.1f} planned), rate effect {fmt_signed_k(pay['rate'])} "
-        "(salary mix, overtime and timing). The two effects reconcile exactly to the "
+        "(arithmetic residual, not a verified cause). The two effects reconcile to the "
         "payroll variance.",
-        f"- **Net billings ran {fmt_signed_k(rev['variance'])} vs budget"
+        f"- Net billings ran {fmt_signed_k(rev['variance'])} vs budget"
         + (" (excluding the month pending data correction)" if rev["excluded_months"] else "")
-        + f".** Volume effect {fmt_signed_k(rev['volume'])} ({rev['projects_actual']} projects "
-        f"delivered vs {rev['projects_budget']} planned), price/mix effect "
+        + f". Volume effect {fmt_signed_k(rev['volume'])} ({rev['projects_actual']} projects "
+        f"delivered vs {rev['projects_budget']} planned), price/mix residual "
         f"{fmt_signed_k(rev['price'])}. The two effects reconcile exactly to the net billings "
         "variance.",
     ]
@@ -440,7 +464,7 @@ def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
             f"- *Data note:* {ex['month']} is excluded from the revenue split above. The ops "
             f"system shows normal activity that month ({ex['projects_actual']} projects "
             f"delivered vs {ex['projects_budget']} planned), which supports treating the "
-            "recorded revenue figure as a data entry error rather than a business event.")
+            "source-verification follow-up. It does not prove a data entry error.")
     lines += [
         "",
         "## Material variances (full 30-month window)",
@@ -464,8 +488,8 @@ def render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug):
         f"Net billings {fmt_money(out['revenue'])} ({out['revenue_vs_py']:+.1%} vs the same "
         f"quarter last year), gross margin {fmt_money(out['gm'])} "
         f"({out['gm_vs_py']:+.1%}), operating result {fmt_money(out['net'])}, "
-        f"{out['margin']:.1%} of gross margin. One-off events and concluded programmes are "
-        "excluded from the forecast base; see the forecast report's audit trail.",
+        f"{out['margin']:.1%} of gross margin. Unresolved historical effects are "
+        "retained unless explicitly approved as one-off adjustments; see the forecast report and sensitivities.",
         "",
         "---",
         "",
@@ -481,8 +505,8 @@ class OnePagerPDF(FPDF):
     def __init__(self):
         super().__init__(orientation="P", unit="mm", format="A4")
         # Pin the embedded creation date to the reporting cutoff so re-running
-        # the pipeline produces byte-identical PDFs (same guarantee as every
-        # other report in this repo).
+        # PDFs omit current-time metadata; other runtime/version inputs can
+        # still change file bytes.
         self.set_creation_date(datetime.datetime(2026, 6, 30, tzinfo=datetime.timezone.utc))
         self.set_margins(self.MARGIN, self.MARGIN, self.MARGIN)
         self.set_auto_page_break(auto=True, margin=11)
@@ -513,10 +537,9 @@ class OnePagerPDF(FPDF):
 def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
     pdf = OnePagerPDF()
     pdf.add_page()
-    pdf.h1(f"{bu}: FY{YEAR} budget vs actual")
-    pdf.sub("Business unit one-pager, EventCo monthly budget vs actual pack. Figures trace to the "
-            "variance and forecast reports; driver splits reconcile exactly. "
-            "DRAFT, pending human sign-off.")
+    pdf.h1(f"{bu}: FY{YEAR} provisional review")
+    pdf.sub("As of 30 Jun 2026. Synthetic case study. Provisional estimates for missing source cells; "
+            "Brand Events Nov-2025 billings use a budget placeholder pending source verification. DRAFT.")
 
     # Scorecard strip
     pdf.ln(2)
@@ -559,7 +582,7 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
         f"Payroll ran {fmt_signed_k(pay['variance'])} vs budget: headcount effect "
         f"{fmt_signed_k(pay['volume'])} (average {pay['fte_actual_avg']:.1f} FTE vs "
         f"{pay['fte_budget_avg']:.1f} planned) and rate effect {fmt_signed_k(pay['rate'])} "
-        "(salary mix, overtime, timing). "
+        "(arithmetic residual, not a verified cause). "
         f"Net billings ran {fmt_signed_k(rev['variance'])} vs budget"
         + (" (excluding the month pending data correction)" if rev["excluded_months"] else "")
         + f": volume {fmt_signed_k(rev['volume'])} ({rev['projects_actual']} projects vs "
@@ -569,10 +592,10 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
         pdf.body(
             f"Data note: {ex['month']} is excluded from the revenue split. The ops system "
             f"shows normal activity ({ex['projects_actual']} projects vs "
-            f"{ex['projects_budget']} planned), supporting a data entry error, not a "
-            "business event.")
+            f"{ex['projects_budget']} planned). This supports source verification; it does not confirm the amount.")
 
-    pdf.h2("Material variances (30-month window)")
+    pdf.h2("Historical material variances (FY2025)")
+    items = [it for it in items if "2025" in it["period"]]
     headers = ["Period", "Line", "EUR", "%", "F/U", "Driver"]
     widths = [22, 24, 16, 12, 8, 102]
     pdf.set_font("Helvetica", "B", 7.4)
@@ -587,7 +610,7 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
         row_h = 3.4 * len(wrapped)
         if pdf.get_y() + row_h > 285:
             pdf.add_page()
-        cells = [it["period"], it["line_item"], f"{it['variance_eur'] / 1e3:+,.0f}k",
+        cells = [it["period"].replace("2025-", "25/").replace("2026-", "26/"), it["line_item"], f"{it['variance_eur'] / 1e3:+,.0f}k",
                  f"{it['variance_pct']:+.0%}", it["direction"]]
         y_row = pdf.get_y()
         for val, wd in zip(cells, widths[:-1]):
@@ -607,19 +630,16 @@ def render_pdf(bu, card, pay, rev, items, ups, out, notes, png_path, pdf_path):
     q_label = " / ".join(pd.Period(m).strftime("%b %Y") for m in out["months"])
     pdf.h2(f"Q3 2026 outlook ({q_label})")
     pdf.body(
-        f"Net billings {fmt_money(out['revenue'])} ({out['revenue_vs_py']:+.1%} vs the same "
-        f"quarter last year), gross margin {fmt_money(out['gm'])} "
-        f"({out['gm_vs_py']:+.1%}), operating result {fmt_money(out['net'])}, "
-        f"{out['margin']:.1%} of gross margin. One-offs and concluded programmes are excluded "
-        "from the forecast base (full audit trail in the forecast report).")
+        f"Net billings {fmt_k(out['revenue'])} ({out['revenue_vs_py']:+.1%} vs the same "
+        f"quarter last year), gross margin {fmt_k(out['gm'])} "
+        f"({out['gm_vs_py']:+.1%}), operating result {fmt_k(out['net'])}, "
+        f"{out['margin']:.1%} of gross margin. Unresolved effects remain in the forecast base. See sensitivities in the forecast report.")
 
     pdf.ln(1)
     pdf.set_font("Helvetica", "I", 7)
     pdf.set_text_color(137, 135, 129)
     pdf.multi_cell(0, 3.4,
-                   "Generated by agents/bu_report_agent.py from pipeline outputs. DRAFT, "
-                   "pending human sign-off; nothing in this pipeline distributes reports on "
-                   "its own.")
+                   "DRAFT. EURk forecasts rounded; rate and price/mix are arithmetic residuals. Full history and assumptions: variance and forecast reports.")
     pdf.output(pdf_path)
 
 
@@ -636,15 +656,16 @@ def main():
         pay = payroll_driver_split(vt, drivers, bu)
         rev = revenue_driver_split(vt, drivers, bu)
         items = material_items(vt, bu)
-        ups = follow_ups(items, card)
         out = outlook(fc, bu)
+        ups = follow_ups(items, card, out)
 
         png_path = os.path.join(OUT_DIR, f"{slug}_bridge.png")
         bridge_chart(bu, card, blocks, png_path)
         md = render_markdown(bu, card, blocks, pay, rev, items, ups, out, notes, slug)
         with open(os.path.join(OUT_DIR, f"{slug}.md"), "w", encoding="utf-8") as f:
             f.write(md)
-        render_pdf(bu, card, pay, rev, items, ups, out, notes,
+        pdf_items = material_items(vt[vt["month"].str.startswith(YEAR)], bu)
+        render_pdf(bu, card, pay, rev, pdf_items, ups, out, notes,
                    png_path, os.path.join(OUT_DIR, f"{slug}.pdf"))
         print(f"{bu}: net {fmt_signed_k(card['net_variance'])} vs budget, "
               f"{len(items)} material item(s) -> {OUT_DIR}/{slug}.md + .pdf")
