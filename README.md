@@ -1,14 +1,29 @@
 # FP&A reporting automation
 
-I built this synthetic case study to demonstrate how I automate recurring FP&A reporting. It produces variance analysis, business-line reviews and a three-month forecast, with source checks and analyst review.
+I built this synthetic case study to show how Python automation and Claude agents can support an FP&A review, from source files to a management report. Financial judgment and approval stay with the analyst.
 
 EventCo is a fictional events agency with four business lines. The reporting cycle draws on my experience as Head of FP&A at a EUR100M events agency. All amounts, events, notes and analyst explanations in this repository are synthetic.
 
 The reporting date is 30 June 2026. The management assessment covers FY2025, the forecast covers Q3 2026, and the historical appendix covers January 2024-June 2026.
 
+## From source files to a management review
+
+```mermaid
+flowchart LR
+  A[Finance exports and operating data] --> B[Python calculations and checks]
+  B --> C[Claude investigation and reporting agents]
+  C --> D[Analyst review and approval]
+```
+
+Python cleans the files, computes variances and forecasts, and reconciles the figures. The investigation agent chooses financial checks, requests operating-driver breakdowns and reads relevant dated notes. A separate reporting agent selects the useful facts and proposes questions for the manager. Both receive a short company brief defining the business model, financial terms and review rules.
+
+A successful live run produces `output/agent_review.md` and its activity record from actual Claude responses on synthetic data. The analyst instructions and follow-up are illustrative examples, not a claim that a live employer review took place. The record includes the agent's chosen checks, recomputed tool results, selected facts and proposed questions. Final approval remains with the analyst. An unavailable provider never produces a fabricated example.
+
+The analyst defines the assignment, challenges assumptions, investigates unresolved items and selects the final management actions. Neither agent has a tool to correct source amounts, approve forecast adjustments or distribute reports. Branding follows the report template; company context focuses on the meaning of the numbers.
+
 ## Read the reports
 
-Start with the [Brand Events business review](output/bu_reports/brand_events.pdf), then the [executive assessment](output/executive_summary.md). The [draft management pack](output/board_pack.md) includes variance analysis, the forecast and validation results. The [public case study](https://alanvourch.com/fpa-project/) will reflect these changes after publication; the local build is under `showcase/_site/`.
+Start with the [Brand Events business review](output/bu_reports/brand_events.pdf), then the [executive assessment](output/executive_summary.md). The [draft management pack](output/board_pack.md) includes variance analysis, the forecast and validation results. The [public case study](https://alanvourch.com/fpa-project/) presents the project; the local build is under `showcase/_site/`.
 
 ![FY2025 provisional operating result, with a zero baseline](docs/variance_bridge_2025.png)
 
@@ -60,17 +75,29 @@ python -m venv .venv
 
 On macOS/Linux, use `.venv/bin/python` and `.venv/bin/pip` for the equivalent commands. Open the local server in a browser. Building does not publish. The repository's existing `gh-pages` workflow remains a separate release action.
 
-The pipeline runs ingestion, variance analysis, forecast, four business-line PDFs, commentary, charts, six validation scripts, adversarial regression tests and the QA gate. `output/pipeline_log.md` records their results. Calculations are reproducible for fixed inputs. The default commentary is deterministic; optional AI ordering is not guaranteed to be identical on fresh calls.
+The pipeline runs ingestion, variance analysis, forecast, four business-line PDFs, commentary, charts, six validation scripts, financial-control tests, agent scope/replay tests and the QA gate. `output/pipeline_log.md` records their results. Calculations are reproducible for fixed inputs. The default commentary is deterministic; optional AI ordering is not guaranteed to be identical on fresh calls.
 
-## Optional AI and data handling
+## Live agents, recorded replay and data handling
 
-The default run makes no AI call. `orchestrator.py --provisional --ai` opts in to sending the structured statement catalogue to the configured Anthropic-compatible provider for ordering only. It cannot add or rewrite statements. A provider error or an invalid response fails the run; an older summary is never used as a fallback.
+The default pipeline makes no new AI call. It replays `data/agent_run.json` and recomputes each requested financial check against the current inputs. Changed company context, prompts, workflow code or hashed source artifacts invalidate that record and stop the run. Text fingerprints normalize Windows and Unix line endings. A cached response cannot silently stand in for a fresh analysis of different data.
 
-Provider credentials are environment configuration; no secret is committed. `FPA_NARRATIVE_MODEL` can select the configured model. This optional path has not been exercised as part of the local repair verification.
+To run a new investigation and reporting session with the current synthetic inputs:
 
-Business notes and catalogues can contain identifying client names and context. Aggregation does not anonymize them. Live employer data requires an approved provider and confidentiality policy. Source scans check specified provider references and prohibited filenames in literal `open()` calls; they do not establish runtime network isolation or comprehensive data-loss prevention.
+```powershell
+.venv\Scripts\python.exe orchestrator.py --provisional --live-agents
+```
 
-No step distributes reports. The optional AI request is separate from report distribution.
+If `ANTHROPIC_API_KEY` is set in the environment or the git-ignored `.env` file, the agents use the Anthropic API directly. The API path uses Sonnet 5, counts input tokens before generation and reserves the maximum output allowance against an estimated $1 run cap at the published $2/$10 per million input/output token rates. Retries are disabled. The cap is a local token-cost estimate, not a provider billing limit. Without an API key, the adapter uses the installed Claude Code CLI and its existing login. The adapter runs without built-in tools, MCP servers or project/user customizations. Python dispatches a small allowlist of read-only checks. `FPA_AGENT_MODEL` selects the configured model alias, defaulting to `sonnet`. The CLI must support the flags used in `agents/narrative_agent.py`. Authentication or provider failure stops the run; there is no fabricated fallback conversation.
+
+The live session sends the synthetic company brief, scoped facts, analyst instructions and selected tool results to Claude. Visiting the static case-study page makes no AI request. Full activity is saved in `output/agent_review.json`; only structured decisions and returned checks are recorded, not private chain-of-thought.
+
+The legacy `--ai` option orders the executive statement catalogue through the configured Anthropic-compatible API. It is separate from the investigation example and is not needed for the standard or live-agent workflow.
+
+Facts in the manager brief retain their original unit, period, signed amount and evidence. The model selects fact IDs rather than supplying new monetary figures. Generated questions remain proposals for human review. Scope, citation and replay checks do not establish that every question is commercially sound or prove the underlying source is correct.
+
+Business notes and briefs can contain identifying client names and context. Aggregation does not anonymize them. Live employer data requires an approved provider and confidentiality policy. Source scans are limited regression checks, not runtime network isolation or comprehensive data-loss prevention. No credentials are committed.
+
+No step distributes reports. A fresh Claude run may choose different checks or questions; deterministic calculations and replayed results are reproducible for fixed inputs.
 
 ## Limits
 
@@ -80,4 +107,4 @@ No step distributes reports. The optional AI request is separate from report dis
 - Support staff and overheads are allocated to the four business lines. A real management pack should also show central cost centres before allocation.
 - There is no measured before/after productivity benefit, real-client deployment or production confidentiality control demonstrated here.
 
-See [canonical figures](FIGURES.md) and the [audit repair record](docs/audit-repairs.md).
+See [canonical figures](FIGURES.md), the [audit repair record](docs/audit-repairs.md) and [agent design choices](docs/agent-design.md), including a comparison with Anthropic's finance templates.

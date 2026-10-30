@@ -1,0 +1,6 @@
+{
+  "label": "Illustrative analyst instructions for a real Claude run on synthetic data; not a record of a live employer review",
+  "business_unit": "Brand Events",
+  "instruction": "Investigate the FY2025 provisional Brand Events operating loss. Use the available financial tools to check the result, relevant business notes and operating drivers. Identify the facts a manager needs and the questions that remain open.",
+  "follow_up": "Keep the November billings placeholder separate from business performance. Do not explain rate or price/mix residuals as proven causes. Check the relevant source notes before proposing project recovery actions. Make the final brief useful to the BU manager; no source correction or forecast adjustment is approved."
+}

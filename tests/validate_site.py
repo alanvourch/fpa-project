@@ -41,6 +41,10 @@ def main():
     html=(SITE/'index.html').read_text(encoding='utf-8')
     assert 'provisional' in html.lower() and 'Paris' not in html and 'director was' not in html.lower()
     assert 'EUR663k' in html and 'EUR193k' in html
+    assert html.index('id="workflow"') < html.index('id="reports"')
+    assert 'Claude agents' in html and 'Analyst review' in html
+    assert 'illustrative' in html and 'recorded Claude run' in html
+    assert (SITE/'assets/agent_review.json').read_bytes()==(ROOT/'output/agent_review.json').read_bytes()
     print(f'PASS: {checked} local link/image targets; copied PDFs/charts/CSVs match canonical artifacts; no unresolved landing-page values')
 
 

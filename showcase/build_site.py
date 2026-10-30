@@ -60,6 +60,8 @@ ASSETS = [
     ROOT / "output" / "forecast_backtest.csv",
     ROOT / "output" / "reporting_adjustments.csv",
     ROOT / "output" / "reporting_bridge.csv",
+    ROOT / "output" / "agent_review.json",
+    ROOT / "data" / "company_context.json",
 ]
 
 # Rendered from the PDF at build time, not committed as a static image: a
@@ -70,6 +72,7 @@ ONEPAGER_PREVIEW_NAME = "brand_events_onepager.png"
 
 # (source markdown, page title)
 REPORTS = [
+    ("agent_review.md", "Working with agents: recorded review"),
     ("executive_summary.md", "Executive summary"),
     ("board_pack.md", "Board pack (draft, pending sign-off)"),
     ("variance_report.md", "Variance analysis"),
@@ -291,8 +294,21 @@ def main():
                   Q3_BILLINGS=million(facts['q3_bills_GROUP']['amount']), Q3_RESULT=thousand(facts['q3_op_GROUP']['amount']),
                   AUG_LOSS=thousand(facts['month_2026-08']['amount']), GROWTH_MAE=thousand(bt.absolute_error.mean()),
                   NAIVE_MAE=thousand(bt.naive_error.mean()), MATERIAL_COUNT=str(len(json.loads((ROOT/'output/material_items.json').read_text()))))
+    review = json.loads((ROOT / 'output/agent_review.json').read_text(encoding='utf-8'))
+    values['AGENT_INSTRUCTION'] = review['scenario']['instruction']
+    values['AGENT_FOLLOWUP'] = review['scenario']['follow_up']
     for key,value in values.items():
         template = template.replace('{{'+key+'}}', html.escape(value))
+    checks = []
+    labels = dict(scorecard='Checked the provisional FY2025 scorecard', material_items='Examined the material variances',
+                  business_notes='Read the supporting business notes', driver_splits='Requested headcount/rate and project-volume/mix breakdowns',
+                  forecast='Checked the next-quarter forecast')
+    for event in review['events']:
+        for result in event.get('results', []):
+            label = labels[result['request']['name']]
+            if label not in checks:
+                checks.append(label)
+    template = template.replace('{{AGENT_CHECKS}}', '<ul>'+''.join('<li>'+html.escape(c)+'</li>' for c in checks)+'</ul>')
     if re.search(r'\{\{[A-Z_]+\}\}', template):
         raise ValueError('Unresolved landing-page fact')
     (SITE / "index.html").write_text(template,encoding="utf-8")

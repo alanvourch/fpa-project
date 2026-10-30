@@ -1,6 +1,6 @@
 # Local pipeline validation
 
-No report distribution is performed. Optional --ai sends the statement catalogue externally.
+No report distribution is performed. --live-agents sends synthetic company context and selected evidence to Claude. --ai optionally sends statement ordering externally.
 
 ## Source ingestion
 
@@ -65,6 +65,16 @@ Exit status: 0
 
 ```
 Commentary: 28 bound statements; local deterministic rendering
+
+
+```
+
+## Recorded Claude agent review
+
+Exit status: 0
+
+```
+Agent review: 5 recorded decisions; tool evidence and scoped facts verified; approval pending
 
 
 ```
@@ -273,7 +283,35 @@ Exit status: 0
 
 ..............
 ----------------------------------------------------------------------
-Ran 14 tests in 1.887s
+Ran 14 tests in 9.414s
+
+OK
+
+```
+
+## Agent scope and replay checks
+
+Exit status: 0
+
+```
+
+...........
+----------------------------------------------------------------------
+Ran 11 tests in 2.607s
+
+OK
+
+```
+
+## Agent API spend and response checks
+
+Exit status: 0
+
+```
+
+...
+----------------------------------------------------------------------
+Ran 3 tests in 12.530s
 
 OK
 

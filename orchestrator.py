@@ -13,6 +13,7 @@ STEPS = [
     ('agents/forecast_agent.py', 'Recurrence-reviewed forecast'),
     ('agents/bu_report_agent.py', 'Business-line reports'),
     ('agents/narrative_agent.py', 'Bound commentary'),
+    ('agents/review_workflow.py', 'Recorded Claude agent review'),
     ('make_charts.py', 'Charts'),
     ('agents/figures_agent.py', 'Canonical figures and source bridge'),
     ('tests/validate_ingestion.py', 'Ingestion validation'),
@@ -22,6 +23,8 @@ STEPS = [
     ('tests/validate_bu_reports.py', 'Report validation'),
     ('tests/validate_narrative.py', 'Commentary validation'),
     ('tests/test_financial_controls.py', 'Adversarial and gate regression tests'),
+    ('tests/test_review_workflow.py', 'Agent scope and replay checks'),
+    ('tests/test_agent_api.py', 'Agent API spend and response checks'),
     ('agents/qa_agent.py', 'QA gate'),
 ]
 
@@ -46,15 +49,18 @@ def assemble_board_pack():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--provisional', action='store_true', help='Select the unapproved, labelled synthetic reporting scenario')
+    parser.add_argument('--live-agents', action='store_true', help='Run Claude investigation and reporting on synthetic data; otherwise verify the captured run')
     parser.add_argument('--ai', action='store_true', help='Opt in to external AI ordering of synthetic statements')
     args = parser.parse_args()
     Path('output').mkdir(exist_ok=True)
     stamp_manifest(False, 'Run in progress; previous validation invalidated')
-    log = ['# Local pipeline validation', '', 'No report distribution is performed. Optional --ai sends the statement catalogue externally.', '']
+    log = ['# Local pipeline validation', '', 'No report distribution is performed. --live-agents sends synthetic company context and selected evidence to Claude. --ai optionally sends statement ordering externally.', '']
     for script, description in STEPS:
         extra = ['--provisional'] if script == 'agents/variance_agent.py' and args.provisional else []
         if script == 'agents/narrative_agent.py' and args.ai:
             extra = ['--ai']
+        if script == 'agents/review_workflow.py' and args.live_agents:
+            extra = ['--live']
         result = run_step(script, extra)
         print(f'{description}: '+('PASS' if result.returncode == 0 else 'FAIL'))
         log += ['## '+description, '', f'Exit status: {result.returncode}', '', '```', result.stdout, result.stderr, '```', '']
