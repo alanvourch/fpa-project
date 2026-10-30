@@ -58,19 +58,55 @@ pre { padding:16px; background:#f2f1ec; overflow-x:auto; font:13px/1.6 Consolas,
 footer { padding:32px 0; border-top:1px solid var(--line); font-size:14px; }
 @media(max-width:760px) { .grid,.cards { grid-template-columns:1fr; } .stats { gap:14px; } .stat strong { font-size:23px; } .wrap { padding:0 18px; } header { padding:42px 0; } section { padding:40px 0; } h2 { font-size:26px; } }
 @media(max-width:420px) { .stats { grid-template-columns:1fr; } }
+
+.workflow-intro { max-width:850px; }
+.workflow { list-style:none; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; padding:0; margin:28px 0 18px; }
+.workflow li { position:relative; border:1px solid var(--line); border-radius:10px; background:white; padding:20px 17px; margin:0; }
+.workflow li:not(:last-child)::after { content:"→"; position:absolute; right:-17px; top:46%; color:var(--accent); background:var(--bg); font-size:22px; z-index:1; }
+.workflow .step { display:block; color:var(--accent); font-size:12px; font-weight:650; margin-bottom:12px; }
+.workflow h3 { font-size:18px; line-height:1.3; margin-bottom:12px; }
+.workflow p { font-size:15px; line-height:1.55; margin:0; }
+.workflow .analyst-step { background:var(--soft); border-color:#9bbadd; }
+.workflow-caption { max-width:850px; }
+.example-grid { display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:22px; }
+.example-grid blockquote { margin:12px 0 26px; border-left:3px solid var(--accent); padding-left:15px; color:var(--text); font-size:15px; }
+.example-grid li { font-size:15px; }
+@media(max-width:900px) { .workflow { grid-template-columns:1fr 1fr; } .workflow li:nth-child(2)::after { content:none; } }
+@media(max-width:760px) { .workflow,.example-grid { grid-template-columns:1fr; } .workflow { gap:24px; } .workflow li:not(:last-child)::after { content:"↓"; top:auto; bottom:-25px; right:calc(50% - 9px); } }
 </style>
 </head>
 <body>
-<nav aria-label="Main navigation"><div class="wrap"><a href="https://alanvourch.com/">Alan Vourc'h</a><div><a href="#reports">Business-line reports</a> &nbsp; <a href="#forecast">Forecast</a> &nbsp; <a href="#method">Method</a></div></div></nav>
+<nav aria-label="Main navigation"><div class="wrap"><a href="https://alanvourch.com/">Alan Vourc'h</a><div><a href="#workflow">Workflow</a> &nbsp; <a href="#reports">Business-line reports</a> &nbsp; <a href="#forecast">Forecast</a> &nbsp; <a href="#method">Method</a></div></div></nav>
 <main>
 <header><div class="wrap">
 <span class="tag">Synthetic case study · Alan Vourc'h</span>
 <h1>FP&amp;A reporting automation</h1>
 <p class="lead">Variance analysis and a three-month forecast</p>
-<p class="lead">I built this case study to demonstrate how I automate recurring FP&amp;A reporting. It produces variance analysis, business-line reviews and a three-month forecast, with source checks and analyst review.</p>
-<div class="buttons"><a class="btn primary" href="assets/brand_events.pdf">Open a business-line report</a><a class="btn" href="https://github.com/alanvourch/fpa-project">View the code</a></div>
+<p class="lead">I built this synthetic case study to show how Python automation and Claude agents can support an FP&amp;A review, from source files to a management report. Financial judgment and approval stay with the analyst.</p>
+<div class="buttons"><a class="btn primary" href="#workflow">See how it works</a><a class="btn" href="assets/brand_events.pdf">Open a business-line report</a><a class="btn" href="https://github.com/alanvourch/fpa-project">View the code</a></div>
 <p class="small" style="margin-top:20px">EventCo is a fictional events agency with four business lines. Reporting date: 30 June 2026. Historical review: FY2025; outlook: July-September 2026.</p>
 </div></header>
+<section id="workflow"><div class="wrap">
+<div class="kicker">Purpose and approach</div><h2>From source files to a management review</h2>
+<p class="workflow-intro">The goal is to make recurring reporting easier to prepare and review. I designed the finance rules and workflow, then built the scripts and agent instructions with AI assistance.</p>
+<ol class="workflow" aria-label="Reporting workflow from inputs to analyst approval">
+<li><span class="step">1 · Source files</span><h3>Finance and operating data</h3><p>Monthly finance exports, business notes, headcount and project volumes.</p></li>
+<li><span class="step">2 · Python automation</span><h3>Calculate and check</h3><p>Clean the inputs, calculate variances and forecasts, and reconcile the figures.</p></li>
+<li><span class="step">3 · Claude agents</span><h3>Investigate and draft</h3><p>Choose relevant checks, read supporting notes and prepare a short management brief.</p></li>
+<li class="analyst-step"><span class="step">4 · Analyst review</span><h3>Challenge and decide</h3><p>Investigate gaps, judge assumptions and select actions before approving the report.</p></li>
+</ol>
+<p class="small workflow-caption">An agent is an AI assistant with a defined assignment and a limited set of checks it can request. Python supplies the figures; the analyst remains responsible for the conclusions.</p>
+<details class="workflow-detail"><summary>See an example: instructions, checks and the draft brief</summary>
+<p class="small">A recorded Claude run on synthetic data. The analyst instructions are illustrative; this is not an employer review or an approved management recommendation.</p>
+<div class="example-grid"><div><h3>The assignment</h3><blockquote>Investigate the FY2025 provisional Brand Events operating loss. Use the available financial tools to check the result, relevant business notes and operating drivers. Identify the facts a manager needs and the questions that remain open.</blockquote><h3>The agent's checks</h3><ul><li>Checked the provisional FY2025 scorecard</li><li>Requested headcount/rate and project-volume/mix breakdowns</li><li>Examined the material variances</li><li>Read the supporting business notes</li></ul></div><div><h3>The analyst's follow-up</h3><blockquote>Keep the November billings placeholder separate from business performance. Do not explain rate or price/mix residuals as proven causes. Check the relevant source notes before proposing project recovery actions. Make the final brief useful to the BU manager; no source correction or forecast adjustment is approved.</blockquote><h3>An example of analyst judgment</h3><p>The project overrun measures a cost variance against budget. The annual operating loss is a net result. The analyst needs to reconcile the full bridge before attributing the loss to a particular cause.</p><p>Verify source amounts and quantify any recovery already included in billings. The agents cannot correct the accounts, approve forecast changes or distribute reports.</p></div></div>
+<p><a href="reports/agent_review.html" target="_blank" rel="noopener">Open the recorded review and draft brief</a> · <a href="assets/agent_review.json" target="_blank" rel="noopener">Inspect the complete activity record</a></p>
+</details>
+<details><summary>How the agents learn the company's reporting rules</summary>
+<p>Both roles receive a short company brief: how the business earns money, what each metric means, the reporting period and what needs analyst approval. For EventCo, billings are invoiced amounts; a rate or price/mix residual does not establish a cause. Missing source figures must stay visible.</p>
+<p>The investigation agent can request scorecards, operating-driver breakdowns and dated notes. The reporting agent selects the useful facts and proposes questions for the manager. An agent's suggestion remains subject to review.</p>
+<p class="small">The company brief and role instructions are maintained separately from the calculations. Formatting follows a report template. <a href="assets/company_context.json" target="_blank" rel="noopener">Read the synthetic company brief</a>.</p>
+</details>
+</div></section>
 <section id="reports"><div class="wrap">
 <div class="kicker">Business-line review</div><h2>Start with the manager's report</h2>
 <div class="grid"><div>
@@ -98,16 +134,16 @@ footer { padding:32px 0; border-top:1px solid var(--line); font-size:14px; }
 </div></section>
 <section id="method"><div class="wrap"><div class="kicker">Method and review</div><h2>What runs locally, and what needs judgment</h2>
 <ol><li>Clean dates, names and currency formatting. Keep missing source amounts blank and flag unusual budget ratios for verification.</li><li>Compute material variances, link relevant dated notes and record analyst explanations separately. Keep unresolved items open.</li><li>Build the provisional forecast, report the assumptions and compare historical holdouts. Require explicit recurrence review before changing history.</li><li>Render business-line reports and scoped executive statements. Bind each statement to its unit, period, metric, signed amount and evidence.</li><li>Run validation and assemble a draft. A failed required check returns a failing status and blocks the site build. Changed artifacts require validation again.</li></ol>
-<div class="grid"><div class="card"><h3>Data definitions</h3><p>Net billings are invoiced amounts. Gross margin is billings less project costs. This simplified management P&amp;L does not implement accounting revenue recognition, ARR or ACV restatement, a full close, or SAP/BPC integration.</p></div><div class="card"><h3>Data handling</h3><p>Calculations and default commentary run locally. Optional AI ordering sends a structured statement catalogue to the configured provider. Aggregation does not anonymize business context. Source scans are limited regression checks, not runtime network isolation.</p></div></div>
+<div class="grid"><div class="card"><h3>Data definitions</h3><p>Net billings are invoiced amounts. Gross margin is billings less project costs. This simplified management P&amp;L does not implement accounting revenue recognition, ARR or ACV restatement, a full close, or SAP/BPC integration.</p></div><div class="card"><h3>Data handling</h3><p>Calculations and default commentary run locally. A live agent run sends the synthetic company brief, facts and selected tool results to Claude. The page shows a recorded run; visiting it makes no AI request. Aggregation does not anonymize business context. Source scans are limited regression checks, not runtime network isolation.</p></div></div>
 <details><summary>Technical appendix: reproduction, checks and limitations</summary>
 <p>The input has 120 cleaned BU-month rows over January 2024-June 2026, with 11 P&amp;L lines per row. All data is synthetic. The 13 analyst explanations are illustrative; driver data is consistent by construction.</p>
 <pre><code>.venv\Scripts\python.exe orchestrator.py --provisional
 .venv\Scripts\python.exe showcase/build_site.py</code></pre>
 <p>Without <code>--provisional</code>, unresolved source gaps stop reporting. The optional scenario records estimates in a separate adjustment ledger; these estimates are not approved actuals or budgets.</p>
-<p>Calculations are reproducible for fixed inputs. Commentary uses constrained statements; changing wording requires a template change and review. Validation rejects arbitrary prose and does not claim to understand every possible financial assertion. Optional AI can reorder statements, so wording and ordering are not claimed to be identical across fresh AI calls.</p>
+<p>Calculations are reproducible for fixed inputs. Commentary uses constrained statements; changing wording requires a template change and review. Validation rejects arbitrary prose and does not claim to understand every possible financial assertion. The agent example replays a recorded Claude conversation and recomputes every financial check against the same inputs. A fresh Claude run may choose different checks or questions. It cannot approve financial changes or publish reports.</p>
 <p><a href="reports/data_quality_report.html">Data quality report</a> · <a href="reports/qa_report.html">QA report</a> · <a href="assets/reporting_adjustments.csv">Provisional cell ledger</a> · <a href="https://github.com/alanvourch/fpa-project">Source code</a></p>
 </details>
 </div></section>
 <section id="about"><div class="wrap"><div class="kicker">About</div><h2>Alan Vourc'h</h2><p>I worked as Head of FP&amp;A at a EUR100M events agency. This personal project brings that reporting experience together with Python to produce inspectable reports for finance and business teams.</p><p>I am looking for Senior FP&amp;A, FP&amp;A Manager and Finance &amp; Strategy roles in Montr&eacute;al.</p><div class="buttons"><a class="btn" href="https://alanvourch.com/">Portfolio</a><a class="btn" href="https://www.linkedin.com/in/alan-vourch/">LinkedIn</a><a class="btn" href="mailto:alan.vourch@gmail.com">Email</a></div></div></section>
-</main><footer><div class="wrap"><p>Synthetic case study. Local draft pending review. <a href="https://github.com/alanvourch/fpa-project">Code and limitations</a>.</p></div></footer>
+</main><footer><div class="wrap"><p>Synthetic case study. Reports pending analyst review. <a href="https://github.com/alanvourch/fpa-project">Code and limitations</a>.</p></div></footer>
 </body></html>

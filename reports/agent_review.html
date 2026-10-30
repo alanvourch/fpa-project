@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Working with agents: recorded review &middot; EventCo budget vs actual pack</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #fcfcfb; color: #171715;
+    font: 15.5px/1.65 "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+  .back {
+    display: inline-block; margin-bottom: 26px; font-size: 14px; font-weight: 600;
+    color: #1d5aa6; text-decoration: none;
+  }
+  .back:hover { text-decoration: underline; }
+  .doc-note {
+    font-size: 13px; color: #85837d; border: 1px solid #e5e4dd; background: #fff;
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 30px;
+  }
+  .doc-note .dl { display: block; margin-top: 6px; font-weight: 600; color: #1d5aa6; text-decoration: none; }
+  .doc-note .dl:hover { text-decoration: underline; }
+  h1 { font-size: 27px; line-height: 1.2; margin: 18px 0 12px; letter-spacing: -0.01em; }
+  h2 { font-size: 20px; margin: 30px 0 10px; }
+  h3 { font-size: 16.5px; margin: 22px 0 8px; }
+  p, li { color: #4f4e4a; margin-bottom: 10px; }
+  ul, ol { padding-left: 22px; margin-bottom: 12px; }
+  blockquote { border-left: 3px solid #2a78d6; padding: 4px 0 4px 16px; margin: 14px 0; }
+  blockquote p { color: #171715; }
+  code { font: 13px Consolas, "Cascadia Mono", Menlo, monospace; background: #f0efe9; padding: 1px 5px; border-radius: 4px; }
+  .tablewrap { overflow-x: auto; margin: 14px 0; border: 1px solid #e5e4dd; border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: #fff; }
+  th, td { padding: 7px 10px; border-bottom: 1px solid #e5e4dd; text-align: left; vertical-align: top; }
+  th { color: #85837d; font-weight: 600; white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  hr { border: none; border-top: 1px solid #e5e4dd; margin: 26px 0; }
+  a { color: #1d5aa6; }
+  .report-chart { margin: 18px 0 24px; }
+  .report-chart img { width: 100%; height: auto; border: 1px solid #e5e4dd; border-radius: 10px; }
+
+  /* card list: replaces wide tables whose last column is long free text */
+  .vcards { display: flex; flex-direction: column; gap: 10px; margin: 14px 0 20px; }
+  .vcard { border: 1px solid #e5e4dd; background: #fff; border-radius: 10px; padding: 14px 16px; }
+  .vcard-meta { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: 12.5px; color: #85837d; margin-bottom: 8px; }
+  .vcard-meta b { color: #171715; font-size: 13.5px; }
+  .vc-badge { display: inline-block; font-weight: 700; font-size: 11px; letter-spacing: .02em; border-radius: 5px; padding: 1px 7px; }
+  .vc-badge.f { background: #e6f4e6; color: #0a7d0a; }
+  .vc-badge.u { background: #fbeaea; color: #a12626; }
+  .vcard-text { color: #4f4e4a; margin-bottom: 0; }
+  .vcard-evidence { margin-top: 6px; font-size: 12.5px; color: #85837d; margin-bottom: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">&larr; Back to the demo</a>
+  <div class="doc-note">Synthetic case study. As of 30 June 2026. Provisional reporting scenario, pending human review.</div>
+<h1>Working with agents: a recorded case study</h1>
+<p>A real Claude run on synthetic data, with illustrative analyst instructions. Replayed locally against the same inputs; not a live employer review. Final approval remains open.</p>
+<h2>The assignment</h2>
+<p>Investigate the FY2025 provisional Brand Events operating loss. Use the available financial tools to check the result, relevant business notes and operating drivers. Identify the facts a manager needs and the questions that remain open.</p>
+<h2>Company context</h2>
+<p>Events agency. Four business lines deliver client projects using employees and external suppliers.</p>
+<p>The agents receive the company metric definitions, reporting date and review rules. Billings are invoiced amounts; rate and price/mix residuals do not establish causes.</p>
+<h2>What the investigation agent checked</h2>
+<ul>
+<li>Checked the provisional annual scorecard.</li>
+<li>Requested headcount/rate and project-volume/mix breakdowns.</li>
+<li>Examined material variances and their evidence references.</li>
+<li>Read dated business notes: N11, N13.</li>
+</ul>
+<h3>Analyst follow-up</h3>
+<p>Keep the November billings placeholder separate from business performance. Do not explain rate or price/mix residuals as proven causes. Check the relevant source notes before proposing project recovery actions. Make the final brief useful to the BU manager; no source correction or forecast adjustment is approved.</p>
+<h2>Draft for the manager</h2>
+<p>Scope: Brand Events | FY2025</p>
+<p>Brand Events records a provisional FY2025 operating loss of EUR391k.</p>
+<p>Scope: GROUP | FY2025</p>
+<p>These results use unapproved estimates for missing source cells and a budget placeholder for November 2025 Brand Events billings. The source amount remains unconfirmed. Totals are a provisional demonstration scenario, pending source verification.</p>
+<p>Scope: Brand Events | 2025-04..2025-06</p>
+<p>Brand Events: EUR1,640k adverse P&amp;L impact from the project cost overrun during Apr-Jun 2025.</p>
+<p>Scope: GROUP | FY2025</p>
+<p>Gross-margin variances below monthly materiality total EUR956k adverse in FY2025 and need review alongside the largest project item.</p>
+<p>Scope: Brand Events | Q3 2026</p>
+<p>Brand Events Q3 2026 operating profit forecast: EUR812k.</p>
+<p>Scope: GROUP | Q3 2026</p>
+<p>The selected forecast retains unresolved historical effects. The August operating loss needs review by BU managers and group FP&amp;A. A seasonal pattern does not establish that the loss is commercially acceptable; compare the raw baseline and unapproved sensitivity in the forecast report.</p>
+<h2>Proposed actions</h2>
+<ul>
+<li>BU manager and group FP&amp;A: review project recovery and scope-change controls.</li>
+<li>Finance data owner: verify the November billings entry and missing source amounts before approval.</li>
+<li>BU controller: investigate the rate and price/mix residuals before assigning a cause.</li>
+</ul>
+<h2>Questions requiring analyst review</h2>
+<ul>
+<li>Has the change-order negotiation for the documented Riyadh launch event reached a final resolution, and what recovery outcome is now expected?</li>
+<li>Has the unconfirmed November billings figure for Brand Events now been verified, and could confirmation change the understanding of the full-year result?</li>
+</ul>
+
+<p>The proposed questions are AI-generated and need human review. Checks validate tool scope, cited facts and replay consistency; they do not establish that every question or conclusion is commercially sound.</p>
+<h2>Illustrative analyst review point</h2>
+<p>Note N13 already records a signed change order for partial recovery. The useful next check is the amount recovered and whether it is already included in billings. Any proposed benefit needs that reconciliation before it can enter the forecast. This review point is part of the synthetic case study; final sign-off remains open.</p>
+<h2>What stays with the analyst</h2>
+<p>Check source uncertainty, challenge explanations, choose management actions and approve the report. These agents have no tool for correcting source amounts, changing forecasts or publishing.</p>
+</div>
+</body>
+</html>
